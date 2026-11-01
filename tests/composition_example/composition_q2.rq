@@ -1,0 +1,41 @@
+PREFIX sem:    <http://semanticweb.cs.vu.nl/2009/11/sem/>
+PREFIX prov:   <http://www.w3.org/ns/prov#>
+PREFIX rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX skos:   <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX exrole: <https://example.org/ext/role/>
+PREFIX syn:    <https://example.org/syn/>
+
+# Q2 (composition). Which roles did Vendor Beta take in engagement B, which claim is final for each, which activity
+# and plans produced it, and which earlier claims about the same participation disagree?
+# A claim reifies a sem:roleType statement about the participation node. It is final when the node was derived from
+# it (prov:wasDerivedFrom); an earlier claim disagrees when its role type is not a role type of the node.
+SELECT ?kind ?role ?claim ?activity ?agent
+       (GROUP_CONCAT(DISTINCT ?planLabel; SEPARATOR=" | ") AS ?plans) ?revisedBy
+WHERE {
+  VALUES ?e { syn:engagement-B }
+  ?org rdfs:label "Vendor Beta (SYN)" .
+  ?e   sem:hasActor ?p .
+  ?p   rdf:value ?org .
+  ?c   a rdf:Statement ;
+       rdf:subject ?p ;
+       rdf:predicate sem:roleType ;
+       rdf:object ?v ;
+       prov:wasGeneratedBy ?act .
+  ?v   skos:inScheme exrole: ;
+       skos:notation ?role .
+  BIND(EXISTS { ?p prov:wasDerivedFrom ?c } AS ?isFinal)
+  BIND(EXISTS { ?p sem:roleType ?v } AS ?agrees)
+  FILTER(?isFinal || !?agrees)
+  BIND(IF(?isFinal, "final", "earlier, disagrees") AS ?kind)
+  ?act rdfs:label ?activity ;
+       prov:qualifiedAssociation ?as .
+  ?as  prov:agent ?ag ;
+       prov:hadPlan ?plan .
+  ?ag  rdfs:label ?agent .
+  ?plan rdfs:label ?planLabel .
+  OPTIONAL { ?rev prov:wasRevisionOf ?c . BIND(STRAFTER(STR(?rev), "https://example.org/syn/") AS ?revisedBy) }
+  BIND(STRAFTER(STR(?c), "https://example.org/syn/") AS ?claim)
+}
+GROUP BY ?kind ?role ?claim ?activity ?agent ?revisedBy
+ORDER BY DESC(?kind) ?role ?claim

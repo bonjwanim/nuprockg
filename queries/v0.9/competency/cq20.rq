@@ -1,0 +1,45 @@
+PREFIX nuproc:  <https://w3id.org/nuproc/ns#>
+PREFIX skos:    <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX prov:    <http://www.w3.org/ns/prov#>
+PREFIX dqv:     <http://www.w3.org/ns/dqv#>
+PREFIX time:    <http://www.w3.org/2006/time#>
+PREFIX xsd:     <http://www.w3.org/2001/XMLSchema#>
+PREFIX channel: <https://w3id.org/nuproc/channel/>
+PREFIX prole:   <https://w3id.org/nuproc/playerrole/>
+PREFIX crole:   <https://w3id.org/nuproc/counterpartyrole/>
+PREFIX srole:   <https://w3id.org/nuproc/siderole/>
+PREFIX erole:   <https://w3id.org/nuproc/engagementrole/>
+PREFIX obo:     <http://purl.obolibrary.org/obo/>
+PREFIX rstat:   <https://w3id.org/nuproc/resolutionstatus/>
+PREFIX ostat:   <https://w3id.org/nuproc/occurrencestatus/>
+
+# CQ20 (provenance) On which claim, activity and plans does the occurrence status of the engagement a cluster
+#   reports (occurred, planned, denied, unclear) rest, and how many clusters, per status, leave no engagement in the
+#   real-world layer?
+# CQ20 (P · 발생 상태의 출처, v0.9 신설 — ADR-0041 §1 · §2) 한 군집이 보도한 관여의 발생 상태 (일어남 · 예정 · 부인 · 불명) 는
+# 어느 주장 · 활동 · 계획에 기대며, 실세계 층에 관여를 남기지 않은 군집은 상태별로 몇인가?
+# 경로: 군집 — hasFinalOccurrenceClaim → 최종 발생 주장 — wasGeneratedBy → 활동 — qualifiedAssociation → (행위자, 계획).
+# 최종 주장은 모델 코딩 (표본 밖) 또는 사람 기준 (사람이 점검한 표본) 이 낸다. 같은 군집에 관한 최종이 아닌 주장 — 표본의 모델 주장 ·
+# 코더 A · B 의 주장 — 을 센다. 관여를 보도하는 군집 수를 함께 내어, 상태마다 관여를 남기지 않은 군집 수 (군집 수 − 보도하는 군집
+# 수) 를 읽는다: occurred 가 아닌 상태는 모두 관여를 남기지 않고, occurred 가운데서는 병합된 군집만 남기지 않는다.
+# 상태와 최종 주장의 활동마다 한 행 — 개별 군집 · 주장 IRI 를 내지 않는다 ((iii)층).
+SELECT ?status ?finalActivity ?agent (MIN(?nPlans) AS ?minPlans)
+       (COUNT(DISTINCT ?k) AS ?nClusters) (COUNT(DISTINCT ?kr) AS ?nReporting)
+       (COUNT(DISTINCT ?other) AS ?nNonFinalClaims)
+WHERE {
+  ?k nuproc:hasOccurrenceStatus ?s ; nuproc:hasFinalOccurrenceClaim ?c .
+  ?s skos:notation ?status .
+  ?c nuproc:occurrenceClaimAbout ?k ; prov:wasGeneratedBy ?act .
+  {
+    SELECT ?act (SAMPLE(?ag0) AS ?ag) (COUNT(DISTINCT ?plan) AS ?nPlans)
+    WHERE { ?act prov:qualifiedAssociation ?asn . ?asn prov:agent ?ag0 ; prov:hadPlan ?plan . }
+    GROUP BY ?act
+  }
+  BIND(STRAFTER(STR(?act), "/activity/") AS ?finalActivity)
+  BIND(STRAFTER(STR(?ag), "/agent/") AS ?agent)
+  OPTIONAL { ?k nuproc:reportsEngagement ?e . BIND(?k AS ?kr) }
+  OPTIONAL { ?other nuproc:occurrenceClaimAbout ?k . FILTER(?other != ?c) }
+}
+GROUP BY ?status ?finalActivity ?agent
+ORDER BY ?status ?finalActivity

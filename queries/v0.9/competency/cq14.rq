@@ -1,0 +1,40 @@
+PREFIX nuproc:  <https://w3id.org/nuproc/ns#>
+PREFIX skos:    <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX prov:    <http://www.w3.org/ns/prov#>
+PREFIX dqv:     <http://www.w3.org/ns/dqv#>
+PREFIX time:    <http://www.w3.org/2006/time#>
+PREFIX xsd:     <http://www.w3.org/2001/XMLSchema#>
+PREFIX channel: <https://w3id.org/nuproc/channel/>
+PREFIX prole:   <https://w3id.org/nuproc/playerrole/>
+PREFIX crole:   <https://w3id.org/nuproc/counterpartyrole/>
+PREFIX srole:   <https://w3id.org/nuproc/siderole/>
+PREFIX erole:   <https://w3id.org/nuproc/engagementrole/>
+PREFIX obo:     <http://purl.obolibrary.org/obo/>
+PREFIX rstat:   <https://w3id.org/nuproc/resolutionstatus/>
+
+# CQ14 (multi-hop) Did the same organisation take part in several cases, and did its coded category differ between
+#   them?
+# CQ14 (M) 동일 조직이 여러 사례에 참여했는가? 사례에 따라 역할이 달랐는가?
+# 기대 (0.9.0 — evaluation/cq/v0.9/expected_results.csv): 다중 사례 참여 조직 9종 — 3사례 6종 · 2사례 3종.
+# 후보 집합 표기가 사건마다 해소되어 (ADR-0040 §5) KHNP 가 조직 참여자로 3사례에 나타난다.
+# ORSD §5 — UnnamedActorReference 배제. ADR-0023 이후 국가측 지칭이 조직 집계에서
+# 빠지므로 'X (government)' 계열은 이 질의에 나타나지 않는다.
+# v0.8 — **조직 IRI 로 묶는다.** 종전에는 라벨로 묶어, 라벨이 같은 서로 다른 조직이 한 조직으로 합쳐질 수
+# 있었다 (합성 예로 재현된다). 라벨은 그 조직의 것을 하나 보인다 (SAMPLE). 조직 IRI 는 결과에 내지 않는다.
+SELECT (SAMPLE(?label) AS ?orgLabel) (COUNT(DISTINCT ?case) AS ?nCases) (COUNT(DISTINCT ?role) AS ?nRoles)
+       (GROUP_CONCAT(DISTINCT ?case; separator="|") AS ?cases)
+       (GROUP_CONCAT(DISTINCT ?role; separator="|") AS ?roles)
+WHERE {
+  ?ev a nuproc:EngagementCluster ;
+      nuproc:concernsCase ?c ;
+      nuproc:hasParticipation ?p .
+  ?p  nuproc:hasSide srole:export_side ;
+      nuproc:namesParticipant ?org .
+  ?org rdfs:label ?label .
+  ?c   rdfs:label ?case .
+  OPTIONAL { ?p nuproc:hasCodedPlayerCategory ?pr . ?pr skos:notation ?role }
+}
+GROUP BY ?org
+HAVING( COUNT(DISTINCT ?case) >= 2 )
+ORDER BY DESC(?nCases) ?orgLabel

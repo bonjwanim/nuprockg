@@ -1,0 +1,144 @@
+# What a builder adds to the composition of composition.ttl: the ad-hoc terms for which no published term was
+# found, and the builder's own code lists. No NuProc term is used.
+#
+# Section markers ("# == <id> <title> ==") are read by run.py.
+#
+# Why these three properties are ad hoc: the term-level comparison (Table 1 of the paper and Section S2 of its
+# supplementary material, rows "candidate-set reference" and "reference with resolution status") found no term for a
+# reference known to denote one of several candidate organisations in any of the ten resources, and no resolution
+# status term in any of them. The link from a participation to the mention used for its actor has no published term
+# either: SEM puts the actor itself under rdf:value, and GAF links a mention to what it denotes, not to the
+# participation in which it was used. See README.md for the alternatives considered (rdf:Alt, owl:oneOf,
+# gaf:denotedBy, prov:wasDerivedFrom).
+
+@prefix excp:    <https://example.org/ext/counterparty/> .
+@prefix ex:      <https://example.org/ext#> .
+@prefix explan:  <https://example.org/ext/plantype/> .
+@prefix exrole:  <https://example.org/ext/role/> .
+@prefix exside:  <https://example.org/ext/side/> .
+@prefix exstat:  <https://example.org/ext/status/> .
+@prefix extype:  <https://example.org/ext/eventtype/> .
+@prefix gaf:     <http://groundedannotationframework.org/gaf#> .
+@prefix org:     <http://www.w3.org/ns/org#> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sem:     <http://semanticweb.cs.vu.nl/2009/11/sem/> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+
+# == X1 ad-hoc terms ==
+
+ex:actorReference a owl:ObjectProperty ;
+    rdfs:label "actor reference" ;
+    rdfs:comment "Links a participation (a sem:Role constraint on sem:hasActor) to the mention by which the source referred to its actor, whether or not that mention was resolved." ;
+    rdfs:domain sem:Role ;
+    rdfs:range gaf:Mention .
+
+ex:candidate a owl:ObjectProperty ;
+    rdfs:label "candidate" ;
+    rdfs:comment "Links a mention to an organisation it may denote, when the source names several organisations and does not determine which one is meant." ;
+    rdfs:domain gaf:Mention ;
+    rdfs:range org:Organization .
+
+ex:resolutionStatus a owl:ObjectProperty ;
+    rdfs:label "resolution status" ;
+    rdfs:comment "Links a mention to the outcome of matching it to one organisation: resolved, not yet resolved, or unresolvable because the source names a candidate set." ;
+    rdfs:domain gaf:Mention ;
+    rdfs:range skos:Concept .
+
+# == X2 code lists ==
+
+# The builder's code lists. NuProc ships the corresponding schemes, with definitions, scope notes and examples, in
+# ontology/nuproc-codebook.ttl; here each code has only a scheme, a notation and a label.
+
+exrole: a skos:ConceptScheme ;
+    skos:prefLabel "engagement role types" .
+
+exrole:technology_supply a skos:Concept ;
+    skos:inScheme exrole: ;
+    skos:notation "technology_supply" ;
+    skos:prefLabel "technology supply" .
+
+exrole:construction_contract a skos:Concept ;
+    skos:inScheme exrole: ;
+    skos:notation "construction_contract" ;
+    skos:prefLabel "construction contract" .
+
+exrole:financing a skos:Concept ;
+    skos:inScheme exrole: ;
+    skos:notation "financing" ;
+    skos:prefLabel "financing" .
+
+exrole:state_sponsorship a skos:Concept ;
+    skos:inScheme exrole: ;
+    skos:notation "state_sponsorship" ;
+    skos:prefLabel "state sponsorship" .
+
+exrole:commercial_supply a skos:Concept ;
+    skos:inScheme exrole: ;
+    skos:notation "commercial_supply" ;
+    skos:prefLabel "commercial supply" .
+
+exrole:other a skos:Concept ;
+    skos:inScheme exrole: ;
+    skos:notation "other" ;
+    skos:prefLabel "other" .
+
+exside: a skos:ConceptScheme ;
+    skos:prefLabel "sides of an engagement" .
+
+exside:export_side a skos:Concept ;
+    skos:inScheme exside: ;
+    skos:notation "export_side" ;
+    skos:prefLabel "export side" .
+
+exside:host_side a skos:Concept ;
+    skos:inScheme exside: ;
+    skos:notation "host_side" ;
+    skos:prefLabel "host side" .
+
+excp: a skos:ConceptScheme ;
+    skos:prefLabel "counterparty roles" .
+
+excp:host_government a skos:Concept ;
+    skos:inScheme excp: ;
+    skos:notation "host_government" ;
+    skos:prefLabel "host government" .
+
+exstat: a skos:ConceptScheme ;
+    skos:prefLabel "resolution statuses" .
+
+exstat:resolved a skos:Concept ;
+    skos:inScheme exstat: ;
+    skos:notation "resolved" ;
+    skos:prefLabel "resolved" .
+
+exstat:unresolved a skos:Concept ;
+    skos:inScheme exstat: ;
+    skos:notation "unresolved" ;
+    skos:prefLabel "unresolved" .
+
+exstat:unresolvable_candidate_set a skos:Concept ;
+    skos:inScheme exstat: ;
+    skos:notation "unresolvable_candidate_set" ;
+    skos:prefLabel "unresolvable: candidate set" .
+
+explan: a skos:ConceptScheme ;
+    skos:prefLabel "plan types" .
+
+explan:codebook a skos:Concept ;
+    skos:inScheme explan: ;
+    skos:notation "codebook" ;
+    skos:prefLabel "codebook edition" .
+
+explan:prompt_specification a skos:Concept ;
+    skos:inScheme explan: ;
+    skos:notation "prompt_specification" ;
+    skos:prefLabel "prompt specification" .
+
+extype: a skos:ConceptScheme ;
+    skos:prefLabel "engagement types" .
+
+extype:meeting a skos:Concept ;
+    skos:inScheme extype: ;
+    skos:notation "meeting" ;
+    skos:prefLabel "meeting" .

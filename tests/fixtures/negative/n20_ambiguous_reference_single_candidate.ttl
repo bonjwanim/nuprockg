@@ -1,0 +1,41 @@
+# NuProc 0.9.0 SHACL test graph negative/n20_ambiguous_reference_single_candidate.ttl
+# Synthetic: no real organization, article or event.
+# Validate it merged with ontology/nuproc-core.ttl, nuproc-codebook.ttl and nuproc-alignments.ttl against
+# ontology/nuproc-shapes.ttl; tests/run_fixtures.py does this for every test graph (tests/README.md).
+# Expected with all shapes: reported by AmbiguousReferenceCandidateShape (Violation).
+# Expected with the pattern-layer shapes only: reported by AmbiguousReferenceCandidateShape only.
+
+@prefix nuproc:  <https://w3id.org/nuproc/ns#> .
+@prefix channel: <https://w3id.org/nuproc/channel/> .
+@prefix etype:   <https://w3id.org/nuproc/eventtype/> .
+@prefix prole:   <https://w3id.org/nuproc/playerrole/> .
+@prefix crole:   <https://w3id.org/nuproc/counterpartyrole/> .
+@prefix srole:   <https://w3id.org/nuproc/siderole/> .
+@prefix rstat:   <https://w3id.org/nuproc/resolutionstatus/> .
+@prefix otype:   <https://w3id.org/nuproc/organizationtype/> .
+@prefix erole:   <https://w3id.org/nuproc/engagementrole/> .
+@prefix eident:  <https://w3id.org/nuproc/engagementidentification/> .
+@prefix ostat:   <https://w3id.org/nuproc/occurrencestatus/> .
+@prefix obo:     <http://purl.obolibrary.org/obo/> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+@prefix prov:    <http://www.w3.org/ns/prov#> .
+@prefix dqv:     <http://www.w3.org/ns/dqv#> .
+@prefix time:    <http://www.w3.org/2006/time#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ex:      <https://w3id.org/nuproc/fixture/> .
+
+ex:n20 a nuproc:AmbiguousOrganizationReference ;
+    nuproc:hasResolutionStatus rstat:unresolvable_candidate_set ;
+    nuproc:hasCandidateLabel "only one candidate" .
+
+<https://w3id.org/nuproc/fixture/n20> nuproc:hasFinalResolutionClaim <https://w3id.org/nuproc/fixture/n20_res> .
+<https://w3id.org/nuproc/fixture/n20_res> a nuproc:ResolutionClaim ;
+    nuproc:resolutionClaimAbout <https://w3id.org/nuproc/fixture/n20> ;
+    nuproc:claimedResolutionStatus <https://w3id.org/nuproc/resolutionstatus/unresolvable_candidate_set> ;
+    prov:wasGeneratedBy ex:fxResJudging .
+ex:fxResJudging a prov:Activity ;
+    prov:qualifiedAssociation ex:fxResJudging_as .
+ex:fxResJudging_as a prov:Association ; prov:agent ex:fxResJudge ; prov:hadPlan ex:fxResRules .
+ex:fxResJudge a prov:Person .
+ex:fxResRules a prov:Plan ; rdfs:label "reference resolution rules (synthetic)"@en .

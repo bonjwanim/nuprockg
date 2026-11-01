@@ -1,0 +1,32 @@
+PREFIX nuproc:  <https://w3id.org/nuproc/ns#>
+PREFIX skos:    <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX prov:    <http://www.w3.org/ns/prov#>
+PREFIX dqv:     <http://www.w3.org/ns/dqv#>
+PREFIX time:    <http://www.w3.org/2006/time#>
+PREFIX xsd:     <http://www.w3.org/2001/XMLSchema#>
+PREFIX channel: <https://w3id.org/nuproc/channel/>
+PREFIX prole:   <https://w3id.org/nuproc/playerrole/>
+PREFIX crole:   <https://w3id.org/nuproc/counterpartyrole/>
+PREFIX srole:   <https://w3id.org/nuproc/siderole/>
+PREFIX erole:   <https://w3id.org/nuproc/engagementrole/>
+PREFIX obo:     <http://purl.obolibrary.org/obo/>
+PREFIX rstat:   <https://w3id.org/nuproc/resolutionstatus/>
+
+# G5 (optional) Roles by organisation: resolved organisation, organisation type and engagement role, for events
+#   whose export-side participant is a resolved organisation; an event is counted once per role, and an event with
+#   no role appears as '?'. Organisation-level aggregates only; no empirical reading is offered.
+# G5 (선택) 관여 역할 축 — 해소된 조직 × 조직 유형 × 관여 역할 (ADR-0040 §3)
+# v0.8: 역할은 여럿일 수 있으므로 한 사건이 역할마다 한 번 센다 (행 합 ≠ 사건 수). 역할이 없는 사건은 '?'.
+# 수출 측 참여자가 해소된 조직인 사건만 본다. 경험적 해석을 붙이지 않는다 — 조직 수준 집계만 낸다.
+SELECT ?organisation ?organisationType ?engagementRole (COUNT(DISTINCT ?ev) AS ?nEvents)
+WHERE {
+  ?ev a nuproc:EngagementCluster ; nuproc:hasParticipation ?p .
+  ?p  nuproc:hasSide srole:export_side ; nuproc:namesParticipant ?o .
+  ?o  nuproc:hasOrganizationType ?ot . ?ot skos:notation ?organisationType .
+  OPTIONAL { ?p nuproc:hasEngagementRole ?rc . ?rc skos:notation ?rn }
+  BIND(COALESCE(?rn, "?") AS ?engagementRole)
+  BIND(STRAFTER(STR(?o), "/org/") AS ?organisation)
+}
+GROUP BY ?organisation ?organisationType ?engagementRole
+ORDER BY ?organisation ?engagementRole

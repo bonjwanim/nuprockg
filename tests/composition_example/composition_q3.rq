@@ -1,0 +1,24 @@
+PREFIX sem:    <http://semanticweb.cs.vu.nl/2009/11/sem/>
+PREFIX rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX skos:   <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX exrole: <https://example.org/ext/role/>
+
+# Q3 (composition). In which engagements did an organisation take two or more roles?
+# A role is a role type of the builder's role scheme on a participation node whose rdf:value (the actor) is an
+# organisation; side and counterparty codes belong to other schemes and are not counted.
+SELECT ?engagement ?organisation (COUNT(DISTINCT ?v) AS ?nRoles)
+       (GROUP_CONCAT(DISTINCT ?role; SEPARATOR=" | ") AS ?roles)
+WHERE {
+  ?e   a sem:Event ;
+       sem:hasActor ?p .
+  ?p   rdf:value ?org ;
+       sem:roleType ?v .
+  ?v   skos:inScheme exrole: ;
+       skos:notation ?role .
+  ?org rdfs:label ?organisation .
+  BIND(STRAFTER(STR(?e), "https://example.org/syn/") AS ?engagement)
+}
+GROUP BY ?engagement ?organisation
+HAVING (COUNT(DISTINCT ?v) >= 2)
+ORDER BY ?engagement ?organisation

@@ -1,0 +1,24 @@
+PREFIX nuproc: <https://w3id.org/nuproc/ns#>
+PREFIX srole:  <https://w3id.org/nuproc/siderole/>
+PREFIX skos:   <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX syn:    <https://example.org/syn/>
+
+# Q1 (NuProc). Which organisations could the actor of engagement A be, and is the reference resolved?
+# The engagement is reached from the cluster that reports it; the export-side participation of that cluster points
+# to the reference used for its actor, whatever its resolution status.
+SELECT ?engagement ?mention ?status ?candidate ?resolvedTo
+WHERE {
+  VALUES ?e { syn:engagement-A }
+  ?k   nuproc:reportsEngagement ?e ;
+       nuproc:hasParticipation ?p .
+  ?p   nuproc:hasSide srole:export_side ;
+       nuproc:hasActorReference ?ref .
+  ?ref nuproc:hasSourceMention ?mention ;
+       nuproc:hasResolutionStatus ?st .
+  ?st  skos:notation ?status .
+  OPTIONAL { ?ref nuproc:hasCandidateOrganization ?c . ?c rdfs:label ?candidate }
+  OPTIONAL { ?ref nuproc:resolvedTo ?o . ?o rdfs:label ?resolvedTo }
+  BIND(STRAFTER(STR(?e), "https://example.org/syn/") AS ?engagement)
+}
+ORDER BY ?candidate

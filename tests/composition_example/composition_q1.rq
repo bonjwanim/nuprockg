@@ -1,0 +1,26 @@
+PREFIX sem:    <http://semanticweb.cs.vu.nl/2009/11/sem/>
+PREFIX gaf:    <http://groundedannotationframework.org/gaf#>
+PREFIX prov:   <http://www.w3.org/ns/prov#>
+PREFIX skos:   <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX ex:     <https://example.org/ext#>
+PREFIX exside: <https://example.org/ext/side/>
+PREFIX syn:    <https://example.org/syn/>
+
+# Q1 (composition). Which organisations could the actor of engagement A be, and is the reference resolved?
+# The export-side participation node of the engagement points to the mention used for its actor (ad hoc); the
+# candidates and the status are ad-hoc properties of the mention; a resolved mention denotes the organisation (GAF).
+SELECT ?engagement ?mention ?status ?candidate ?resolvedTo
+WHERE {
+  VALUES ?e { syn:engagement-A }
+  ?e   sem:hasActor ?p .
+  ?p   sem:roleType exside:export_side ;
+       ex:actorReference ?ref .
+  ?ref prov:value ?mention ;
+       ex:resolutionStatus ?st .
+  ?st  skos:notation ?status .
+  OPTIONAL { ?ref ex:candidate ?c . ?c rdfs:label ?candidate }
+  OPTIONAL { ?ref gaf:denotes ?o . ?o rdfs:label ?resolvedTo }
+  BIND(STRAFTER(STR(?e), "https://example.org/syn/") AS ?engagement)
+}
+ORDER BY ?candidate

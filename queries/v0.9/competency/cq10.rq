@@ -1,0 +1,32 @@
+PREFIX nuproc:  <https://w3id.org/nuproc/ns#>
+PREFIX skos:    <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX prov:    <http://www.w3.org/ns/prov#>
+PREFIX dqv:     <http://www.w3.org/ns/dqv#>
+PREFIX time:    <http://www.w3.org/2006/time#>
+PREFIX xsd:     <http://www.w3.org/2001/XMLSchema#>
+PREFIX channel: <https://w3id.org/nuproc/channel/>
+PREFIX prole:   <https://w3id.org/nuproc/playerrole/>
+PREFIX crole:   <https://w3id.org/nuproc/counterpartyrole/>
+PREFIX srole:   <https://w3id.org/nuproc/siderole/>
+PREFIX erole:   <https://w3id.org/nuproc/engagementrole/>
+PREFIX obo:     <http://purl.obolibrary.org/obo/>
+PREFIX rstat:   <https://w3id.org/nuproc/resolutionstatus/>
+
+# CQ10 (consistency) Are there events whose event-type code carries a channel prefix that disagrees with the event's
+#   channel?
+# CQ10 (C) primary_code 의 채널 접두사가 사건의 채널과 불일치하는 사건이 있는가?
+# 기대(ORSD §4): design 세트에서 0건. SHACL R6 와 같은 규칙이다.
+# 'Unknown' 은 구성상 접두사를 갖지 않으므로 양쪽 모두 제외한다 (R6 와 동일).
+SELECT ?channel ?eventType (COUNT(DISTINCT ?ev) AS ?n)
+WHERE {
+  ?ev a nuproc:EngagementCluster ;
+      nuproc:hasEngagementChannel ?c ;
+      nuproc:hasEventType ?e .
+  ?c skos:notation ?channel .
+  ?e skos:notation ?eventType .
+  FILTER( STR(?channel) != "Unknown" && STR(?eventType) != "Unknown" )
+  FILTER( ! STRSTARTS( STR(?eventType), CONCAT(STR(?channel), "-") ) )
+}
+GROUP BY ?channel ?eventType
+ORDER BY ?channel ?eventType

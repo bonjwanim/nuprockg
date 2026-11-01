@@ -1,0 +1,36 @@
+PREFIX nuproc:  <https://w3id.org/nuproc/ns#>
+PREFIX srole:   <https://w3id.org/nuproc/siderole/>
+PREFIX obo:     <http://purl.obolibrary.org/obo/>
+
+# G7 (worked example: a candidate set is not a participant).
+# Export-side participations by the referential kind and the resolution status of their reference: how many name a
+# participant (nuproc:namesParticipant), how many candidate organizations their references list, and how many of
+# the engagements their clusters report have the export-side participant asserted (RO has participant).
+# The candidates of an ambiguous reference are the organizations the source may mean; it does not single one out, so
+# a candidate is neither the participant of the participation nor a participant of the engagement. A query that took
+# the candidates as participants would count organizations the source did not name.
+# Aggregate only: no article, event or engagement identifier.
+SELECT ?referenceKind ?resolution
+       (COUNT(DISTINCT ?p) AS ?nParticipations)
+       (COUNT(DISTINCT ?named) AS ?nNamingParticipant)
+       (COUNT(DISTINCT ?cand) AS ?nCandidateOrganizations)
+       (COUNT(DISTINCT ?e) AS ?nEngagements)
+       (COUNT(DISTINCT ?eWith) AS ?nEngagementsWithParticipant)
+WHERE {
+  ?k   nuproc:hasParticipation ?p .
+  ?p   nuproc:hasSide srole:export_side .
+  { ?p nuproc:hasActorReference ?ref } UNION { ?p nuproc:hasParticipantReference ?ref }
+  ?ref a ?kind ;
+       nuproc:hasResolutionStatus ?st .
+  FILTER( STRSTARTS(STR(?kind), STR(nuproc:)) )
+  OPTIONAL { ?p nuproc:namesParticipant ?o . BIND(?p AS ?named) }
+  OPTIONAL { ?ref nuproc:hasCandidateOrganization ?cand }
+  OPTIONAL {
+    ?k nuproc:reportsEngagement ?e .
+    OPTIONAL { ?p nuproc:namesParticipant ?o2 . ?e obo:RO_0000057 ?o2 . BIND(?e AS ?eWith) }
+  }
+  BIND( STRAFTER(STR(?kind), STR(nuproc:)) AS ?referenceKind )
+  BIND( REPLACE(STR(?st), "^.*/", "") AS ?resolution )
+}
+GROUP BY ?referenceKind ?resolution
+ORDER BY ?referenceKind ?resolution

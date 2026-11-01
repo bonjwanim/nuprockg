@@ -1,0 +1,40 @@
+PREFIX nuproc:  <https://w3id.org/nuproc/ns#>
+PREFIX skos:    <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX prov:    <http://www.w3.org/ns/prov#>
+PREFIX dqv:     <http://www.w3.org/ns/dqv#>
+PREFIX time:    <http://www.w3.org/2006/time#>
+PREFIX xsd:     <http://www.w3.org/2001/XMLSchema#>
+PREFIX channel: <https://w3id.org/nuproc/channel/>
+PREFIX prole:   <https://w3id.org/nuproc/playerrole/>
+PREFIX crole:   <https://w3id.org/nuproc/counterpartyrole/>
+PREFIX srole:   <https://w3id.org/nuproc/siderole/>
+PREFIX erole:   <https://w3id.org/nuproc/engagementrole/>
+PREFIX obo:     <http://purl.obolibrary.org/obo/>
+PREFIX rstat:   <https://w3id.org/nuproc/resolutionstatus/>
+
+# G2 (required) Organisations that take part in more than one case: the cases, the coded categories each held and
+#   its event count, grouped by the resolved organisation rather than by its label.
+# G2 (필수) 같은 조직의 cross-case 참여와 역할 변화
+# 평면 표에서는 사례별 파일이 갈려 있어 조직 동일성을 사람이 이어 붙여야 한다.
+# ORSD §5 — UnnamedActorReference 는 배제한다 (동일성이 확정된 조직에만 의미가 있다).
+# v0.8 — 조직 IRI 로 묶는다 (CQ14 와 같은 고침 — 라벨이 같은 서로 다른 조직을 합치지 않는다).
+SELECT (SAMPLE(?label) AS ?orgLabel) ?orgType (COUNT(DISTINCT ?case) AS ?nCases)
+       (COUNT(DISTINCT ?role) AS ?nRoles)
+       (GROUP_CONCAT(DISTINCT ?case; separator=" · ") AS ?cases)
+       (GROUP_CONCAT(DISTINCT ?role; separator=" · ") AS ?roles)
+       (COUNT(DISTINCT ?ev) AS ?nEvents)
+WHERE {
+  ?ev a nuproc:EngagementCluster ;
+      nuproc:concernsCase ?c ;
+      nuproc:hasParticipation ?p .
+  ?p  nuproc:hasSide srole:export_side ;
+      nuproc:namesParticipant ?org .
+  ?org rdfs:label ?label .
+  ?c   rdfs:label ?case .
+  OPTIONAL { ?org nuproc:hasOrganizationType ?ot . ?ot skos:notation ?orgType }
+  OPTIONAL { ?p   nuproc:hasCodedPlayerCategory ?pr .       ?pr skos:notation ?role }
+}
+GROUP BY ?org ?orgType
+HAVING( COUNT(DISTINCT ?case) >= 2 )
+ORDER BY DESC(?nCases) DESC(?nRoles) ?orgLabel

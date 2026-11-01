@@ -1,0 +1,45 @@
+PREFIX nuproc:  <https://w3id.org/nuproc/ns#>
+PREFIX skos:    <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX prov:    <http://www.w3.org/ns/prov#>
+PREFIX dqv:     <http://www.w3.org/ns/dqv#>
+PREFIX time:    <http://www.w3.org/2006/time#>
+PREFIX xsd:     <http://www.w3.org/2001/XMLSchema#>
+PREFIX channel: <https://w3id.org/nuproc/channel/>
+PREFIX prole:   <https://w3id.org/nuproc/playerrole/>
+PREFIX crole:   <https://w3id.org/nuproc/counterpartyrole/>
+PREFIX srole:   <https://w3id.org/nuproc/siderole/>
+PREFIX erole:   <https://w3id.org/nuproc/engagementrole/>
+PREFIX obo:     <http://purl.obolibrary.org/obo/>
+PREFIX rstat:   <https://w3id.org/nuproc/resolutionstatus/>
+
+# CQ02 (representation) Which organisation is on the export side of an event, and what is its type? (The event's
+#   role facets are returned in the same row.)
+# CQ02 (R) 한 사건의 수출 측 조직은 무엇이며 그 조직의 유형은 무엇인가?
+# ORSD §5 — UnnamedActorReference 는 배제한다 (유형이 없는 참조는 대상이 아니다).
+# 배제 규모는 cq04 가 센다. 후보 집합으로 남은 25건 (0.9.0) 은 조직이 아니라 모호한 조직 참조이므로
+# (ADR-0026) hasParticipantReference 경로에 있고 여기서 빠진다.
+# hasCodedPlayerCategory(코딩 산출)과 hasOrganizationType(행위자 레지스트리에서 연구자가 확정한 값)은
+# 서로 다른 열로 나온다 — 같은 것으로 제시하지 않는다 (ADR-0014).
+# v0.8 (ADR-0040 §3): 관여 역할은 참여에 여럿일 수 있다 — 한 행에 모아 (GROUP_CONCAT) 사건당 한 행을 지킨다.
+#   역할이 없는 사건 ('?') 은 빈 문자열이다. v0.5~v0.7 의 기능 열 (값 하나) 을 대신한다.
+# 2026-10-14 첫 실행 뒤 수정 — rdflib 가 역할 없는 사건의 묶음에서 묶이지 않은 ?role 에 GROUP_CONCAT 을 쓰다
+#   NotBoundError 로 멈췄다 (질의가 결과를 내지 못했다). SPARQL 1.1 의 집계는 묶이지 않은 값을 건너뛰고 빈 묶음에
+#   빈 문자열을 낸다 — COALESCE 는 그 뜻을 그대로 적은 것이다. 기대결과는 건드리지 않았다 (DERIVATION.md §실행 후).
+# v0.8 (ADR-0040 §5): 후보 집합 표기가 사건마다 해소되므로 조직 참여는 570 에서 늘어난다.
+# v0.5: 해소 상태는 조직이 아니라 지칭에 있다 (ADR-0026 §3 · ADR-0031). v0.4 의 조직 경로는
+#   늘 비어 있었다. 참여당 지칭은 최대 하나이므로 역시 행 수가 늘지 않는다.
+SELECT ?ev ?orgLabel ?orgType ?playerRole (GROUP_CONCAT(DISTINCT COALESCE(?role, ""); separator="|") AS ?engagementRoles) ?resolution
+WHERE {
+  ?ev a nuproc:EngagementCluster ;
+      nuproc:hasParticipation ?p .
+  ?p  nuproc:hasSide srole:export_side ;
+      nuproc:namesParticipant ?org .
+  ?org rdfs:label ?orgLabel .
+  OPTIONAL { ?org nuproc:hasOrganizationType ?ot . ?ot skos:notation ?orgType }
+  OPTIONAL { ?p   nuproc:hasCodedPlayerCategory ?pr .       ?pr skos:notation ?playerRole }
+  OPTIONAL { ?p   nuproc:hasEngagementRole ?er .           ?er skos:notation ?role }
+  OPTIONAL { ?p   nuproc:hasActorReference ?ref . ?ref nuproc:hasResolutionStatus ?rs . ?rs skos:notation ?resolution }
+}
+GROUP BY ?ev ?orgLabel ?orgType ?playerRole ?resolution
+ORDER BY ?ev

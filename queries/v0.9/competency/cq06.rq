@@ -1,0 +1,27 @@
+PREFIX nuproc:  <https://w3id.org/nuproc/ns#>
+PREFIX skos:    <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX prov:    <http://www.w3.org/ns/prov#>
+PREFIX dqv:     <http://www.w3.org/ns/dqv#>
+PREFIX time:    <http://www.w3.org/2006/time#>
+PREFIX xsd:     <http://www.w3.org/2001/XMLSchema#>
+PREFIX channel: <https://w3id.org/nuproc/channel/>
+PREFIX prole:   <https://w3id.org/nuproc/playerrole/>
+PREFIX crole:   <https://w3id.org/nuproc/counterpartyrole/>
+PREFIX srole:   <https://w3id.org/nuproc/siderole/>
+PREFIX erole:   <https://w3id.org/nuproc/engagementrole/>
+PREFIX obo:     <http://purl.obolibrary.org/obo/>
+PREFIX rstat:   <https://w3id.org/nuproc/resolutionstatus/>
+
+# CQ06 (provenance) On which articles does an event rest, and how many records did each article provide?
+# CQ06 (P) 한 사건은 어떤 기사들에 근거하며 각 기사는 몇 건의 기록을 제공했는가?
+# 기대(ORSD §4): 기록 총계가 design 5,228 과 일치.
+SELECT ?ev (COUNT(?rec) AS ?nRecords) (COUNT(DISTINCT ?article) AS ?nArticles)
+WHERE {
+  ?ev  a nuproc:EngagementCluster .
+  ?rec a nuproc:EventRecord ;
+       nuproc:describesEvent ?ev ;
+       prov:wasDerivedFrom ?article .
+}
+GROUP BY ?ev
+ORDER BY ?ev

@@ -1,0 +1,53 @@
+PREFIX nuproc:  <https://w3id.org/nuproc/ns#>
+PREFIX skos:    <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX prov:    <http://www.w3.org/ns/prov#>
+PREFIX dqv:     <http://www.w3.org/ns/dqv#>
+PREFIX time:    <http://www.w3.org/2006/time#>
+PREFIX xsd:     <http://www.w3.org/2001/XMLSchema#>
+PREFIX channel: <https://w3id.org/nuproc/channel/>
+PREFIX prole:   <https://w3id.org/nuproc/playerrole/>
+PREFIX crole:   <https://w3id.org/nuproc/counterpartyrole/>
+PREFIX srole:   <https://w3id.org/nuproc/siderole/>
+PREFIX erole:   <https://w3id.org/nuproc/engagementrole/>
+PREFIX obo:     <http://purl.obolibrary.org/obo/>
+PREFIX rstat:   <https://w3id.org/nuproc/resolutionstatus/>
+PREFIX ostat:   <https://w3id.org/nuproc/occurrencestatus/>
+
+# CQ18 (representation) Which participant organisations realized two or more roles in one engagement, which roles,
+#   and was the engagement's identification confirmed by a person (verified) or does it rest on the cluster key alone
+#   (key-based, provisional)?
+# CQ18 (R · 실세계 층, v0.8 신설 — ADR-0040 §1) 한 관여에서 둘 이상의 역할을 실현한 참여 조직은 어느 것이며, 그 역할은 무엇이고,
+# 그 관여의 식별은 사람이 확인했는가 (verified) 아니면 군집 키뿐인가 (key_based — 잠정)?
+# 실세계 층만 걷는다: 관여 (BFO process) — has participant (RO) → 조직, 그리고 그 조직의 역할 — realized in → 같은 관여.
+# 역할은 사례 수준이다 (v0.8 — 담지 조직, 사례, 종류): 관여 하나가 그 조직의 사례 수준 역할 여럿을 실현할 수 있다.
+# 측 역할 (ExportSideRole · HostSideRole) 은 세지 않는다 — facet 만 센다. 사례 이름은 관여의 사례에서 온다.
+# **개별 관여 식별자를 내지 않는다** — 관여 IRI 는 군집의 키 해시를 담는 record 수준 자료다 ((iii)층). 조직 × 사례 ×
+# 역할 조합 × 식별 상태 수준으로 센다.
+# v0.9 (ADR-0041 §2) — 실세계 층의 관여는 최종 발생 상태가 occurred 이고 병합되지 않은 군집만 보도한다.
+# 그래서 이 질의는 발생한 관여만 센다 — 보도 군집의 발생 상태를 열로 낸다 (모두 occurred 여야 한다).
+# v0.8 — **관여는 보도 군집이 식별한 것이다.** 군집 규칙은 같은 달의 서로 다른 회의를 한 군집으로 묶을 수 있으므로,
+# 관여마다 그것을 보도한 군집의 식별 상태를 열로 낸다. 한 관여의 여러 역할에 관한 답은 verified 행이고, key_based 행은 '한 보도
+# 군집에서 관측된 여러 역할' 로 읽는 잠정 결과다. 조직은 IRI 로 묶는다 (라벨이 같은 서로 다른 조직을 합치지 않는다).
+SELECT ?case (SAMPLE(?label) AS ?orgLabel) ?roleKinds ?identification ?occurrence (COUNT(DISTINCT ?e) AS ?nEngagements)
+WHERE {
+  {
+    SELECT ?e ?o (GROUP_CONCAT(DISTINCT ?kind; separator="|") AS ?roleKinds) (COUNT(DISTINCT ?k) AS ?nKinds)
+    WHERE {
+      ?e a nuproc:Engagement ; obo:RO_0000057 ?o .
+      ?r obo:RO_0000081 ?o ; obo:BFO_0000054 ?e ; a ?k .
+      ?k rdfs:subClassOf nuproc:EngagementRole .
+      FILTER(?k NOT IN (nuproc:ExportSideRole, nuproc:HostSideRole))
+      BIND(STRAFTER(STR(?k), "#") AS ?kind)
+    }
+    GROUP BY ?e ?o
+  }
+  FILTER(?nKinds >= 2)
+  ?e nuproc:concernsCase ?c . ?c rdfs:label ?case .
+  ?o rdfs:label ?label .
+  ?cluster nuproc:reportsEngagement ?e ; nuproc:hasEngagementIdentification ?st .
+  ?st skos:notation ?identification .
+  ?cluster nuproc:hasOccurrenceStatus ?os . ?os skos:notation ?occurrence .
+}
+GROUP BY ?case ?o ?roleKinds ?identification ?occurrence
+ORDER BY ?identification ?case ?orgLabel ?roleKinds

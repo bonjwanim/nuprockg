@@ -1,0 +1,32 @@
+PREFIX nuproc:  <https://w3id.org/nuproc/ns#>
+PREFIX srole:   <https://w3id.org/nuproc/siderole/>
+
+# G9 (worked example: a planned, denied or unclear engagement is not counted as one that took place).
+# Clusters by their occurrence status and identification status: the final role claims of their export-side
+# participations, how many of those claims support a role in the real-world layer (nuproc:supportedByClaim), and how
+# many engagements the clusters report. Only a cluster whose occurrence status is occurred, and that is not judged to
+# bring several engagements together (merged), reports an engagement; only the claims of a cluster that occurred
+# support roles. A query that counted coded role values would count the roles claimed for a planned engagement as
+# roles held in one that took place.
+# Aggregate only: no article, event or engagement identifier.
+SELECT ?occurrence ?identification
+       (COUNT(DISTINCT ?k) AS ?nClusters)
+       (COUNT(DISTINCT ?c) AS ?nFinalRoleClaims)
+       (COUNT(DISTINCT ?cs) AS ?nClaimsSupportingARole)
+       (COUNT(DISTINCT ?e) AS ?nEngagements)
+WHERE {
+  ?k  a nuproc:EngagementCluster ;
+      nuproc:hasOccurrenceStatus ?os ;
+      nuproc:hasEngagementIdentification ?is ;
+      nuproc:hasParticipation ?p .
+  ?p  nuproc:hasSide srole:export_side .
+  OPTIONAL {
+    ?p nuproc:hasFinalRoleClaim ?c .
+    OPTIONAL { ?r nuproc:supportedByClaim ?c . BIND(?c AS ?cs) }
+  }
+  OPTIONAL { ?k nuproc:reportsEngagement ?e }
+  BIND( REPLACE(STR(?os), "^.*/", "") AS ?occurrence )
+  BIND( REPLACE(STR(?is), "^.*/", "") AS ?identification )
+}
+GROUP BY ?occurrence ?identification
+ORDER BY ?occurrence ?identification

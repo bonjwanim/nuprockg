@@ -1,0 +1,50 @@
+PREFIX nuproc:  <https://w3id.org/nuproc/ns#>
+PREFIX rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX prov:    <http://www.w3.org/ns/prov#>
+
+# G8 (worked example: tracing a judgement that was revised or derived).
+# For every asserted value whose final claim revises an earlier claim (prov:wasRevisionOf) or is derived from other
+# claims (prov:wasDerivedFrom): the judgement, the asserted value and the activity of the final claim, and the value
+# and activity of the earlier claim. Four judgements are claims in NuProc: the resolution of a reference, the
+# occurrence of a reported engagement, the identification of an engagement by a cluster, and an engagement role.
+# The asserted value is the value of the final claim; the earlier claim stays in the graph, so a revised judgement can
+# be traced to the claim it replaced and its activity instead of being overwritten.
+# Aggregate only: no article, event, reference or claim identifier.
+SELECT ?judgement ?assertedValue ?finalClaimBy ?link ?earlierValue ?earlierClaimBy
+       (COUNT(DISTINCT ?final) AS ?nFinalClaims)
+WHERE {
+  {
+    ?x nuproc:hasFinalResolutionClaim ?final .
+    ?final nuproc:claimedResolutionStatus ?v .
+    ?old   nuproc:claimedResolutionStatus ?ov .
+    OPTIONAL { ?old nuproc:claimedResolvedTo ?oorg . ?oorg rdfs:label ?oorgLabel }
+    BIND("reference resolution" AS ?judgement)
+  } UNION {
+    ?x nuproc:hasFinalOccurrenceClaim ?final .
+    ?final nuproc:claimedOccurrence ?v .
+    ?old   nuproc:claimedOccurrence ?ov .
+    BIND("engagement occurrence" AS ?judgement)
+  } UNION {
+    ?x nuproc:hasFinalIdentificationClaim ?final .
+    ?final nuproc:claimedIdentification ?v .
+    ?old   nuproc:claimedIdentification ?ov .
+    BIND("engagement identification" AS ?judgement)
+  } UNION {
+    ?x nuproc:hasFinalRoleClaim ?final .
+    ?final nuproc:claimedRole ?v .
+    ?old   nuproc:claimedRole ?ov .
+    BIND("engagement role" AS ?judgement)
+  }
+  { ?final prov:wasRevisionOf ?old . BIND("revises" AS ?link) }
+  UNION
+  { ?final prov:wasDerivedFrom ?old . BIND("derived from" AS ?link) }
+  ?final prov:wasGeneratedBy ?a1 .
+  ?old   prov:wasGeneratedBy ?a0 .
+  BIND( REPLACE(STR(?v), "^.*/", "") AS ?assertedValue )
+  BIND( IF(BOUND(?oorgLabel), CONCAT(REPLACE(STR(?ov), "^.*/", ""), " to ", STR(?oorgLabel)),
+           REPLACE(STR(?ov), "^.*/", "")) AS ?earlierValue )
+  BIND( STRAFTER(STR(?a1), "/activity/") AS ?finalClaimBy )
+  BIND( STRAFTER(STR(?a0), "/activity/") AS ?earlierClaimBy )
+}
+GROUP BY ?judgement ?assertedValue ?finalClaimBy ?link ?earlierValue ?earlierClaimBy
+ORDER BY ?judgement ?assertedValue ?link ?earlierClaimBy

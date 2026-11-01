@@ -1,0 +1,34 @@
+PREFIX nuproc:  <https://w3id.org/nuproc/ns#>
+PREFIX skos:    <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX prov:    <http://www.w3.org/ns/prov#>
+PREFIX dqv:     <http://www.w3.org/ns/dqv#>
+PREFIX time:    <http://www.w3.org/2006/time#>
+PREFIX xsd:     <http://www.w3.org/2001/XMLSchema#>
+PREFIX channel: <https://w3id.org/nuproc/channel/>
+PREFIX prole:   <https://w3id.org/nuproc/playerrole/>
+PREFIX crole:   <https://w3id.org/nuproc/counterpartyrole/>
+PREFIX srole:   <https://w3id.org/nuproc/siderole/>
+PREFIX erole:   <https://w3id.org/nuproc/engagementrole/>
+PREFIX obo:     <http://purl.obolibrary.org/obo/>
+PREFIX rstat:   <https://w3id.org/nuproc/resolutionstatus/>
+
+# CQ15 (multi-hop) Can one go from an article to an event, its participation, the organisation, and an event of
+#   another case?
+# CQ15 (M) 한 기사에서 출발해 사건 -> 참여 -> 조직 -> 다른 사례의 사건까지 도달할 수 있는가?
+# 기대(ORSD §4): 경로가 끊기지 않고 도달. (ii)층 비공개 상태에서도 성립한다 —
+# SourceArticle 을 내부 안정 ID 로만 노출해도 경로 구조는 보존된다.
+# **집계로만 보고한다** — 개별 기사·사건 식별자를 내지 않는다 ((iii)층).
+SELECT ?caseFrom ?caseTo (COUNT(DISTINCT ?art) AS ?nArticles) (COUNT(DISTINCT ?org) AS ?nOrgs)
+WHERE {
+  ?rec1 a nuproc:EventRecord ; prov:wasDerivedFrom ?art ; nuproc:describesEvent ?ev1 .
+  ?ev1  nuproc:concernsCase ?c1 ; nuproc:hasParticipation ?p1 .
+  ?p1   nuproc:namesParticipant ?org .
+  ?ev2  nuproc:hasParticipation ?p2 ; nuproc:concernsCase ?c2 .
+  ?p2   nuproc:namesParticipant ?org .
+  ?c1 rdfs:label ?caseFrom .
+  ?c2 rdfs:label ?caseTo .
+  FILTER( ?c1 != ?c2 )
+}
+GROUP BY ?caseFrom ?caseTo
+ORDER BY ?caseFrom ?caseTo

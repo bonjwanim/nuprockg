@@ -1,0 +1,49 @@
+PREFIX nuproc:  <https://w3id.org/nuproc/ns#>
+PREFIX skos:    <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX prov:    <http://www.w3.org/ns/prov#>
+PREFIX dqv:     <http://www.w3.org/ns/dqv#>
+PREFIX time:    <http://www.w3.org/2006/time#>
+PREFIX xsd:     <http://www.w3.org/2001/XMLSchema#>
+PREFIX channel: <https://w3id.org/nuproc/channel/>
+PREFIX prole:   <https://w3id.org/nuproc/playerrole/>
+PREFIX crole:   <https://w3id.org/nuproc/counterpartyrole/>
+PREFIX srole:   <https://w3id.org/nuproc/siderole/>
+PREFIX erole:   <https://w3id.org/nuproc/engagementrole/>
+PREFIX obo:     <http://purl.obolibrary.org/obo/>
+PREFIX rstat:   <https://w3id.org/nuproc/resolutionstatus/>
+
+# CQ11 (consistency) Where the owner's state-owned enterprise is the counterparty, is it recorded whether it acted
+#   as an evaluation and selection gateway or as a transaction counterparty?
+# CQ11 (C) 사업주 SOE 가 상대인 사건에서 그 SOE 가 평가·선정 관문으로 행위했는지
+#          거래 상대로 행위했는지 판정되어 있는가?
+# 기대(ORSD §4, 2026-08-15 정정): design 252건이 10개 primary_code 에 분포
+#   B2G-2 144 · B2G-1 38 · B2B-1 22 · B2B-3 16 · B2G-3 12 · B2B-4 7 · G2G-3 5 ·
+#   B2G-4 4 · B2G-Other 2 · B2B-2 2. 10개 코드 전부에 관문/거래 매핑이 있고 미매핑 0.
+#
+# **주의 — 관문/거래 매핑은 그래프에 없다.** ADR-0020 §결정 5 가 "별도 functionalStance
+# 속성을 만들지 않고 EventType concept 에 skos:scopeNote 로 범주를 적는다" 고 했으나
+# v0.2 에 그 scopeNote 가 실려 있지 않다. 이 질의는 코드 분해까지만 답하며, 기능 범주는
+# ADR-0020 문서를 봐야 한다. 판정은 그 사실대로 기록한다 (기대결과를 고치지 않는다).
+#
+# 첫 실행 뒤 수정 (2026-08-18): OPTIONAL 로 비어 있는 ?stance 를 GROUP_CONCAT 에
+# 그대로 넣어 rdflib 가 NotBoundError 로 죽었다. COALESCE 로 빈 문자열을 묶어
+# **미매핑을 0행이 아니라 빈 값으로 드러나게** 한다 — 없는 것이 보여야 판정할 수 있다.
+SELECT ?eventType (COUNT(DISTINCT ?ev) AS ?n)
+       (GROUP_CONCAT(DISTINCT ?stanceStr; separator="|") AS ?functionalStance)
+WHERE {
+  ?ev a nuproc:EngagementCluster ;
+      nuproc:hasEventType ?e ;
+      nuproc:hasParticipation ?p .
+  ?p nuproc:hasSide srole:host_side ;
+     nuproc:hasCounterpartyRole crole:project_owner_soe .
+  ?e skos:notation ?eventType .
+  OPTIONAL {
+    ?e skos:scopeNote ?sn .
+    FILTER( CONTAINS(STR(?sn), "functional stance:") )
+    BIND( STRAFTER(STR(?sn), "functional stance:") AS ?stance )
+  }
+  BIND( COALESCE(?stance, "") AS ?stanceStr )
+}
+GROUP BY ?eventType
+ORDER BY DESC(?n)

@@ -1,0 +1,192 @@
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix dqm: <http://purl.org/dqm-vocabulary/v1/dqm#> .
+@prefix dqv: <http://www.w3.org/ns/dqv#> .
+@prefix etype: <https://w3id.org/nuproc/eventtype/> .
+@prefix nuproc: <https://w3id.org/nuproc/ns#> .
+@prefix obo: <http://purl.obolibrary.org/obo/> .
+@prefix org: <http://www.w3.org/ns/org#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix prole: <https://w3id.org/nuproc/playerrole/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sem: <http://semanticweb.cs.vu.nl/2009/11/sem/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix time: <http://www.w3.org/2006/time#> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+obo:BFO_0000054 skos:scopeNote "Reused directly by NuProc, not redefined. Usage: Relates a role to the engagement process in which it is realized; the BFO relation has realization (realized in, in RO's labels), reused directly. (EngagementRole -> Engagement)"@en ;
+    nuproc:status "direct reuse (no NuProc term minted)" .
+
+obo:RO_0000057 skos:scopeNote "Reused directly by NuProc, not redefined. Usage: Points to an organization that participated in the engagement process; the RO relation has participant, reused directly. (Engagement -> Organization)"@en ;
+    nuproc:status "direct reuse (no NuProc term minted)" .
+
+obo:RO_0000081 skos:scopeNote "Reused directly by NuProc, not redefined. Usage: Relates a role to the organization that bears it; the RO relation role of, reused directly (in RO a subproperty of characteristic of, also called inheres in). (EngagementRole -> Organization)"@en ;
+    nuproc:status "direct reuse (no NuProc term minted)" .
+
+time:hasTime skos:scopeNote "Reused directly by NuProc, not redefined. Usage: Attaches a time to an entity. (EngagementCluster / SourceArticle -> time:Instant)"@en ;
+    nuproc:status "direct reuse (no NuProc term minted)" .
+
+time:inXSDDate skos:scopeNote "Reused directly by NuProc, not redefined. Usage: A day-precision time position. The publication date of an article is at day granularity throughout the dataset."@en ;
+    nuproc:status "direct reuse (no NuProc term minted)" .
+
+time:inXSDgYearMonth skos:scopeNote "Reused directly by NuProc, not redefined. Usage: A month-precision time position. The time of an engagement activity is at month granularity throughout the dataset."@en ;
+    nuproc:status "direct reuse (no NuProc term minted)" .
+
+dqv:computedOn skos:scopeNote "Reused directly by NuProc, not redefined. Usage: Points to the data on which a quality measurement was computed. In NuProc these are the coded values that the measured coding activity produced (a prov:Entity); their generating activity gives the coding activity and the codebook version."@en ;
+    nuproc:status "direct reuse (no NuProc term minted)" .
+
+dqv:value skos:scopeNote "Reused directly by NuProc, not redefined. Usage: The value of a quality measurement."@en ;
+    nuproc:status "direct reuse (no NuProc term minted)" .
+
+org:hasMember skos:scopeNote "Reused directly by NuProc, not redefined. Usage: Points to a member organization of a group of organizations acting together as one party, such as a consortium; the W3C ORG relation, reused directly. (Organization -> Organization)"@en ;
+    nuproc:status "direct reuse (no NuProc term minted)" .
+
+org:subOrganizationOf skos:scopeNote "Reused directly by NuProc, not redefined. Usage: Points to the organization of which this organization is a sub-organization, such as a wholly owned subsidiary; the W3C ORG relation, reused directly. (Organization -> Organization)"@en ;
+    nuproc:status "direct reuse (no NuProc term minted)" .
+
+prov:agent skos:scopeNote "Reused directly by NuProc, not redefined. Usage: Points to the agent of a qualified association. (prov:Association -> prov:SoftwareAgent / prov:Person)"@en ;
+    nuproc:status "direct reuse (no NuProc term minted)" .
+
+prov:hadPlan skos:scopeNote "Reused directly by NuProc, not redefined. Usage: Points to the plan the agent followed in a qualified association: a codebook edition, a prompt specification (including a coding protocol), a validation or re-judgement protocol, or the clustering rule (MonthGranularityRule). (prov:Association -> prov:Plan)"@en ;
+    nuproc:status "direct reuse (no NuProc term minted)" .
+
+prov:qualifiedAssociation skos:scopeNote "Reused directly by NuProc, not redefined. Usage: Points to a qualified association of an activity, one per (agent, plan) pair. (CodingActivity, or another activity that followed a plan, such as an adjudication or a re-judgement -> prov:Association) An activity that made a final claim has at least one."@en ;
+    nuproc:status "direct reuse (no NuProc term minted)" .
+
+prov:wasAssociatedWith skos:scopeNote "Reused directly by NuProc, not redefined. Usage: Points to the agent that carried out an activity. (CodingActivity -> prov:SoftwareAgent or prov:Person; ValidationActivity and a person's review, adjudication and re-judgement activities (prov:Activity) -> prov:Person; the clustering (prov:Activity) -> prov:SoftwareAgent)"@en ;
+    nuproc:status "direct reuse (no NuProc term minted)" .
+
+prov:wasDerivedFrom skos:scopeNote "Reused directly by NuProc, not redefined. Usage: Points to what an entity was derived from: for a record, the article (EventRecord -> SourceArticle); for a final claim of an adjudicated human reference, the coders' claims that gave the same value (RoleClaim -> RoleClaim, OccurrenceClaim -> OccurrenceClaim, IdentificationClaim -> IdentificationClaim)."@en ;
+    nuproc:status "direct reuse (no NuProc term minted)" .
+
+prov:wasGeneratedBy skos:scopeNote "Reused directly by NuProc, not redefined. Usage: Points to the activity that generated a record, a claim or a set of coded values. (EventRecord -> CodingActivity; RoleClaim or OccurrenceClaim -> the one coding or adjudication activity that made it; ResolutionClaim -> the one judging activity that made it: the actor registry's judgement, a coding, a review or a re-judgement; IdentificationClaim -> the one activity that made it: the clustering, a coder's check, the reference judgement or a re-check; the coded values on which a quality measurement was computed (a prov:Entity, dqv:computedOn) -> the coding or adjudication activity that produced them)"@en ;
+    nuproc:status "direct reuse (no NuProc term minted)" .
+
+<https://w3id.org/nuproc/alignments> a owl:Ontology ;
+    dcterms:creator "Wonbae Park" ;
+    dcterms:description "Alignments to external vocabularies, and the record of which NuProc terms are external terms reused directly. Kept in a separate module so that the reasoning scope of the core is not widened and so that the alignment record can be cited on its own."@en ;
+    dcterms:issued "2026-08-17"^^xsd:date ;
+    dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
+    dcterms:modified "2026-10-29"^^xsd:date ;
+    dcterms:title "NuProc Ontology — external alignments"@en ;
+    vann:preferredNamespacePrefix "nuproc" ;
+    vann:preferredNamespaceUri "https://w3id.org/nuproc/ns#" ;
+    rdfs:comment "Only PROV-O and SKOS are imported. Everything else is referenced by IRI or mapped with skos:*Match. No owl:equivalentClass is asserted anywhere: an equivalence would import the other vocabulary's axioms into our consistency check by the back door. W3C ORG is pinned but not imported and is referenced from core by rdfs:subClassOf. The eProcurement Ontology core 5.2.0 (EUPL-1.2) and ITS 2.0 are referenced by IRI only, with rdfs:seeAlso and a note stating the relation; no skos:*Match to them is asserted, because a mapping proposed by a language model is not asserted without a recorded human approval. InfoLobby is not aligned: its namespace returned HTTP 403 on 2026-09-28, so its terms could not be checked, and it is cited as prior art only. The IAO information content entity is referenced by IRI only: the NuProc information entities (engagement cluster, coded participation, event record, actor reference, role claim, occurrence claim, resolution claim and identification claim) are asserted as its subclasses, and IAO is not imported, so its axioms do not enter the consistency check. The real-world layer is aligned in the same way: Engagement and ProcurementCase are subclasses of the BFO process, EngagementRole of the BFO role and Organization of the BFO object aggregate, and reportsEngagement is a subproperty of IAO is about; BFO and RO are not imported. The members of a consortium (org:hasMember) are organizations, not BFO member parts, which are objects."@en ;
+    rdfs:seeAlso <https://github.com/bonjwanim/nuprockg> ;
+    owl:imports <https://w3id.org/nuproc/core> ;
+    owl:priorVersion <https://w3id.org/nuproc/alignments/0.8.0> ;
+    owl:versionIRI <https://w3id.org/nuproc/alignments/0.9.0> ;
+    owl:versionInfo "0.9.0" ;
+    nuproc:status "v0.9.0 release. The licence is CC BY 4.0. This version is a logical revision of v0.8.0. It separates the identification of a reported cluster with one engagement from the occurrence of that engagement: a cluster carries a coded occurrence status (OccurrenceStatus: occurred, planned, denied or unclear) with one claim per coded value (OccurrenceClaim), and only a cluster whose occurrence status is occurred, and that a person has not judged to merge engagements, reports an engagement, as do its records. The axiom that every event record reports an engagement was removed, so that the report of a planned or denied engagement does not imply that the engagement exists. A group of organizations acting together as one party, such as a consortium, is one organization whose members are given with W3C ORG (org:hasMember), and the pattern layer again allows at most one participant organization per participation. Each judgement of how an actor reference is resolved is a claim (ResolutionClaim) with the status it gives and, for a resolved reference, the organization; the status and resolvedTo asserted on a reference are those of its final claim, and the claims that were not adopted remain. Each judgement of what a cluster's identification with one engagement rests on (the clustering key alone, a person's check, or a person's finding that it merges engagements) is likewise a claim (IdentificationClaim). A procurement case is aligned, like an engagement, to the BFO process. The information-layer property that names the organization a coded participation denotes is now namesParticipant (hasParticipant in v0.8.0), apart from RO's has participant. The SHACL pattern layer now also requires that a record whose cluster reports no engagement reports none, that an activity which made a final claim names its agent and plan on a qualified association, and that an engagement in the data is reported by a cluster, and it lets only a cluster whose occurrence status is occurred ground a role or a side role (a rule for asserting roles, not a condition of their existence). The disjointness axioms now also cover the occurrence, resolution and identification claims, codebook versions, prompt specifications, quality measurements and the clustering rule, and organizations, roles and cases, like engagements, are disjoint with the coding and validation activities. v0.8.0 added a real-world layer whose classes are aligned by IRI to BFO and whose relations are reused from RO and BFO: an engagement (Engagement) is a process in which parties engage with one another over a procurement case, organizations participate in it, and the engagement roles of an organization (EngagementRole, with two side roles and six role facets) are its roles in a procurement case and are realized in the engagements of that case in which it acts in them; clusters and records report engagements (reportsEngagement, a subproperty of IAO is about). It replaced the single coded engagement function with engagement role types that may be combined, with one claim per coded value (RoleClaim), and the direction role with a side role, and added class restrictions, a functional property, disjointness axioms and the pattern-layer constraints on role claims, qualified associations and the real-world layer. No aliases are kept for renamed terms, because no earlier version was released. v0.7.0 renamed the information entities (EngagementCluster, CodedParticipation, concernsCase), added the function claims and the IAO alignment, and corrected two pattern-layer constraints on actor references. v0.6.1 revised annotations only. v0.6.0 made the direction role optional in the SHACL pattern layer and added the side key; that revision was designed after the v0.5.0 cross-dataset reuse results had been seen. The earlier logical revisions were v0.5.0 (reference resolution completed, coding plans, and SHACL shapes split into a domain-neutral pattern layer and a NuProc profile layer), v0.4.0 (a counterparty participation may carry one participant) and v0.3.0 (the player axis split into a coded category and an engagement function, organization-type axes, typed actor references, and the event as an analytical cluster). No earlier version was released. The cross-dataset reuse results and the reserved-case results reported with this version were obtained on it. No ORCID identifier is recorded for the creator."@en .
+
+etype:B2B-1 skos:editorialNote "PLOVER alignment: no corresponding PLOVER event type (domain-specific), approved on 2026-08-17. The comparison against the PLOVER codebook is recorded in registry/event_type_alignment.csv and is not copied here, because it quotes PLOVER definitions (CC BY-SA 4.0)."@en .
+
+etype:B2B-2 skos:editorialNote "PLOVER alignment: no corresponding PLOVER event type (domain-specific), approved on 2026-08-17. The comparison against the PLOVER codebook is recorded in registry/event_type_alignment.csv and is not copied here, because it quotes PLOVER definitions (CC BY-SA 4.0)."@en .
+
+etype:B2B-3 skos:closeMatch <https://w3id.org/nuproc/ext/plover/COOPERATE> ;
+    skos:editorialNote "PLOVER alignment: closeMatch to COOPERATE, approved on 2026-08-17. The comparison against the PLOVER codebook is recorded in registry/event_type_alignment.csv and is not copied here, because it quotes PLOVER definitions (CC BY-SA 4.0)."@en .
+
+etype:B2B-4 skos:editorialNote "PLOVER alignment: no corresponding PLOVER event type (domain-specific), approved on 2026-08-17. The comparison against the PLOVER codebook is recorded in registry/event_type_alignment.csv and is not copied here, because it quotes PLOVER definitions (CC BY-SA 4.0)."@en .
+
+etype:B2G-2 skos:editorialNote "PLOVER alignment: no corresponding PLOVER event type (domain-specific), approved on 2026-08-17. The comparison against the PLOVER codebook is recorded in registry/event_type_alignment.csv and is not copied here, because it quotes PLOVER definitions (CC BY-SA 4.0)."@en .
+
+etype:B2G-4 skos:editorialNote "PLOVER alignment: no corresponding PLOVER event type (domain-specific), approved on 2026-08-17. The comparison against the PLOVER codebook is recorded in registry/event_type_alignment.csv and is not copied here, because it quotes PLOVER definitions (CC BY-SA 4.0)."@en .
+
+etype:B2G-Other skos:editorialNote "PLOVER alignment: no corresponding PLOVER event type (domain-specific), approved on 2026-08-16. The comparison against the PLOVER codebook is recorded in registry/event_type_alignment.csv and is not copied here, because it quotes PLOVER definitions (CC BY-SA 4.0)."@en .
+
+etype:G2G-2 skos:closeMatch <https://w3id.org/nuproc/ext/plover/SUPPORT> ;
+    skos:editorialNote "PLOVER alignment: closeMatch to SUPPORT, approved on 2026-08-16. The comparison against the PLOVER codebook is recorded in registry/event_type_alignment.csv and is not copied here, because it quotes PLOVER definitions (CC BY-SA 4.0)."@en .
+
+etype:G2G-3 skos:closeMatch <https://w3id.org/nuproc/ext/plover/AID> ;
+    skos:editorialNote "PLOVER alignment: closeMatch to AID, approved on 2026-08-16. The comparison against the PLOVER codebook is recorded in registry/event_type_alignment.csv and is not copied here, because it quotes PLOVER definitions (CC BY-SA 4.0)."@en .
+
+nuproc:ActorReference rdfs:subClassOf obo:IAO_0000030 .
+
+nuproc:CodedParticipation rdfs:seeAlso <http://data.europa.eu/a4g/ontology#AgentInRole> ;
+    rdfs:subClassOf obo:IAO_0000030 ;
+    skos:editorialNote "The eProcurement Ontology core 5.2.0 models an agent's part in a procurement as epo:AgentInRole, which ties an agent to a part it plays in a situational context. NuProc's CodedParticipation is the same kind of n-ary pattern, but it sits inside a reported engagement cluster, not a legally defined procurement procedure; it may lack a participant, or carry a referring expression in its place; and its roles are SKOS values. The real-world roles are BFO roles (EngagementRole) that the organization bears in a procurement case and that are realized in those engagements of the case in which it acts in that role. No skos:*Match is asserted. Checked 2026-09-28."@en .
+
+nuproc:CodingActivity rdfs:seeAlso <https://github.com/openeventdata/PLOVER> ;
+    skos:editorialNote "PLOVER's codebook (ch. 6) records coder, coded_date, citeInfo.codebook and citeInfo.coder, and already separates the human coder from the extraction system. NuProc's contribution is to move those flat scalar fields onto PROV activities and to add a separate human validation activity with its own quality measurements. Chapter 6 of the PLOVER codebook opens with an implementation caveat."@en ;
+    skos:relatedMatch sem:Authority .
+
+nuproc:DataQualityMeasurement rdfs:seeAlso <https://ceur-ws.org/Vol-670/paper_2.pdf> ;
+    skos:editorialNote "Ceolin, Groth & van Hage (2010) map sem:View to opm:Account and compute facet-level trust from evidence counts, and Shimizu & Cheatham (2017) reify trust as tm:TrustMetric attached at two layers. Both are prior art for representing quality in the graph itself."@en .
+
+nuproc:Engagement rdfs:subClassOf obo:BFO_0000015 .
+
+nuproc:EngagementCluster rdfs:seeAlso <http://ontologydesignpatterns.org/index.php/Submissions:ReportingEvent> ;
+    rdfs:subClassOf obo:IAO_0000030 ;
+    skos:editorialNote "The Reporting Event ODP (Kowalczuk & Ławrynowicz, WOP2016) already separates ActualEvent, ActualEventView and ReportingEvent and specialises them onto PROV-O. NuProc does not claim the separation of an actual event from its reports as new. An EventRecord is one article's coded report, an EngagementCluster is an analytical cluster of such records under an explicit clustering rule, and since v0.8.0 the actual engagement is an Engagement, a BFO process that the cluster and its records report (reportsEngagement); since v0.9.0 only a cluster whose coded occurrence status is occurred reports one, so a reported plan or denial does not imply an engagement. What NuProc adds is the coding provenance and the per-layer quality of that lineage. The pattern's OWL artifact returns 404, so the citation is to the paper."@en .
+
+nuproc:EngagementRole rdfs:subClassOf obo:BFO_0000023 .
+
+nuproc:EventRecord rdfs:comment "SEM (van Hage et al. 2011) already provides sem:Authority, sem:View and sem:accordingTo for attributing a statement to a source, and sem:Actor is a subclass of sem:Authority. NuProc maps to those terms rather than reinventing them. SEM is NOT imported: its distribution could not be retrieved on 2026-08-16 because the TLS certificate has expired, so its licence remains unverified and no copy is pinned. A mapping does not depend on the target file's licence; an import would."@en ;
+    rdfs:seeAlso <http://groundedannotationframework.org/gaf> ;
+    rdfs:subClassOf obo:IAO_0000030 ;
+    skos:closeMatch sem:View ;
+    skos:editorialNote "GAF (Fokkens et al. 2013) already separates mention from instance with gaf:denotedBy over SEM, and GRaSP and NIF 2.1 extend the same wiring. NuProc reuses the mention and evidence side of that wiring for the article-record link and claims no novelty for it. An unmerged cluster whose coded occurrence status is occurred, and its records, report an Engagement instance (reportsEngagement); unlike GAF's dark entities, no instance is given to a participant that the data do not identify or to an engagement they do not report as having taken place. The GAF site did not connect on 2026-09-28, so no GAF term is asserted."@en .
+
+nuproc:IdentificationClaim rdfs:subClassOf obo:IAO_0000030 .
+
+nuproc:OccurrenceClaim rdfs:subClassOf obo:IAO_0000030 .
+
+nuproc:Organization rdfs:seeAlso <http://data.europa.eu/a4g/ontology#Business> ;
+    rdfs:subClassOf obo:BFO_0000027 ;
+    skos:editorialNote "Aligned to W3C ORG by rdfs:subClassOf org:Organization (ORG is pinned, not imported). The eProcurement Ontology core 5.2.0 declares epo:Business and epo:OrganisationGroup as subclasses of org:Organization, so organizations described with ePO and with NuProc share that superclass without any further axiom. org:FormalOrganization was not used: the actor registry includes ministries, which ORG would class as org:OrganizationalUnit. Checked 2026-09-28."@en,
+        "Aligned to the BFO object aggregate: an organization is read as an aggregate of the persons who make it up, the position the Common Core Ontologies give to a group of agents; the member organizations of a consortium (org:hasMember) are not its BFO member parts, which are objects. The alignment is by IRI only, so BFO's axioms do not enter the consistency check. BFO and DOLCE classify an organization differently: DOLCE would place it among the non-physical social agents, which the alignmentReadinessDOLCE annotation records for a user who aligns to DOLCE instead; only the BFO alignment is asserted."@en .
+
+nuproc:ProcurementCase rdfs:seeAlso <http://data.europa.eu/a4g/ontology#Procedure> ;
+    rdfs:subClassOf obo:BFO_0000015 ;
+    skos:editorialNote "Not mapped. epo:Procedure (ePO core 5.2.0) is a legally defined set of administrative activities conducted to conclude contracts. A NuProc case is the procurement process for one nuclear new-build project, in which organizations engage over years, often before or outside any procedure; a case may lead to zero or more procedures, a relation NuProc does not assert. Checked 2026-09-28."@en .
+
+nuproc:ResolutionClaim rdfs:subClassOf obo:IAO_0000030 .
+
+nuproc:RoleClaim rdfs:subClassOf obo:IAO_0000030 .
+
+nuproc:appliesToLayer skos:closeMatch dqm:assessedClass ;
+    skos:editorialNote "An alignment of the layer axis to ldq:Granularity was also proposed. It is NOT asserted: the LDQ vocabulary file at http://www.w3.org/2016/05/ldqd# was parsed on 2026-08-16 (96 triples, 18 dqv:Dimension and 4 dqv:Category members) and declares no Granularity term, and the proposal was withdrawn on 2026-08-17."@en .
+
+nuproc:hasSampleSize rdfs:comment "Defined locally. Checked against DQV, DQM and LDQ on 2026-08-16, and against daQ on 2026-08-18 using a copy recovered from the Linked Open Vocabularies (LOV) archive, because the daQ namespace returns HTTP 503: none of them declares a sample-size term."@en .
+
+nuproc:measuresProperty rdfs:comment "DQM (Fürber & Hepp 2011) carries dqm:assessedProperty and dqm:assessedClass on the same domain. Verified against the vocabulary file on 2026-08-16 (sha256 551880c7…, 1040 triples): both terms are present. NuProc therefore claims no novelty for the two-axis combination and maps to DQM instead."@en ;
+    skos:closeMatch dqm:assessedProperty .
+
+nuproc:reportsEngagement rdfs:subPropertyOf obo:IAO_0000136 .
+
+nuproc:resolvedTo rdfs:seeAlso <http://www.w3.org/2005/11/its/rdf#taIdentRef> ;
+    skos:editorialNote "ITS 2.0 Text Analysis already links a text span to the entity it identifies (itsrdf:taIdentRef), and IAO's 'denotes' relates an information entity to what it is about. They are the prior art for a mention-to-entity link, and NuProc claims no novelty for it. resolvedTo differs in that it records the outcome of a resolution decision about a coded label (a registry row decided by the researcher, or an event-level decision made by the model coding under the coding protocol or by the researcher), which may name a person standing for an organization; each decision is recorded as a resolution claim (ResolutionClaim). No skos:*Match is asserted. Checked 2026-09-28."@en .
+
+prole: rdfs:seeAlso org:Role ;
+    skos:editorialNote "Not mapped to org:Role, org:Membership or org:Post, nor to the ePO roles (epo:Buyer, epo:Tenderer, epo:Contractor and the like). ORG roles are roles an agent takes in an organization; ePO roles are defined by legal procurement acts such as submitting a tender or signing a contract. NuProc values are coded from news for one side of an event, and three of the six coded player categories were assigned by an organization lookup. The same holds for the engagement role type and counterparty role schemes. Checked 2026-09-28."@en .
+
+obo:BFO_0000023 a owl:Class ;
+    rdfs:label "role"@en ;
+    rdfs:isDefinedBy obo:bfo.owl .
+
+obo:BFO_0000027 a owl:Class ;
+    rdfs:label "object aggregate"@en ;
+    rdfs:isDefinedBy obo:bfo.owl .
+
+obo:IAO_0000136 a owl:ObjectProperty ;
+    rdfs:label "is about"@en ;
+    rdfs:isDefinedBy obo:iao.owl .
+
+<https://w3id.org/nuproc/ext/plover/AID> rdfs:label "AID"@en ;
+    rdfs:comment "Placeholder IRI minted by NuProc for a PLOVER event type. PLOVER is not published as RDF, so no authoritative IRI exists to link to. Its codebook is CC BY-SA 4.0, so no PLOVER definition text is copied here."@en .
+
+<https://w3id.org/nuproc/ext/plover/COOPERATE> rdfs:label "COOPERATE"@en ;
+    rdfs:comment "Placeholder IRI minted by NuProc for a PLOVER event type. PLOVER is not published as RDF, so no authoritative IRI exists to link to. Its codebook is CC BY-SA 4.0, so no PLOVER definition text is copied here."@en .
+
+<https://w3id.org/nuproc/ext/plover/SUPPORT> rdfs:label "SUPPORT"@en ;
+    rdfs:comment "Placeholder IRI minted by NuProc for a PLOVER event type. PLOVER is not published as RDF, so no authoritative IRI exists to link to. Its codebook is CC BY-SA 4.0, so no PLOVER definition text is copied here."@en .
+
+obo:BFO_0000015 a owl:Class ;
+    rdfs:label "process"@en ;
+    rdfs:isDefinedBy obo:bfo.owl .
+
+obo:IAO_0000030 a owl:Class ;
+    rdfs:label "information content entity"@en ;
+    rdfs:isDefinedBy obo:iao.owl .
+

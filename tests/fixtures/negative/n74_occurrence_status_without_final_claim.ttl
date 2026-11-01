@@ -1,0 +1,114 @@
+# NuProc 0.9.0 SHACL test graph negative/n74_occurrence_status_without_final_claim.ttl
+# Synthetic: no real organization, article or event.
+# Validate it merged with ontology/nuproc-core.ttl, nuproc-codebook.ttl and nuproc-alignments.ttl against
+# ontology/nuproc-shapes.ttl; tests/run_fixtures.py does this for every test graph (tests/README.md).
+# Expected with all shapes: reported by EngagementClusterShape (Violation).
+# Expected with the pattern-layer shapes only: reported by EngagementClusterShape only.
+
+@prefix nuproc:  <https://w3id.org/nuproc/ns#> .
+@prefix channel: <https://w3id.org/nuproc/channel/> .
+@prefix etype:   <https://w3id.org/nuproc/eventtype/> .
+@prefix prole:   <https://w3id.org/nuproc/playerrole/> .
+@prefix crole:   <https://w3id.org/nuproc/counterpartyrole/> .
+@prefix srole:   <https://w3id.org/nuproc/siderole/> .
+@prefix rstat:   <https://w3id.org/nuproc/resolutionstatus/> .
+@prefix otype:   <https://w3id.org/nuproc/organizationtype/> .
+@prefix erole:   <https://w3id.org/nuproc/engagementrole/> .
+@prefix eident:  <https://w3id.org/nuproc/engagementidentification/> .
+@prefix ostat:   <https://w3id.org/nuproc/occurrencestatus/> .
+@prefix obo:     <http://purl.obolibrary.org/obo/> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+@prefix prov:    <http://www.w3.org/ns/prov#> .
+@prefix dqv:     <http://www.w3.org/ns/dqv#> .
+@prefix time:    <http://www.w3.org/2006/time#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ex:      <https://w3id.org/nuproc/fixture/> .
+
+ex:case10 a nuproc:ProcurementCase .
+ex:evt10 a nuproc:EngagementCluster ;
+    nuproc:concernsCase         ex:case10 ;
+    nuproc:hasEngagementChannel channel:B2G ;
+    nuproc:hasEventType         etype:B2G-3 ;
+    nuproc:hasParticipation     ex:p10a , ex:p10b ;
+    nuproc:reportsEngagement    ex:eng10 ;
+    nuproc:hasEngagementIdentification eident:key_based ;
+    nuproc:hasOccurrenceStatus  ostat:occurred ;
+    time:hasTime                ex:t10 .
+ex:t10 a time:Instant ; time:inXSDgYearMonth "2024-02"^^xsd:gYearMonth .
+ex:p10a a nuproc:CodedParticipation ;
+    nuproc:hasSide                srole:export_side ;
+    nuproc:namesParticipant         ex:org10 ;
+    nuproc:hasCodedPlayerCategory prole:soe_vendor ;
+    nuproc:hasEngagementRole      erole:technology_supply , erole:construction_contract ;
+    nuproc:hasFinalRoleClaim      ex:c10ts , ex:c10cc .
+ex:p10b a nuproc:CodedParticipation ;
+    nuproc:hasSide             srole:host_side ;
+    nuproc:hasCounterpartyRole crole:project_owner_soe .
+ex:org10 a nuproc:Organization ;
+    rdfs:label "Synthetic Vendor Group"@en ;
+    nuproc:hasOrganizationType otype:SOE .
+ex:rec10 a nuproc:EventRecord ;
+    prov:wasDerivedFrom      ex:art10 ;
+    prov:wasGeneratedBy      ex:ext10 ;
+    nuproc:describesEvent    ex:evt10 ;
+    nuproc:reportsEngagement ex:eng10 .
+ex:art10 a nuproc:SourceArticle .
+
+ex:rc10 a nuproc:EngagementRoleCodingActivity ;
+    nuproc:usedCodebookVersion     ex:cb10 ;
+    nuproc:usedPromptSpecification ex:pr10 ;
+    prov:wasAssociatedWith         ex:model10 ;
+    prov:qualifiedAssociation      ex:rc10_cb , ex:rc10_pr .
+ex:rc10_cb a prov:Association ; prov:agent ex:model10 ; prov:hadPlan ex:cb10 .
+ex:rc10_pr a prov:Association ; prov:agent ex:model10 ; prov:hadPlan ex:pr10 .
+ex:model10 a prov:SoftwareAgent .
+ex:ext10 a nuproc:EventExtractionActivity , nuproc:CodingActivity ;
+    prov:wasAssociatedWith    ex:model10 ;
+    prov:qualifiedAssociation ex:ext10_cb , ex:ext10_pr .
+ex:ext10_cb a prov:Association ; prov:agent ex:model10 ; prov:hadPlan ex:cb10 .
+ex:ext10_pr a prov:Association ; prov:agent ex:model10 ; prov:hadPlan ex:pr10 .
+ex:cb10 a nuproc:CodebookVersion .
+ex:pr10 a nuproc:PromptSpecification .
+ex:c10ts a nuproc:RoleClaim ;
+    nuproc:claimAbout ex:p10a ; nuproc:claimedRole erole:technology_supply ; prov:wasGeneratedBy ex:rc10 .
+ex:c10cc a nuproc:RoleClaim ;
+    nuproc:claimAbout ex:p10a ; nuproc:claimedRole erole:construction_contract ; prov:wasGeneratedBy ex:rc10 .
+ex:c10old a nuproc:RoleClaim ;
+    nuproc:claimAbout ex:p10a ; nuproc:claimedRole erole:technology_supply ; prov:wasGeneratedBy ex:old10 .
+ex:old10 a prov:Activity .
+
+ex:o10 a nuproc:OccurrenceClaim ;
+    nuproc:occurrenceClaimAbout ex:evt10 ; nuproc:claimedOccurrence ostat:occurred ; prov:wasGeneratedBy ex:oc10 .
+ex:oc10 a nuproc:CodingActivity ;
+    nuproc:usedCodebookVersion     ex:cbo10 ;
+    nuproc:usedPromptSpecification ex:pro10 ;
+    prov:wasAssociatedWith         ex:model10 ;
+    prov:qualifiedAssociation      ex:oc10_cb , ex:oc10_pr .
+ex:oc10_cb a prov:Association ; prov:agent ex:model10 ; prov:hadPlan ex:cbo10 .
+ex:oc10_pr a prov:Association ; prov:agent ex:model10 ; prov:hadPlan ex:pro10 .
+ex:cbo10 a nuproc:CodebookVersion .
+ex:pro10 a nuproc:PromptSpecification .
+
+ex:eng10 a nuproc:Engagement ;
+    nuproc:concernsCase ex:case10 ;
+    obo:RO_0000057      ex:org10 .
+ex:r10x a nuproc:ExportSideRole ;
+    obo:RO_0000081 ex:org10 ; nuproc:concernsCase ex:case10 ; obo:BFO_0000054 ex:eng10 .
+ex:r10ts a nuproc:TechnologySupplyRole ;
+    obo:RO_0000081 ex:org10 ; nuproc:concernsCase ex:case10 ; obo:BFO_0000054 ex:eng10 ;
+    nuproc:supportedByClaim ex:c10ts .
+ex:r10cc a nuproc:ConstructionContractRole ;
+    obo:RO_0000081 ex:org10 ; nuproc:concernsCase ex:case10 ; obo:BFO_0000054 ex:eng10 ;
+    nuproc:supportedByClaim ex:c10cc .
+
+<https://w3id.org/nuproc/fixture/evt10> nuproc:hasFinalIdentificationClaim <https://w3id.org/nuproc/fixture/evt10_ident> .
+<https://w3id.org/nuproc/fixture/evt10_ident> a nuproc:IdentificationClaim ;
+    nuproc:identificationClaimAbout <https://w3id.org/nuproc/fixture/evt10> ;
+    nuproc:claimedIdentification <https://w3id.org/nuproc/engagementidentification/key_based> ;
+    prov:wasGeneratedBy ex:fxClustering .
+ex:fxClustering a prov:Activity ;
+    prov:qualifiedAssociation ex:fxClustering_as .
+ex:fxClustering_as a prov:Association ; prov:agent ex:fxPipeline ; prov:hadPlan ex:fxClusteringRule .
+ex:fxPipeline a prov:SoftwareAgent .
+ex:fxClusteringRule a prov:Plan ; rdfs:label "clustering rule (synthetic)"@en .

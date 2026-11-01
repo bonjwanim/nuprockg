@@ -1,0 +1,43 @@
+PREFIX nuproc:  <https://w3id.org/nuproc/ns#>
+PREFIX skos:    <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX prov:    <http://www.w3.org/ns/prov#>
+PREFIX dqv:     <http://www.w3.org/ns/dqv#>
+PREFIX time:    <http://www.w3.org/2006/time#>
+PREFIX xsd:     <http://www.w3.org/2001/XMLSchema#>
+PREFIX channel: <https://w3id.org/nuproc/channel/>
+PREFIX prole:   <https://w3id.org/nuproc/playerrole/>
+PREFIX crole:   <https://w3id.org/nuproc/counterpartyrole/>
+PREFIX srole:   <https://w3id.org/nuproc/siderole/>
+PREFIX erole:   <https://w3id.org/nuproc/engagementrole/>
+PREFIX obo:     <http://purl.obolibrary.org/obo/>
+PREFIX rstat:   <https://w3id.org/nuproc/resolutionstatus/>
+
+# CQ09 (consistency) Are there events whose stated channel conflicts with the composition of their participants?
+# CQ09 (C) 주장된 채널과 참여자 구성이 어긋나는 사건이 있는가?
+# ADR-0020 의 R1·R3·R4·R5 를 SPARQL 로 옮긴 것이다. SHACL 실행 결과와 같아야 한다
+# (R1 0 · R3 1 · R4 0 · R5 4 = 합계 5 — 0.9.0 의 shapes 에서 넷 모두 sh:Warning 이다).
+# **개별 사건 식별자를 내지 않는다** — 파생 이벤트 코드는 record 수준 자료다 ((iii)층).
+SELECT ?rule ?channel ?role (COUNT(DISTINCT ?ev) AS ?n)
+WHERE {
+  {
+    ?ev nuproc:hasEngagementChannel channel:G2G ; nuproc:hasParticipation ?p .
+    ?p nuproc:hasSide srole:export_side .
+    FILTER NOT EXISTS { ?p nuproc:hasCodedPlayerCategory prole:government }
+    BIND("R1" AS ?rule) BIND("G2G" AS ?channel) BIND("export side not government" AS ?role)
+  } UNION {
+    ?ev nuproc:hasEngagementChannel channel:B2G ; nuproc:hasParticipation ?p .
+    ?p nuproc:hasSide srole:export_side ; nuproc:hasCodedPlayerCategory prole:government .
+    BIND("R3" AS ?rule) BIND("B2G" AS ?channel) BIND("export side is government" AS ?role)
+  } UNION {
+    ?ev nuproc:hasEngagementChannel channel:B2B ; nuproc:hasParticipation ?p .
+    ?p nuproc:hasSide srole:export_side ; nuproc:hasCodedPlayerCategory prole:government .
+    BIND("R4" AS ?rule) BIND("B2B" AS ?channel) BIND("export side is government" AS ?role)
+  } UNION {
+    ?ev nuproc:hasEngagementChannel channel:B2B ; nuproc:hasParticipation ?p .
+    ?p nuproc:hasSide srole:host_side ; nuproc:hasCounterpartyRole crole:host_government .
+    BIND("R5" AS ?rule) BIND("B2B" AS ?channel) BIND("host side is host government" AS ?role)
+  }
+}
+GROUP BY ?rule ?channel ?role
+ORDER BY ?rule

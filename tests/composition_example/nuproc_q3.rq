@@ -1,0 +1,25 @@
+PREFIX nuproc: <https://w3id.org/nuproc/ns#>
+PREFIX erole:  <https://w3id.org/nuproc/engagementrole/>
+PREFIX obo:    <http://purl.obolibrary.org/obo/>
+PREFIX skos:   <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>
+
+# Q3 (NuProc). In which engagements did an organisation take two or more roles?
+# Read in the real-world layer: role individuals borne by an organisation (RO role of) and realized in an engagement
+# (BFO realized in). Side roles are not counted: the codebook links each role facet value to its role class
+# (nuproc:roleClass), and only the classes of values in the EngagementRoleType scheme are kept.
+SELECT ?engagement ?organisation (COUNT(DISTINCT ?r) AS ?nRoles)
+       (GROUP_CONCAT(DISTINCT ?role; SEPARATOR=" | ") AS ?roles)
+WHERE {
+  ?r   obo:RO_0000081 ?org ;
+       obo:BFO_0000054 ?e ;
+       a ?k .
+  ?v   nuproc:roleClass ?k ;
+       skos:inScheme erole: ;
+       skos:notation ?role .
+  ?org rdfs:label ?organisation .
+  BIND(STRAFTER(STR(?e), "https://example.org/syn/") AS ?engagement)
+}
+GROUP BY ?engagement ?organisation
+HAVING (COUNT(DISTINCT ?r) >= 2)
+ORDER BY ?engagement ?organisation

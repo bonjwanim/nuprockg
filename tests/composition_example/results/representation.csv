@@ -1,0 +1,16 @@
+file,section,title,triples,published_terms,adhoc_terms,adhoc_term_list,distinct_codes,codes
+composition.ttl,S0,"case, engagements, records and the two sides of each engagement",61,23,0,,6,excp:host_government explan:codebook explan:prompt_specification exside:export_side exside:host_side extype:meeting
+composition.ttl,S1,organisations,9,3,0,,0,
+composition.ttl,P1,actor references: the candidate set of engagement A and the resolved reference of engagement B,11,3,3,ex:actorReference ex:candidate ex:resolutionStatus,2,exstat:resolved exstat:unresolvable_candidate_set
+composition.ttl,P2,role claims and their provenance,99,19,0,,6,explan:codebook explan:prompt_specification exrole:commercial_supply exrole:construction_contract exrole:financing exrole:technology_supply
+composition.ttl,P3,roles: the role types on the participation nodes,4,1,0,,3,exrole:construction_contract exrole:financing exrole:technology_supply
+composition.ttl,ALL,whole file,184,,,,,
+nuproc.ttl,S0,"case, engagements, clusters, records and the two sides of each engagement",121,47,0,,6,channel:B2G crole:host_government etype:B2G-1 etype:B2G-3 srole:export_side srole:host_side
+nuproc.ttl,S1,organisations,6,2,0,,0,
+nuproc.ttl,P1,actor references: the candidate set of engagement A and the resolved reference of engagement B,31,21,0,,2,rstat:resolved rstat:unresolvable_candidate_set
+nuproc.ttl,P2,role claims and their provenance,93,22,0,,4,erole:commercial_supply erole:construction_contract erole:financing erole:technology_supply
+nuproc.ttl,P3,"roles: coded role values on the participations, and the real-world roles of the resolved participant",19,9,0,,3,erole:construction_contract erole:financing erole:technology_supply
+nuproc.ttl,ALL,whole file,270,,,,,
+composition_ext.ttl,X1,ad-hoc terms,15,5,0,,0,
+composition_ext.ttl,X2,code lists,72,5,0,,6,excp: explan: exrole: exside: exstat: extype:
+composition_ext.ttl,ALL,whole file,87,,,,,

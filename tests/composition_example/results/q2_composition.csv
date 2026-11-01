@@ -1,0 +1,5 @@
+kind,role,claim,activity,agent,plans,revisedBy
+"earlier, disagrees",commercial_supply,claim-B-export-first-pass,"Function coding, first pass (SYN)",Coding model M2 (SYN),Codebook v2.0 (SYN) | Prompt specification v1 (SYN),claim-B-export-adjudication
+"earlier, disagrees",construction_contract,claim-B-export-human-coder-A,Function coding by human coder A (SYN),Human coder A (SYN),Codebook v2.0 (SYN),
+final,financing,claim-B-export-v3-financing,Role coding v3 (SYN),Coding model M3 (SYN),Codebook v3.0 (SYN) | Prompt specification v3 (SYN),
+final,technology_supply,claim-B-export-v3-technology_supply,Role coding v3 (SYN),Coding model M3 (SYN),Codebook v3.0 (SYN) | Prompt specification v3 (SYN),

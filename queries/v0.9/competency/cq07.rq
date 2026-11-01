@@ -1,0 +1,40 @@
+PREFIX nuproc:  <https://w3id.org/nuproc/ns#>
+PREFIX skos:    <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX prov:    <http://www.w3.org/ns/prov#>
+PREFIX dqv:     <http://www.w3.org/ns/dqv#>
+PREFIX time:    <http://www.w3.org/2006/time#>
+PREFIX xsd:     <http://www.w3.org/2001/XMLSchema#>
+PREFIX channel: <https://w3id.org/nuproc/channel/>
+PREFIX prole:   <https://w3id.org/nuproc/playerrole/>
+PREFIX crole:   <https://w3id.org/nuproc/counterpartyrole/>
+PREFIX srole:   <https://w3id.org/nuproc/siderole/>
+PREFIX erole:   <https://w3id.org/nuproc/engagementrole/>
+PREFIX obo:     <http://purl.obolibrary.org/obo/>
+PREFIX rstat:   <https://w3id.org/nuproc/resolutionstatus/>
+
+# CQ07 (provenance) Which coding activity generated a record, and which model, prompt and codebook version did that
+#   activity use?
+# CQ07 (P) 한 기록은 어떤 코딩활동이 생성했으며 그 활동은 어떤 모델·프롬프트·코드북을 썼는가?
+# 기대(ORSD §4): 3단계 활동이 구분되어 조회됨 (ADR-0003).
+# 이 질의가 내는 코딩 활동은 여섯이다 — 스크리닝 · 채널 존재 코딩 · 사건 추출 · 다중 라벨 역할 코딩 (v3) · 사람 검증
+#   코더 A · B 의 역할 코딩. 기록은 사건 추출만 생성하므로 설계 세트의 기록 합은 5,228 이다 (evaluation/cq/v0.9/DERIVATION.md
+#   §5). 발생 상태 코딩 활동 셋 (모델 · 검증 코더 둘) 은 CodingActivity 자체로 타입되어 나오지 않는다 (같은 문서 §1).
+# 스크리닝에 코드북 연결이 없는 것은 없는 연결을 만들지 않았기 때문이다 — OPTIONAL 로 둔다.
+#
+# 첫 실행 뒤 수정 (2026-08-18): `?activity a nuproc:CodingActivity` 를 직접 물었으나
+# ABox 는 구체 하위클래스(ScreeningActivity 등)만 단언하고 상위 타입을 물질화하지 않는다.
+# 추론 없이도 성립하도록 TBox 의 rdfs:subClassOf 를 경유한다. 하위클래스 이름을
+# 질의에 박지 않는다 — 어휘가 늘면 자동으로 따라간다.
+SELECT ?activity ?activityClass ?agent ?prompt ?codebook (COUNT(?rec) AS ?nRecords)
+WHERE {
+  ?activityClass rdfs:subClassOf nuproc:CodingActivity .
+  ?activity a ?activityClass .
+  OPTIONAL { ?activity prov:wasAssociatedWith ?ag .        BIND( STRAFTER(STR(?ag), "/agent/")       AS ?agent ) }
+  OPTIONAL { ?activity nuproc:usedPromptSpecification ?ps . BIND( STRAFTER(STR(?ps), "/prompt/")     AS ?prompt ) }
+  OPTIONAL { ?activity nuproc:usedCodebookVersion ?cb .     BIND( STRAFTER(STR(?cb), "/codebook/")   AS ?codebook ) }
+  # 기록만 센다 — 활동이 낸 주장은 기록이 아니므로 nuproc:EventRecord 로 타입을 묻는다.
+  OPTIONAL { ?rec a nuproc:EventRecord ; prov:wasGeneratedBy ?activity }
+}
+GROUP BY ?activity ?activityClass ?agent ?prompt ?codebook
+ORDER BY ?activity

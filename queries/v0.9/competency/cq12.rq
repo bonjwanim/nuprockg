@@ -1,0 +1,30 @@
+PREFIX nuproc:  <https://w3id.org/nuproc/ns#>
+PREFIX skos:    <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX prov:    <http://www.w3.org/ns/prov#>
+PREFIX dqv:     <http://www.w3.org/ns/dqv#>
+PREFIX time:    <http://www.w3.org/2006/time#>
+PREFIX xsd:     <http://www.w3.org/2001/XMLSchema#>
+PREFIX channel: <https://w3id.org/nuproc/channel/>
+PREFIX prole:   <https://w3id.org/nuproc/playerrole/>
+PREFIX crole:   <https://w3id.org/nuproc/counterpartyrole/>
+PREFIX srole:   <https://w3id.org/nuproc/siderole/>
+PREFIX erole:   <https://w3id.org/nuproc/engagementrole/>
+PREFIX obo:     <http://purl.obolibrary.org/obo/>
+PREFIX rstat:   <https://w3id.org/nuproc/resolutionstatus/>
+
+# CQ12 (temporal) How are a case's events distributed by month from its reference date (T0)?
+# CQ12 (T) 특정 사례에서 기준시점(T0) 대비 월별 사건 분포는 어떠한가?
+# 기대(ORSD §4): 월 분포가 원 집계와 일치. 총계는 design 1,026 건.
+# 벤치마크 event_month_activity.csv 와의 대조는 축 F 가 한다.
+SELECT ?case ?monthRelativeToT0 ?channel (COUNT(DISTINCT ?ev) AS ?n)
+WHERE {
+  ?ev a nuproc:EngagementCluster ;
+      nuproc:concernsCase ?c ;
+      nuproc:monthRelativeToT0 ?monthRelativeToT0 ;
+      nuproc:hasEngagementChannel ?ch .
+  ?c  rdfs:label ?case .
+  ?ch skos:notation ?channel .
+}
+GROUP BY ?case ?monthRelativeToT0 ?channel
+ORDER BY ?case ?monthRelativeToT0 ?channel

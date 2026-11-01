@@ -1,0 +1,39 @@
+PREFIX nuproc: <https://w3id.org/nuproc/ns#>
+PREFIX obo:    <http://purl.obolibrary.org/obo/>
+PREFIX prov:   <http://www.w3.org/ns/prov#>
+PREFIX skos:   <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX syn:    <https://example.org/syn/>
+
+# Q2 (NuProc). Which roles did Vendor Beta take in engagement B, which claim is final for each, which activity and
+# plans produced it, and which earlier claims about the same participation disagree?
+# A claim is final when it supports a role that the organisation bears in the engagement (real-world layer); an
+# earlier claim disagrees when its value is not a role value of the participation. The plans are those of the
+# activity's qualified associations; revisedBy names a claim that revises this one.
+SELECT ?kind ?role ?claim ?activity ?agent
+       (GROUP_CONCAT(DISTINCT ?planLabel; SEPARATOR=" | ") AS ?plans) ?revisedBy
+WHERE {
+  VALUES ?e { syn:engagement-B }
+  ?org rdfs:label "Vendor Beta (SYN)" .
+  ?k   nuproc:reportsEngagement ?e ;
+       nuproc:hasParticipation ?p .
+  ?p   nuproc:namesParticipant ?org .
+  ?c   nuproc:claimAbout ?p ;
+       nuproc:claimedRole ?v ;
+       prov:wasGeneratedBy ?act .
+  ?v   skos:notation ?role .
+  BIND(EXISTS { ?r obo:RO_0000081 ?org ; obo:BFO_0000054 ?e ; nuproc:supportedByClaim ?c } AS ?isFinal)
+  BIND(EXISTS { ?p nuproc:hasEngagementRole ?v } AS ?agrees)
+  FILTER(?isFinal || !?agrees)
+  BIND(IF(?isFinal, "final", "earlier, disagrees") AS ?kind)
+  ?act rdfs:label ?activity ;
+       prov:qualifiedAssociation ?as .
+  ?as  prov:agent ?ag ;
+       prov:hadPlan ?plan .
+  ?ag  rdfs:label ?agent .
+  ?plan rdfs:label ?planLabel .
+  OPTIONAL { ?rev prov:wasRevisionOf ?c . BIND(STRAFTER(STR(?rev), "https://example.org/syn/") AS ?revisedBy) }
+  BIND(STRAFTER(STR(?c), "https://example.org/syn/") AS ?claim)
+}
+GROUP BY ?kind ?role ?claim ?activity ?agent ?revisedBy
+ORDER BY DESC(?kind) ?role ?claim

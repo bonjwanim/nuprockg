@@ -1,0 +1,8 @@
+# NuProc Ontology v0.9.0 — TBox freeze checksum
+# 생성: 2026-10-30T09:01:03+01:00
+# 줄끝은 LF 로 고정돼 있다 (.gitattributes) — 이 해시는 clone 에서 재현된다
+
+d6380d25aa62c06a6ad6839021cf0c4357611e9bf784890cf7d29428fcb595cd  nuproc-core.ttl
+94da79c2631c0c5169c7e03316e026555fb9e3904bc2e0c121cead60a98de849  nuproc-codebook.ttl
+50b6787adb65b61a4fddc3b6800d46ff22edcfb82c66353c73c89696b8e7971d  nuproc-alignments.ttl
+edd1c49a8509e855f952f44e607eafdd9846152209424be6e192ba2ce1101a06  nuproc-shapes.ttl

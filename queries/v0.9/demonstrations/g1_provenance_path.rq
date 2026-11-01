@@ -1,0 +1,49 @@
+PREFIX nuproc:  <https://w3id.org/nuproc/ns#>
+PREFIX skos:    <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX prov:    <http://www.w3.org/ns/prov#>
+PREFIX dqv:     <http://www.w3.org/ns/dqv#>
+PREFIX time:    <http://www.w3.org/2006/time#>
+PREFIX xsd:     <http://www.w3.org/2001/XMLSchema#>
+PREFIX channel: <https://w3id.org/nuproc/channel/>
+PREFIX prole:   <https://w3id.org/nuproc/playerrole/>
+PREFIX crole:   <https://w3id.org/nuproc/counterpartyrole/>
+PREFIX srole:   <https://w3id.org/nuproc/siderole/>
+PREFIX erole:   <https://w3id.org/nuproc/engagementrole/>
+PREFIX obo:     <http://purl.obolibrary.org/obo/>
+PREFIX rstat:   <https://w3id.org/nuproc/resolutionstatus/>
+
+# G1 (required) Provenance path: from a source article to the record derived from it, the event the record
+#   describes, the export-side participation, the player category coded on it and the channel, then to the
+#   extraction activity, the software agent that ran it and the codebook version it applied. Aggregates only; no
+#   article or event identifier is returned.
+# G1 (필수) provenance path — 기사 → 기록 → 사건 → 참여 → 역할 → 채널
+# EVALUATION_PROTOCOL §7. 여기에 **코딩활동·모델·코드북 버전**까지 이어 붙인다 —
+# 평면 표에서는 앞의 3계층조차 세 파일을 조인해야 하고, 뒤의 3개는 표에 아예 없다.
+# **집계로만 낸다.** 개별 기사·사건 식별자를 내지 않는다 ((iii)층).
+# 이 경로가 따라가는 값은 사건 추출 활동이 만든 **코딩된 범주** (hasCodedPlayerCategory)다 (ADR-0033 §7).
+#   관여 역할 (facet) 은 이 경로에 없다 — 역할은 나중에 다른 모델 (claude-opus-5-5) 이 다른 코드북 (v3.0) 으로
+#   코딩했다. 역할을 이 활동에 이으면 출처가 거짓이 된다 (evaluation/coding/v3.0/CODING_PROTOCOL.md).
+SELECT ?case ?channel ?codedCategory ?agent ?codebook
+       (COUNT(DISTINCT ?art) AS ?nArticles) (COUNT(?rec) AS ?nRecords)
+       (COUNT(DISTINCT ?ev) AS ?nEvents)
+WHERE {
+  ?rec a nuproc:EventRecord ;
+       prov:wasDerivedFrom ?art ;
+       prov:wasGeneratedBy ?act ;
+       nuproc:describesEvent ?ev .
+  ?act prov:wasAssociatedWith ?ag ;
+       nuproc:usedCodebookVersion ?cb .
+  ?ev  nuproc:concernsCase ?c ;
+       nuproc:hasEngagementChannel ?ch ;
+       nuproc:hasParticipation ?p .
+  ?p   nuproc:hasSide srole:export_side ;
+       nuproc:hasCodedPlayerCategory ?pr .
+  ?c   rdfs:label ?case .
+  ?ch  skos:notation ?channel .
+  ?pr  skos:notation ?codedCategory .
+  BIND( STRAFTER(STR(?ag), "/agent/")       AS ?agent )
+  BIND( STRAFTER(STR(?cb), "/codebook/")    AS ?codebook )
+}
+GROUP BY ?case ?channel ?codedCategory ?agent ?codebook
+ORDER BY ?case ?channel ?codedCategory

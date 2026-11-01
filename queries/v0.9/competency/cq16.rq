@@ -1,0 +1,62 @@
+PREFIX nuproc:  <https://w3id.org/nuproc/ns#>
+PREFIX skos:    <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX prov:    <http://www.w3.org/ns/prov#>
+PREFIX dqv:     <http://www.w3.org/ns/dqv#>
+PREFIX time:    <http://www.w3.org/2006/time#>
+PREFIX xsd:     <http://www.w3.org/2001/XMLSchema#>
+PREFIX channel: <https://w3id.org/nuproc/channel/>
+PREFIX prole:   <https://w3id.org/nuproc/playerrole/>
+PREFIX crole:   <https://w3id.org/nuproc/counterpartyrole/>
+PREFIX srole:   <https://w3id.org/nuproc/siderole/>
+PREFIX erole:   <https://w3id.org/nuproc/engagementrole/>
+PREFIX obo:     <http://purl.obolibrary.org/obo/>
+PREFIX rstat:   <https://w3id.org/nuproc/resolutionstatus/>
+
+# CQ16 (quality) How reliable is a given property, and at which layer? (Each measurement is returned with the coding
+#   it was computed on, that coding's codebook version and the comparison made.)
+# CQ16 (Q) 특정 속성의 신뢰도는 어느 계층에서 얼마인가?
+# 기대(ORSD §4): hasEventType 이 계층에 따라 0.88 (EventRecord) / 0.60 (EngagementCluster).
+# 계층을 합치면 이 차이를 표현할 수 없다 (ADR-0009).
+# **무엇을 잰 값인지 함께 낸다.** 측정마다 그것이 계산된 코딩 값 (dqv:computedOn) 의 생성 활동 · 그 활동의 코드북 판 ·
+#   비교 유형 (nuproc:comparisonType) 을 열로 낸다. hasEngagementRole 의 측정은 다중 라벨 역할 코딩 (코드북 v3.0) 과 그 사람
+#   검증 (VALIDATION_PROTOCOL) 의 것이다.
+# v0.9 (첫 실행 뒤 — 질의만 고쳤다): 발생 상태의 '조정 기준–모델' κ 는 조정 기준 활동의 산출에서도 계산된다. 그 활동은
+#   코딩 활동이 아니라 판정 활동이라 usedCodebookVersion (정의역 CodingActivity) 이 없고 코드북은 한정 연관의 계획에만 있다 — 그래서
+#   한 측정의 묶음에 코드북이 묶이지 않은 행이 섞였다. SPARQL 1.1 의 집계는 묶이지 않은 값을 건너뛰지만 rdflib 7.6.0 은
+#   GROUP_CONCAT(DISTINCT …) 의 중복 검사 (Accumulator.use_row) 에서 그 값을 평가하다 NotBoundError 로 멈췄다 (값을 더하는
+#   GroupConcat.update 는 건너뛴다). 코드북 묶음을 코드북이 묶인 행만 보는 하위 질의로 떼어 같은 뜻을 적었다 — 경로를 더하지 않았다
+#   (한정 연관의 계획은 읽지 않는다). 기대결과 · 검증 규칙 · 다른 질의는 건드리지 않았다 (evaluation/cq/v0.9/DERIVATION.md).
+SELECT ?property ?layer ?metric ?value ?n ?comparison ?codings ?codebooks
+WHERE {
+  {
+    SELECT ?qm (GROUP_CONCAT(DISTINCT ?actName; separator="|") AS ?codings)
+    WHERE {
+      ?qm a nuproc:DataQualityMeasurement ;
+          dqv:computedOn ?data .
+      ?data prov:wasGeneratedBy ?act .
+      BIND( STRAFTER(STR(?act), "/activity/") AS ?actName )
+    }
+    GROUP BY ?qm
+  }
+  OPTIONAL {
+    SELECT ?qm (GROUP_CONCAT(DISTINCT ?cbName; separator="|") AS ?codebooks)
+    WHERE {
+      ?qm a nuproc:DataQualityMeasurement ;
+          dqv:computedOn ?data .
+      ?data prov:wasGeneratedBy ?act .
+      ?act nuproc:usedCodebookVersion ?cb .
+      BIND( STRAFTER(STR(?cb), "/codebook/") AS ?cbName )
+    }
+    GROUP BY ?qm
+  }
+  ?qm nuproc:measuresProperty ?prop ;
+      nuproc:appliesToLayer ?lay ;
+      nuproc:hasSampleSize ?n ;
+      dqv:value ?value ;
+      nuproc:comparisonType ?comparison .
+  OPTIONAL { ?qm dqv:isMeasurementOf ?m . BIND( STRAFTER(STR(?m), "metric/") AS ?metric ) }
+  BIND( STRAFTER(STR(?prop), "ns#") AS ?property )
+  BIND( STRAFTER(STR(?lay),  "ns#") AS ?layer )
+}
+ORDER BY ?property ?layer ?value

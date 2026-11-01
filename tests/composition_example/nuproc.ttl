@@ -1,0 +1,397 @@
+# The case of composition_example/README.md, expressed in NuProc 0.9.0 (TBox: ontology/nuproc-core.ttl,
+# nuproc-codebook.ttl, nuproc-alignments.ttl). Every individual is synthetic; every label carries "(SYN)".
+# The modelling follows the public demonstration graph (kg/public/nuproc-demo.ttl): EngagementCluster,
+# EventRecord, CodedParticipation with hasSide, ActorReference subclasses with hasResolutionStatus and
+# hasCandidateOrganization, RoleClaim with claimAbout / claimedRole / hasFinalRoleClaim / prov:wasGeneratedBy /
+# prov:wasRevisionOf, Engagement, EngagementRole subclasses with RO_0000081 / BFO_0000054 / supportedByClaim, and
+# coding activities with one qualified association per plan.
+#
+# The individuals that are the same thing in both encodings (case, engagements, records, articles, participations,
+# references, organisations, claims, activities, agents, plans) have the same IRI in composition.ttl.
+#
+# Section markers ("# == <id> <title> ==") are read by run.py, which counts the triples of each section. Every
+# triple belongs to exactly one section: S0 and S1 hold what both encodings need whatever the three phenomena,
+# P1 the actor references (candidate set and resolved), P2 the role claims and their provenance, P3 the roles.
+
+@prefix channel: <https://w3id.org/nuproc/channel/> .
+@prefix crole:   <https://w3id.org/nuproc/counterpartyrole/> .
+@prefix eident:  <https://w3id.org/nuproc/engagementidentification/> .
+@prefix erole:   <https://w3id.org/nuproc/engagementrole/> .
+@prefix etype:   <https://w3id.org/nuproc/eventtype/> .
+@prefix nuproc:  <https://w3id.org/nuproc/ns#> .
+@prefix obo:     <http://purl.obolibrary.org/obo/> .
+@prefix ostat:   <https://w3id.org/nuproc/occurrencestatus/> .
+@prefix prov:    <http://www.w3.org/ns/prov#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rstat:   <https://w3id.org/nuproc/resolutionstatus/> .
+@prefix srole:   <https://w3id.org/nuproc/siderole/> .
+@prefix syn:     <https://example.org/syn/> .
+@prefix time:    <http://www.w3.org/2006/time#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+
+# == S0 case, engagements, clusters, records and the two sides of each engagement ==
+
+syn:case a nuproc:ProcurementCase ;
+    rdfs:label "Demo case (SYN)" .
+
+<https://w3id.org/nuproc/rule/month-granularity> a nuproc:MonthGranularityRule .
+
+syn:month-2024-03 a time:Instant ;
+    time:inXSDgYearMonth "2024-03"^^xsd:gYearMonth .
+
+syn:month-2024-05 a time:Instant ;
+    time:inXSDgYearMonth "2024-05"^^xsd:gYearMonth .
+
+# Engagement A: the export side (reported as the bundled label "Vendor K / Utility K (SYN)") meets the host
+# government's ministry; two news records report it and are clustered into one cluster.
+syn:engagement-A a nuproc:Engagement ;
+    rdfs:label "Engagement A (SYN)" ;
+    nuproc:concernsCase syn:case .
+
+syn:cluster-A a nuproc:EngagementCluster ;
+    time:hasTime syn:month-2024-03 ;
+    nuproc:clusteredBy <https://w3id.org/nuproc/rule/month-granularity> ;
+    nuproc:concernsCase syn:case ;
+    nuproc:hasEngagementChannel channel:B2G ;
+    nuproc:hasEventType etype:B2G-1 ;
+    nuproc:hasParticipation syn:participation-A-export , syn:participation-A-host ;
+    nuproc:reportsEngagement syn:engagement-A ;
+    nuproc:hasEngagementIdentification eident:key_based ;
+    nuproc:uniqueSourceArticleCount "2"^^xsd:nonNegativeInteger .
+
+# Engagement B: a second engagement in the same case; its export-side actor resolves to Vendor Beta (SYN).
+syn:engagement-B a nuproc:Engagement ;
+    rdfs:label "Engagement B (SYN)" ;
+    nuproc:concernsCase syn:case .
+
+syn:cluster-B a nuproc:EngagementCluster ;
+    time:hasTime syn:month-2024-05 ;
+    nuproc:clusteredBy <https://w3id.org/nuproc/rule/month-granularity> ;
+    nuproc:concernsCase syn:case ;
+    nuproc:hasEngagementChannel channel:B2G ;
+    nuproc:hasEventType etype:B2G-3 ;
+    nuproc:hasParticipation syn:participation-B-export , syn:participation-B-host ;
+    nuproc:reportsEngagement syn:engagement-B ;
+    nuproc:hasEngagementIdentification eident:key_based ;
+    nuproc:uniqueSourceArticleCount "1"^^xsd:nonNegativeInteger .
+
+syn:article-A1 a nuproc:SourceArticle .
+syn:article-A2 a nuproc:SourceArticle .
+syn:article-B1 a nuproc:SourceArticle .
+
+syn:record-A1 a nuproc:EventRecord ;
+    prov:wasDerivedFrom syn:article-A1 ;
+    prov:wasGeneratedBy syn:activity-event-extraction ;
+    nuproc:describesEvent syn:cluster-A ;
+    nuproc:reportsEngagement syn:engagement-A .
+
+syn:record-A2 a nuproc:EventRecord ;
+    prov:wasDerivedFrom syn:article-A2 ;
+    prov:wasGeneratedBy syn:activity-event-extraction ;
+    nuproc:describesEvent syn:cluster-A ;
+    nuproc:reportsEngagement syn:engagement-A .
+
+syn:record-B1 a nuproc:EventRecord ;
+    prov:wasDerivedFrom syn:article-B1 ;
+    prov:wasGeneratedBy syn:activity-event-extraction ;
+    nuproc:describesEvent syn:cluster-B ;
+    nuproc:reportsEngagement syn:engagement-B .
+
+syn:participation-A-export a nuproc:CodedParticipation ;
+    nuproc:hasSide srole:export_side .
+
+syn:participation-A-host a nuproc:CodedParticipation ;
+    nuproc:hasCounterpartyRole crole:host_government ;
+    nuproc:hasSide srole:host_side .
+
+syn:participation-B-export a nuproc:CodedParticipation ;
+    nuproc:namesParticipant syn:org-vendor-beta ;
+    nuproc:hasSide srole:export_side .
+
+syn:participation-B-host a nuproc:CodedParticipation ;
+    nuproc:hasCounterpartyRole crole:host_government ;
+    nuproc:hasSide srole:host_side .
+
+syn:activity-event-extraction a nuproc:EventExtractionActivity ;
+    rdfs:label "Event extraction (SYN)" ;
+    prov:qualifiedAssociation syn:association-event-extraction-codebook ,
+        syn:association-event-extraction-prompt ;
+    prov:wasAssociatedWith syn:agent-extraction-model ;
+    nuproc:usedCodebookVersion syn:plan-extraction-codebook ;
+    nuproc:usedPromptSpecification syn:plan-extraction-prompt .
+
+syn:association-event-extraction-codebook a prov:Association ;
+    prov:agent syn:agent-extraction-model ;
+    prov:hadPlan syn:plan-extraction-codebook .
+
+syn:association-event-extraction-prompt a prov:Association ;
+    prov:agent syn:agent-extraction-model ;
+    prov:hadPlan syn:plan-extraction-prompt .
+
+syn:agent-extraction-model a prov:SoftwareAgent ;
+    rdfs:label "Extraction model (SYN)" .
+
+syn:plan-extraction-codebook a nuproc:CodebookVersion ;
+    rdfs:label "Extraction codebook (SYN)" .
+
+syn:plan-extraction-prompt a nuproc:PromptSpecification ;
+    rdfs:label "Extraction prompt specification (SYN)" .
+
+# A cluster that reports an engagement carries the occurrence status occurred, resting on a final occurrence claim
+# (pattern), and every NuProc cluster carries a status (profile).
+# Both engagements were reported as having taken place. The composition has no counterpart, and none of Q1-Q3 or
+# c1-c4 reads these triples; like the identification status, they are what NuProc asks of every cluster.
+syn:cluster-A nuproc:hasOccurrenceStatus ostat:occurred ;
+    nuproc:hasFinalOccurrenceClaim syn:occurrence-claim-A .
+syn:cluster-B nuproc:hasOccurrenceStatus ostat:occurred ;
+    nuproc:hasFinalOccurrenceClaim syn:occurrence-claim-B .
+syn:occurrence-claim-A a nuproc:OccurrenceClaim ;
+    nuproc:occurrenceClaimAbout syn:cluster-A ;
+    nuproc:claimedOccurrence ostat:occurred ;
+    prov:wasGeneratedBy syn:occurrence-coding .
+syn:occurrence-claim-B a nuproc:OccurrenceClaim ;
+    nuproc:occurrenceClaimAbout syn:cluster-B ;
+    nuproc:claimedOccurrence ostat:occurred ;
+    prov:wasGeneratedBy syn:occurrence-coding .
+syn:occurrence-coding a prov:Activity ;
+    rdfs:label "Occurrence coding (SYN)" ;
+    prov:qualifiedAssociation syn:occurrence-coding-association .
+syn:occurrence-coding-association a prov:Association ;
+    prov:agent syn:agent-model-m3 ;
+    prov:hadPlan syn:plan-occurrence-protocol .
+syn:plan-occurrence-protocol a prov:Plan ;
+    rdfs:label "Occurrence coding protocol (SYN)" .
+
+# The identification of an engagement by a cluster is a claim as well (ADR-0044): a NuProc cluster that carries an
+# identification status has the final claim that gave it (profile). Both statuses rest on the clustering key, so the
+# final claim is the claim of the clustering activity, whose plan is the month-granularity rule. As for the occurrence
+# status, the composition has no counterpart, and none of Q1-Q3 or c1-c4 reads these triples.
+syn:cluster-A nuproc:hasFinalIdentificationClaim syn:identification-claim-A .
+syn:cluster-B nuproc:hasFinalIdentificationClaim syn:identification-claim-B .
+syn:identification-claim-A a nuproc:IdentificationClaim ;
+    nuproc:identificationClaimAbout syn:cluster-A ;
+    nuproc:claimedIdentification eident:key_based ;
+    prov:wasGeneratedBy syn:clustering .
+syn:identification-claim-B a nuproc:IdentificationClaim ;
+    nuproc:identificationClaimAbout syn:cluster-B ;
+    nuproc:claimedIdentification eident:key_based ;
+    prov:wasGeneratedBy syn:clustering .
+syn:clustering a prov:Activity ;
+    rdfs:label "Clustering (SYN)" ;
+    prov:qualifiedAssociation syn:clustering-association .
+syn:clustering-association a prov:Association ;
+    prov:agent syn:agent-pipeline ;
+    prov:hadPlan <https://w3id.org/nuproc/rule/month-granularity> .
+syn:agent-pipeline a prov:SoftwareAgent ;
+    rdfs:label "Aggregation pipeline (SYN)" .
+
+# == S1 organisations ==
+
+syn:org-vendor-k a nuproc:Organization ;
+    rdfs:label "Vendor K (SYN)" .
+
+syn:org-utility-k a nuproc:Organization ;
+    rdfs:label "Utility K (SYN)" .
+
+syn:org-vendor-beta a nuproc:Organization ;
+    rdfs:label "Vendor Beta (SYN)" .
+
+# == P1 actor references: the candidate set of engagement A and the resolved reference of engagement B ==
+
+# The bundled label names two candidate organisations and the evidence does not say which one is meant: the
+# reference stays unresolvable. No participant is asserted for the participation (hasParticipantReference is the
+# slot), and engagement A gets no RO_0000057 participant and no role individual.
+syn:participation-A-export nuproc:hasActorReference syn:reference-A-export ;
+    nuproc:hasParticipantReference syn:reference-A-export .
+
+syn:reference-A-export a nuproc:AmbiguousOrganizationReference ;
+    nuproc:hasCandidateOrganization syn:org-utility-k , syn:org-vendor-k ;
+    nuproc:hasResolutionStatus rstat:unresolvable_candidate_set ;
+    nuproc:hasSourceMention "Vendor K / Utility K (SYN)"^^xsd:string .
+
+syn:participation-B-export nuproc:hasActorReference syn:reference-B-export .
+
+syn:reference-B-export a nuproc:DefiniteOrganizationReference ;
+    nuproc:hasResolutionStatus rstat:resolved ;
+    nuproc:hasSourceMention "Vendor Beta (SYN)"^^xsd:string ;
+    nuproc:resolvedTo syn:org-vendor-beta .
+
+# Each reference rests on the final claim of the judgement that gave its status and organization (ADR-0043): the
+# claim names the activity that made it, and the activity names its agent and plan on a qualified association, as
+# for role and occurrence claims.
+syn:reference-A-export nuproc:hasFinalResolutionClaim syn:resolution-claim-A .
+syn:reference-B-export nuproc:hasFinalResolutionClaim syn:resolution-claim-B .
+syn:resolution-claim-A a nuproc:ResolutionClaim ;
+    nuproc:resolutionClaimAbout syn:reference-A-export ;
+    nuproc:claimedResolutionStatus rstat:unresolvable_candidate_set ;
+    prov:wasGeneratedBy syn:reference-resolution .
+syn:resolution-claim-B a nuproc:ResolutionClaim ;
+    nuproc:resolutionClaimAbout syn:reference-B-export ;
+    nuproc:claimedResolutionStatus rstat:resolved ;
+    nuproc:claimedResolvedTo syn:org-vendor-beta ;
+    prov:wasGeneratedBy syn:reference-resolution .
+syn:reference-resolution a prov:Activity ;
+    rdfs:label "Reference resolution (SYN)" ;
+    prov:qualifiedAssociation syn:reference-resolution-association .
+syn:reference-resolution-association a prov:Association ;
+    prov:agent syn:agent-adjudicator ;
+    prov:hadPlan syn:plan-resolution-rules .
+syn:plan-resolution-rules a prov:Plan ;
+    rdfs:label "Reference resolution rules (SYN)" .
+
+# == P2 role claims and their provenance ==
+
+# One claim per (activity, participation, value). The final claims are the two of the model coding under codebook
+# v3.0 (engagement B) and the two of the same coding for engagement A. The earlier single-value coding left three
+# claims about engagement B: a model first pass (commercial supply), a human coder (construction contract) and an
+# adjudication that revised the first pass (technology supply).
+syn:claim-A-export-v3-construction_contract a nuproc:RoleClaim ;
+    prov:wasGeneratedBy syn:activity-role-coding-v3 ;
+    nuproc:claimAbout syn:participation-A-export ;
+    nuproc:claimedRole erole:construction_contract .
+
+syn:claim-A-export-v3-technology_supply a nuproc:RoleClaim ;
+    prov:wasGeneratedBy syn:activity-role-coding-v3 ;
+    nuproc:claimAbout syn:participation-A-export ;
+    nuproc:claimedRole erole:technology_supply .
+
+syn:claim-B-export-v3-financing a nuproc:RoleClaim ;
+    prov:wasGeneratedBy syn:activity-role-coding-v3 ;
+    nuproc:claimAbout syn:participation-B-export ;
+    nuproc:claimedRole erole:financing .
+
+syn:claim-B-export-v3-technology_supply a nuproc:RoleClaim ;
+    prov:wasGeneratedBy syn:activity-role-coding-v3 ;
+    nuproc:claimAbout syn:participation-B-export ;
+    nuproc:claimedRole erole:technology_supply .
+
+syn:claim-B-export-first-pass a nuproc:RoleClaim ;
+    prov:wasGeneratedBy syn:activity-function-first-pass ;
+    nuproc:claimAbout syn:participation-B-export ;
+    nuproc:claimedRole erole:commercial_supply .
+
+syn:claim-B-export-human-coder-A a nuproc:RoleClaim ;
+    prov:wasGeneratedBy syn:activity-function-coder-A ;
+    nuproc:claimAbout syn:participation-B-export ;
+    nuproc:claimedRole erole:construction_contract .
+
+syn:claim-B-export-adjudication a nuproc:RoleClaim ;
+    prov:wasGeneratedBy syn:activity-function-adjudication ;
+    prov:wasRevisionOf syn:claim-B-export-first-pass ;
+    nuproc:claimAbout syn:participation-B-export ;
+    nuproc:claimedRole erole:technology_supply .
+
+syn:participation-A-export nuproc:hasFinalRoleClaim syn:claim-A-export-v3-construction_contract ,
+        syn:claim-A-export-v3-technology_supply .
+
+syn:participation-B-export nuproc:hasFinalRoleClaim syn:claim-B-export-v3-financing ,
+        syn:claim-B-export-v3-technology_supply .
+
+syn:activity-role-coding-v3 a nuproc:EngagementRoleCodingActivity ;
+    rdfs:label "Role coding v3 (SYN)" ;
+    prov:qualifiedAssociation syn:association-role-coding-v3-codebook ,
+        syn:association-role-coding-v3-prompt ;
+    prov:wasAssociatedWith syn:agent-model-m3 ;
+    nuproc:usedCodebookVersion syn:plan-codebook-v3 ;
+    nuproc:usedPromptSpecification syn:plan-prompt-v3 .
+
+syn:association-role-coding-v3-codebook a prov:Association ;
+    prov:agent syn:agent-model-m3 ;
+    prov:hadPlan syn:plan-codebook-v3 .
+
+syn:association-role-coding-v3-prompt a prov:Association ;
+    prov:agent syn:agent-model-m3 ;
+    prov:hadPlan syn:plan-prompt-v3 .
+
+syn:activity-function-first-pass a nuproc:EngagementRoleCodingActivity ;
+    rdfs:label "Function coding, first pass (SYN)" ;
+    prov:qualifiedAssociation syn:association-function-first-pass-codebook ,
+        syn:association-function-first-pass-prompt ;
+    prov:wasAssociatedWith syn:agent-model-m2 ;
+    nuproc:usedCodebookVersion syn:plan-codebook-v2 ;
+    nuproc:usedPromptSpecification syn:plan-prompt-v1 .
+
+syn:association-function-first-pass-codebook a prov:Association ;
+    prov:agent syn:agent-model-m2 ;
+    prov:hadPlan syn:plan-codebook-v2 .
+
+syn:association-function-first-pass-prompt a prov:Association ;
+    prov:agent syn:agent-model-m2 ;
+    prov:hadPlan syn:plan-prompt-v1 .
+
+syn:activity-function-coder-A a nuproc:EngagementRoleCodingActivity ;
+    rdfs:label "Function coding by human coder A (SYN)" ;
+    prov:qualifiedAssociation syn:association-function-coder-A-codebook ;
+    prov:wasAssociatedWith syn:agent-human-coder-A ;
+    nuproc:usedCodebookVersion syn:plan-codebook-v2 .
+
+syn:association-function-coder-A-codebook a prov:Association ;
+    prov:agent syn:agent-human-coder-A ;
+    prov:hadPlan syn:plan-codebook-v2 .
+
+syn:activity-function-adjudication a prov:Activity ;
+    rdfs:label "Function adjudication (SYN)" ;
+    prov:qualifiedAssociation syn:association-function-adjudication-rule ;
+    prov:wasAssociatedWith syn:agent-adjudicator ;
+    prov:wasInformedBy syn:activity-function-first-pass .
+
+syn:association-function-adjudication-rule a prov:Association ;
+    prov:agent syn:agent-adjudicator ;
+    prov:hadPlan syn:plan-adjudication-rule .
+
+syn:agent-model-m3 a prov:SoftwareAgent ;
+    rdfs:label "Coding model M3 (SYN)" .
+
+syn:agent-model-m2 a prov:SoftwareAgent ;
+    rdfs:label "Coding model M2 (SYN)" .
+
+syn:agent-human-coder-A a prov:Person ;
+    rdfs:label "Human coder A (SYN)" .
+
+syn:agent-adjudicator a prov:Person ;
+    rdfs:label "Adjudicator (SYN)" .
+
+syn:plan-codebook-v3 a nuproc:CodebookVersion ;
+    rdfs:label "Codebook v3.0 (SYN)" .
+
+syn:plan-prompt-v3 a nuproc:PromptSpecification ;
+    rdfs:label "Prompt specification v3 (SYN)" .
+
+syn:plan-codebook-v2 a nuproc:CodebookVersion ;
+    rdfs:label "Codebook v2.0 (SYN)" .
+
+syn:plan-prompt-v1 a nuproc:PromptSpecification ;
+    rdfs:label "Prompt specification v1 (SYN)" .
+
+syn:plan-adjudication-rule a prov:Plan ;
+    rdfs:label "Adjudication rule (SYN)" .
+
+# == P3 roles: coded role values on the participations, and the real-world roles of the resolved participant ==
+
+# Information layer: the role values coded for each export-side participation (several, no priority).
+syn:participation-A-export nuproc:hasEngagementRole erole:construction_contract , erole:technology_supply .
+
+syn:participation-B-export nuproc:hasEngagementRole erole:financing , erole:technology_supply .
+
+# Real-world layer: only the resolved participant gets roles. Vendor Beta participates in engagement B and bears
+# three roles in the case, realized in engagement B: the export side and two role facets, each facet backed by
+# its final claim. A role is case-level: one per bearer, case and kind, realized in the engagements of the case in
+# which the bearer acts in it (here only engagement B).
+syn:engagement-B obo:RO_0000057 syn:org-vendor-beta .
+
+syn:role-case-vendor-beta-export_side a nuproc:ExportSideRole ;
+    nuproc:concernsCase syn:case ;
+    obo:BFO_0000054 syn:engagement-B ;
+    obo:RO_0000081 syn:org-vendor-beta .
+
+syn:role-case-vendor-beta-financing a nuproc:FinancingRole ;
+    nuproc:concernsCase syn:case ;
+    obo:BFO_0000054 syn:engagement-B ;
+    obo:RO_0000081 syn:org-vendor-beta ;
+    nuproc:supportedByClaim syn:claim-B-export-v3-financing .
+
+syn:role-case-vendor-beta-technology_supply a nuproc:TechnologySupplyRole ;
+    nuproc:concernsCase syn:case ;
+    obo:BFO_0000054 syn:engagement-B ;
+    obo:RO_0000081 syn:org-vendor-beta ;
+    nuproc:supportedByClaim syn:claim-B-export-v3-technology_supply .

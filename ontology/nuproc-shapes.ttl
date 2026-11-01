@@ -1,0 +1,1435 @@
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+@prefix prov:    <http://www.w3.org/ns/prov#> .
+@prefix time:    <http://www.w3.org/2006/time#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix vann:    <http://purl.org/vocab/vann/> .
+@prefix nuproc:  <https://w3id.org/nuproc/ns#> .
+@prefix channel: <https://w3id.org/nuproc/channel/> .
+@prefix etype:   <https://w3id.org/nuproc/eventtype/> .
+@prefix prole:   <https://w3id.org/nuproc/playerrole/> .
+@prefix crole:   <https://w3id.org/nuproc/counterpartyrole/> .
+@prefix srole:   <https://w3id.org/nuproc/siderole/> .
+@prefix rstat:   <https://w3id.org/nuproc/resolutionstatus/> .
+@prefix otype:   <https://w3id.org/nuproc/organizationtype/> .
+@prefix erole:   <https://w3id.org/nuproc/engagementrole/> .
+@prefix eident:  <https://w3id.org/nuproc/engagementidentification/> .
+@prefix ostat:   <https://w3id.org/nuproc/occurrencestatus/> .
+@prefix obo:     <http://purl.obolibrary.org/obo/> .
+
+<https://w3id.org/nuproc/shapes>
+    a owl:Ontology ;
+    owl:versionIRI <https://w3id.org/nuproc/shapes/0.9.0> ;
+    owl:versionInfo "0.9.0" ;
+    owl:priorVersion <https://w3id.org/nuproc/shapes/0.8.0> ;
+    owl:imports <https://w3id.org/nuproc/core> ;
+    dcterms:title "NuProc Ontology — SHACL shapes"@en ;
+    dcterms:description """Constraints for NuProc knowledge graphs, in two layers. The pattern layer holds the rules that follow from the definitions of four reusable patterns: reified two-sided participation (side optional), actor-reference resolution, coding provenance, and the real-world engagement with its roles. It obliges no class whose definition encodes the NuProc data, and the only NuProc codebook values it uses are the four occurrence values (occurred, planned, denied, unclear), which are pattern vocabulary: any dataset of reported events can carry them, and NuProc coded them under its occurrence codebook occurrence_v1. The first three patterns were fixed before the first cross-dataset reuse experiments (v0.5.0); the cross-dataset results reported with this version were obtained on it, after earlier results had been seen. Since v0.8.0 coding provenance also constrains the role claims, one per coded value, and the qualified associations that tie each coding activity to its agent and plans; and the fourth pattern constrains the real-world layer: a role is the role of one organization in one procurement case and is realized only in engagements of that case, the organizations that bear the roles realized in an engagement are its participants, and an engagement's participants and roles come from coded participations of the clusters that report it. A cluster that reports an engagement also states what that identification rests on (the clustering key alone, a person's check, or a person's judgement that the cluster merges two or more engagements), and a cluster judged to merge engagements reports none. Since v0.9.0 a cluster may carry a coded occurrence status (occurred, planned, denied or unclear) with one final claim for it, and only a cluster whose occurrence status is occurred reports an engagement or grounds a role (a rule for asserting engagements and roles: a role can exist before any engagement, but the report of an engagement not stated to have taken place is not taken as evidence for it); a record whose cluster reports no engagement reports none; each judgement of how an actor reference is resolved is a claim (ResolutionClaim) with the status it gives and, for a resolved reference, its organization, and a reference's final resolution claim claims the status and organization the reference carries; each judgement of what a cluster's identification with one engagement rests on is likewise a claim (IdentificationClaim), and a cluster's final identification claim claims the status the cluster carries; an activity that made a final role, occurrence, resolution or identification claim names its agent and plan on a qualified association; an engagement in the data is reported by at least one cluster; and a participation again has at most one participant organization, because a group of organizations acting together as one party, such as a consortium, is one organization. The real-world layer, the occurrence status and the role and resolution claims have no targets in the cross-dataset reuse graphs and are not tested by them. The profile layer holds the rules that encode the NuProc dataset and codebook: the procurement case, channel and event type, news-article sources, month precision, the coded vocabularies, the side of every participation, the completeness of the export side, the case of every engagement, the rule that a facet role is asserted only from a final role claim, the comparison of every quality measurement, the occurrence status of every cluster, the final identification claim of every cluster that carries an identification status, the final resolution claim of every actor reference, and the rule that a coding activity carried out by a software agent follows a prompt specification (every NuProc software coder was a prompted language model; in the pattern layer the rule would reject the non-generative coder of an external dataset). Since v0.7.0 every actor reference carries exactly one resolution status, and a candidate organization and its own name count as one candidate. Since v0.6.0 the pattern layer has not required the value that names a participation's side (the direction role in v0.6.0–v0.7.0, the side value since v0.8.0): a participation names its side by its side value when the source separates the export side from the host side, and otherwise by its side key. Severity is set by the kind of rule, not by how the design sample behaved: ontology invariants that follow from the definitions and design decisions, and the assertion rules that say which engagements and roles the real-world layer asserts, are sh:Violation, and the domain regularities (five channel regularities and the actor type expected by the role state_sponsorship) are sh:Warning whatever their measured rate. The layer never changes a severity. Sample-based expectations are reported under evaluation/ and are not encoded as shapes, which is why R2 is absent."""@en ;
+    dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
+    dcterms:creator "Wonbae Park" ;
+    dcterms:issued "2026-08-17"^^xsd:date ;
+    dcterms:modified "2026-10-29"^^xsd:date ;
+    vann:preferredNamespacePrefix "nuproc" ;
+    vann:preferredNamespaceUri "https://w3id.org/nuproc/ns#" ;
+    rdfs:seeAlso <https://github.com/bonjwanim/nuprockg> ;
+    rdfs:comment """Zero measured violations does not mean the rule is universal. It means the rule held on the three design cases. Violations found on the reserved case (UK_SIZEWELL) are measurements for the reserved-case evaluation, not errors to be corrected away."""@en ;
+    rdfs:comment """Pattern-only validation. Every named node shape carries exactly one nuproc:shapeLayer, "pattern" or "profile", and one nuproc:ruleKind. To validate a dataset against the pattern layer alone, load this graph and apply, in memory, the SPARQL Update INSERT { ?s sh:deactivated true } WHERE { ?s a sh:NodeShape . FILTER NOT EXISTS { ?s nuproc:shapeLayer "pattern" } } — a deactivated shape conforms for every node (SHACL 2017 §2.1.6). The update is fail-closed: a shape without a layer never stays in the pattern. Merge nuproc-core and nuproc-codebook into the data graph, and run with SHACL-SPARQL enabled; several pattern shapes carry SPARQL constraints."""@en .
+
+nuproc:prefixes
+    a owl:Ontology ;
+    sh:declare [ sh:prefix "nuproc" ; sh:namespace "https://w3id.org/nuproc/ns#"^^xsd:anyURI ] ;
+    sh:declare [ sh:prefix "skos"   ; sh:namespace "http://www.w3.org/2004/02/skos/core#"^^xsd:anyURI ] ;
+    sh:declare [ sh:prefix "channel"; sh:namespace "https://w3id.org/nuproc/channel/"^^xsd:anyURI ] ;
+    sh:declare [ sh:prefix "etype"  ; sh:namespace "https://w3id.org/nuproc/eventtype/"^^xsd:anyURI ] .
+
+
+########################################################################
+########################################################################
+##  패턴 층 — 재사용 패턴의 정의에서 나오는 규칙 (ADR-0034)
+##
+##  기준은 셋이고 차례로 적용한다. T1 종류(도메인 규칙성이면 프로파일) · T2 의무 어휘
+##  (요구하는 IRI 가 패턴 어휘 밖이면 프로파일 — 대상 자리는 조건이지 의무가 아니다) ·
+##  T3 근거(근거가 NuProc 원자료·코딩의 사실이면 프로파일). 기수 세칙: 최대는 동일성
+##  기준에서 나오고, 최소는 정의나 기록된 동일성 기준이 적을 때만 패턴이다.
+##  **쪽은 구조다** — 사건마다 참여 정확히 둘. **점유자는 자료다** — 수출 측이 채워져
+##  있어야 한다는 규칙은 프로파일이다. **측 값은 쪽의 속성이다** (v0.6 ADR-0036 · v0.8 ADR-0040) —
+##  측별 최대 하나는 패턴이고, 측을 반드시 적어야 한다는 규칙은 프로파일이다.
+##  **존재는 자료다** (v0.8 · v0.9) — 관여를 실어야 하는 군집 (병합되지 않고 occurred) 과 그 기록마다 관여가 실렸는가는
+##  적재 완결성이라 check_kg 가 센다.
+########################################################################
+########################################################################
+
+########################################################################
+## RP. 물화된 양쪽 참여 (측 선택) — ADR-0001 · ADR-0013 (개정 2026-09-16) · ADR-0031 · ADR-0036 · ADR-0040
+##
+##    ADR-0013 의 배타성은 **두 부분으로** 쓴다 (ADR-0034 §3). "한 참여가 두 슬롯을 함께
+##    갖지 않는다" 는 패턴(sh:not), "수출 측은 둘 중 하나를 갖는다" 는 프로파일이다.
+##
+##    **v0.6 (ADR-0036).** 참여의 동일성 기준은 (사건, 쪽) 이다. **v0.8 (ADR-0040 §4)** — 방향 역할
+##    (누가 주도했나) 을 측 역할 (어느 쪽인가 — 수출 측 · 발주 측) 이 대신한다. 원천이 두 측을 가르면 측 값이
+##    쪽의 이름이고, 아니면 sideKey 가 이름이다. 패턴은 측을 요구하지 않고 (V1), 쪽의 이름 하나를 요구한다
+##    (V2). 측 필수는 CodedParticipationProfileShape 에 있다 (V4).
+########################################################################
+
+nuproc:CodedParticipationShape
+    a sh:NodeShape ;
+    nuproc:shapeLayer "pattern" ;
+    nuproc:ruleKind "ontology invariant"@en ;
+    sh:targetClass nuproc:CodedParticipation ;
+    rdfs:comment "Slot exclusivity: a participation never carries both slots, on either side. Whether an export-side participation must carry one is a profile rule."@en ;
+    rdfs:comment "A participation names its side by its side value when the source separates the export side from the host side, and otherwise by its side key. The pattern does not require a side value; the NuProc profile does."@en ;
+
+    ## V1 (ADR-0036 · ADR-0040) — 측은 선택이다. 있으면 하나이고 두 값 중 하나다.
+    sh:property [
+        sh:path nuproc:hasSide ;
+        sh:maxCount 1 ;
+        sh:in ( srole:export_side srole:host_side ) ;
+        sh:message "A participation carries at most one side value, export_side or host_side. The side is recorded when the source separates the export side from the host side; the pattern does not require it (ADR-0036, ADR-0040)."@en ;
+    ] ;
+
+    ## V2 (ADR-0036) — 쪽의 이름. sideKey 는 최대 하나의 문자열이고, 참여는 측 값이나 sideKey
+    ## 로 제 쪽을 이름 짓는다.
+    sh:property [
+        sh:path nuproc:sideKey ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "A participation carries at most one side key, a string: the source's name for its side (ADR-0036)."@en ;
+    ] ;
+    ## ADR-0036 V2 의 노드 수준 sh:or ( [측 ≥ 1] [sideKey ≥ 1] ) 와 **같은 조건**을 대안 경로의
+    ## minCount 1 로 적는다. 대안 경로의 값 노드는 두 속성 값의 합집합이므로, 하나 이상 ⇔ 어느
+    ## 하나가 있다. 노드 수준에 두면 그 결과가 이 shape 의 sh:message(배타성)를 달고 나온다 —
+    ## SHACL 은 노드 수준 제약의 결과에 shape 의 메시지를 붙인다. 제 메시지를 갖게 하려고 속성
+    ## shape 로 둔다. 두 형태가 같은 판정을 내는지는 작은 그래프 전수 대조로 확인했다.
+    sh:property [
+        sh:path [ sh:alternativePath ( nuproc:hasSide nuproc:sideKey ) ] ;
+        sh:minCount 1 ;
+        sh:message "A participation names its side by its side value or by its side key (ADR-0036, ADR-0040)."@en ;
+    ] ;
+
+    # 조직 슬롯에는 조직만 온다. 지칭이 오면 위반이다 — 동일성 기준이 다르기 때문이다. **v0.9 (ADR-0041 §3)** — 참여자는 많아야
+    # 하나다 (패턴). 함께 한 당사자로 움직인 조직 무리 (컨소시엄) 는 조직 하나이고 구성원은 org:hasMember 로 잇는다. 0.8.0 은 이
+    # 상한을 프로파일에 두어, 패턴에서는 주장 하나가 한 측의 조직 여럿의 역할을 함께 뒷받침할 수 있었다.
+    sh:property [
+        sh:path nuproc:namesParticipant ;
+        sh:maxCount 1 ;
+        sh:class nuproc:Organization ;
+        sh:message "namesParticipant points to at most one Organization. A reference is a referring expression, not an actor, and belongs on hasParticipantReference (ADR-0013, ADR-0031). A group of organizations acting together as one party, such as a consortium, is one organization whose members are given with org:hasMember (ADR-0041)."@en ;
+    ] ;
+    sh:property [
+        sh:path nuproc:hasParticipantReference ;
+        sh:maxCount 1 ;
+        sh:class nuproc:ActorReference ;
+    ] ;
+    # ADR-0031 §8 — 지칭의 동일성은 그것이 쓰인 참여다. 슬롯의 지칭을 지칭 링크에 명시해도
+    # 같은 노드이므로 한 번으로 센다.
+    sh:property [
+        sh:path [ sh:alternativePath ( nuproc:hasParticipantReference nuproc:hasActorReference ) ] ;
+        sh:maxCount 1 ;
+        sh:class nuproc:ActorReference ;
+        sh:message "A participation carries at most one actor reference: a reference's identity is the participation in which it was used (ADR-0031)."@en ;
+    ] ;
+
+    ## **참여는 정확히 한 사건에 속한다.** 사건 shape 이 '사건마다 참여 둘' 을
+    ## 보장해도, 두 사건이 **같은 CodedParticipation 을 함께 가리키면** 양쪽 기수는 모두
+    ## 충족된다. 그러면 `CodedParticipation` 의 식별 기준(사건 + 쪽)이 깨진다 — 하나의
+    ## 참여가 두 사건에 속하게 되기 때문이다. 그 사건이 NuProc 의 사건
+    ## 군집이어야 한다는 것은 프로파일이 본다.
+    sh:property [
+        sh:path [ sh:inversePath nuproc:hasParticipation ] ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Each CodedParticipation must belong to exactly one event: its identity criterion is the event plus the side (ADR-0036)."@en ;
+    ] ;
+
+    sh:not [
+        sh:property [ sh:path nuproc:namesParticipant ;          sh:minCount 1 ] ;
+        sh:property [ sh:path nuproc:hasParticipantReference ; sh:minCount 1 ] ;
+    ] ;
+    sh:message "A participation never carries both namesParticipant and hasParticipantReference, on either side (ADR-0013 exclusivity)."@en ;
+    sh:severity sh:Violation .
+
+nuproc:EngagementClusterShape
+    a sh:NodeShape ;
+    nuproc:shapeLayer "pattern" ;
+    nuproc:ruleKind "ontology invariant"@en ;
+    sh:targetClass nuproc:EngagementCluster ;
+    # 추론 없이 검증하므로, 참여를 가진 노드는 타입이 없어도 사건으로서 검사한다 (ADR-0034).
+    sh:targetSubjectsOf nuproc:hasParticipation ;
+    #: **v0.6 (ADR-0036 V3)** — 쪽은 구조다: 사건마다 참여가 정확히 둘이다. v0.3~v0.5 는 방향별
+    #: 최소 1 · 최대 1 로 이것을 함의했으나, 측 값이 쪽의 속성인 지금은 수를 직접 적는다.
+    sh:property [ sh:path nuproc:hasParticipation ; sh:minCount 2 ; sh:maxCount 2 ;
+                  sh:class nuproc:CodedParticipation ;
+                  sh:message "An event has exactly two participations, one for each side: a participation is identified by its event and its side (ADR-0034, ADR-0036)."@en ] ;
+    #: 측별 **최대** 하나는 패턴이다 — 측 값이 쪽의 이름이면 한 쪽에 참여 하나다. 측별 **최소** 는 없다:
+    #: 원천이 두 측을 가르지 않으면 측 값이 없다. NuProc 에서는 프로파일의 측 필수(V4) · 참여 2..2 ·
+    #: 측별 최대 1 이 합쳐 정확히 수출 측 1 · 발주 측 1 이 된다 (ADR-0036 §5 · ADR-0040 §4).
+    sh:property [ sh:path nuproc:hasParticipation ;
+                  sh:qualifiedMaxCount 1 ;
+                  sh:qualifiedValueShape [ sh:property [
+                      sh:path nuproc:hasSide ; sh:hasValue srole:export_side ] ] ;
+                  sh:message "An event has at most one export-side participation: a side value names one side (ADR-0013, ADR-0040)."@en ] ;
+    sh:property [ sh:path nuproc:hasParticipation ;
+                  sh:qualifiedMaxCount 1 ;
+                  sh:qualifiedValueShape [ sh:property [
+                      sh:path nuproc:hasSide ; sh:hasValue srole:host_side ] ] ;
+                  sh:message "An event has at most one host-side participation: a side value names one side (ADR-0013, ADR-0040)."@en ] ;
+    #: sideKey 가 쪽의 이름일 때도 한 쪽에 참여 하나다 — 두 참여가 같은 sideKey 를 가지면 같은 쪽이
+    #: 된다. 전체 IRI 로 적는다. DISTINCT — 참여 쌍의 두 순서를
+    #: 한 결과로 센다.
+    sh:sparql [
+        sh:message "Two participations of one event share a side key: a side key names one side, and a side has one participation (ADR-0036)."@en ;
+        sh:select """
+            SELECT DISTINCT $this ?value WHERE {
+              $this <https://w3id.org/nuproc/ns#hasParticipation> ?p1 , ?p2 .
+              FILTER(?p1 != ?p2)
+              ?p1 <https://w3id.org/nuproc/ns#sideKey> ?value .
+              ?p2 <https://w3id.org/nuproc/ns#sideKey> ?value .
+            }
+        """ ;
+    ] ;
+    #: **ADR-0040 덧붙임** — 군집 → 관여 식별의 상태. 군집 규칙은 같은 달의 서로 다른 회의를 한 군집으로
+    #: 묶을 수 있으므로, 관여를 보도하는 군집은 그 식별이 무엇에 기대는지 적는다 (키 기반 · 확인됨). 사람이 둘 이상의 관여를
+    #: 묶었다고 판단한 군집 (병합) 은 관여를 보도하지 않는다. 새 이름 있는 shape 를 만들지 않았다 (식별 상태는 이 shape
+    #: 안에 둔다). 모든 군집이 상태를 가졌는가는 적재 완결성이라 check_kg 가 센다.
+    sh:property [ sh:path nuproc:hasEngagementIdentification ; sh:maxCount 1 ;
+                  sh:in ( eident:key_based eident:verified eident:merged ) ;
+                  sh:message "A cluster carries at most one engagement-identification state, from the engagement identification vocabulary (ADR-0040)."@en ] ;
+    #: ADR-0044 §2.2 — 식별 판단은 주장이다. 최종 주장은 많아야 하나 (패턴). 주장과 군집의 값이 맞는가는 IdentificationClaimShape 가
+    #: (주장 쪽에서), 상태를 가진 NuProc 군집마다 최종 주장이 있는가는 프로파일이 본다.
+    sh:property [ sh:path nuproc:hasFinalIdentificationClaim ; sh:maxCount 1 ; sh:class nuproc:IdentificationClaim ;
+                  sh:message "A cluster has at most one final identification claim (ADR-0044)."@en ] ;
+    sh:sparql [
+        sh:message "A cluster that reports an engagement states what that identification rests on, and the state is not merged: a cluster judged to bring two or more engagements together reports none (ADR-0040)."@en ;
+        sh:select """
+            SELECT $this ?value WHERE {
+              $this <https://w3id.org/nuproc/ns#reportsEngagement> ?value .
+              FILTER NOT EXISTS {
+                $this <https://w3id.org/nuproc/ns#hasEngagementIdentification> ?s .
+                FILTER(?s != <https://w3id.org/nuproc/engagementidentification/merged>)
+              }
+            }
+        """ ;
+    ] ;
+    #: **v0.9 (ADR-0041 §1 · §2 · 덧붙임 4)** — 관여의 발생 상태. 식별 (군집의 기록들이 관여 하나를 보도한다) 과 따로다. 관여를 보도하는
+    #: 군집은 발생 상태 occurred 를 적는다 — 상태를 적지 않은 군집도 관여를 보도하면 걸린다. 예정 · 부인 · 불명인 관여의 보도는 관여의
+    #: 존재를 함의하지 않는다. 단언된 값마다 그 값을 낸 최종 주장이 하나다 — 역할 주장과 같은 꼴 (CodedParticipationRoleClaimShape).
+    #: 관여를 보도하지 않는 군집은 상태가 없어도 이 shape 에 걸리지 않는다 — 역할의 근거는 EngagementRoleShape 가, 군집마다 상태가
+    #: 있는가는 프로파일 (EngagementClusterProfileShape) 이 본다.
+    sh:property [ sh:path nuproc:hasOccurrenceStatus ; sh:maxCount 1 ;
+                  sh:in ( ostat:occurred ostat:planned ostat:denied ostat:unclear ) ;
+                  sh:message "A cluster carries at most one occurrence status, from the occurrence status vocabulary (ADR-0041)."@en ] ;
+    sh:property [ sh:path nuproc:hasFinalOccurrenceClaim ; sh:class nuproc:OccurrenceClaim ] ;
+    sh:sparql [
+        sh:message "A cluster that reports an engagement carries the occurrence status occurred, resting on its final occurrence claim: the real-world layer asserts only engagements reported as having taken place, and the report of a planned, denied or unclear engagement does not imply that the engagement exists (ADR-0041)."@en ;
+        sh:select """
+            SELECT $this ?value WHERE {
+              $this <https://w3id.org/nuproc/ns#reportsEngagement> ?value .
+              FILTER NOT EXISTS {
+                $this <https://w3id.org/nuproc/ns#hasOccurrenceStatus> <https://w3id.org/nuproc/occurrencestatus/occurred> .
+              }
+            }
+        """ ;
+    ] ;
+    sh:sparql [
+        sh:message "The occurrence status of a cluster has exactly one final occurrence claim; that claim is about this cluster and claims that status, and every final occurrence claim claims the status the cluster carries (ADR-0041)."@en ;
+        sh:select """
+            SELECT $this ?value WHERE {
+              {
+                $this <https://w3id.org/nuproc/ns#hasOccurrenceStatus> ?value .
+                FILTER NOT EXISTS { $this <https://w3id.org/nuproc/ns#hasFinalOccurrenceClaim>/<https://w3id.org/nuproc/ns#claimedOccurrence> ?value }
+              } UNION {
+                $this <https://w3id.org/nuproc/ns#hasFinalOccurrenceClaim> ?c .
+                ?c <https://w3id.org/nuproc/ns#claimedOccurrence> ?value .
+                FILTER NOT EXISTS { $this <https://w3id.org/nuproc/ns#hasOccurrenceStatus> ?value }
+              } UNION {
+                $this <https://w3id.org/nuproc/ns#hasFinalOccurrenceClaim> ?value .
+                FILTER NOT EXISTS { ?value <https://w3id.org/nuproc/ns#occurrenceClaimAbout> $this }
+              } UNION {
+                $this <https://w3id.org/nuproc/ns#hasFinalOccurrenceClaim> ?c1 , ?c2 .
+                FILTER(?c1 != ?c2)
+                ?c1 <https://w3id.org/nuproc/ns#claimedOccurrence> ?value .
+                ?c2 <https://w3id.org/nuproc/ns#claimedOccurrence> ?value .
+              }
+            }
+        """ ;
+    ] ;
+    sh:severity sh:Violation .
+
+
+########################################################################
+## RR. 행위자 지칭 해소 — ADR-0026 · ADR-0031
+##
+##    지칭의 **종류**는 강성(클래스)이고 **해소 상태**는 반강성 값이다. 허용되는 상태는
+##    종류에서 나온다. 해소된 지칭은 정확히 그때 resolvedTo 를 갖고, 그 조직은 참여의
+##    namesParticipant 와 같다.
+##
+##    **v0.7 (ADR-0039 §3) — 해소 상태는 필수다.** 종전에는 상태의 완결성을 check_kg 만 셌고
+##    (*"minCount 를 두면 음성 fixture 가 둘 이상의 shape 에 걸린다"*), 상태가 없는 지칭이 SHACL 을
+##    통과했다. 해소 상태는 이 패턴이 나타내는 것 자체이므로 정의에서 나오는 규칙이다 — 패턴이다.
+##    음성 fixture 의 지칭에는 상태를 채워 한 shape 에서만 울게 했다. **지칭이 빠짐없이 있는가**
+##    (수출 측 참여마다 지칭 하나 — 1,026 / 1,026) 는 여전히 적재 완결성이고 check_kg 가 센다 — SHACL 통과는
+##    자료가 완결됐다는 뜻이 아니다.
+########################################################################
+
+nuproc:ActorReferenceShape
+    a sh:NodeShape ;
+    nuproc:shapeLayer "pattern" ;
+    nuproc:ruleKind "ontology invariant"@en ;
+    sh:targetClass nuproc:ActorReference ;
+    sh:property [ sh:path nuproc:hasSourceMention ; sh:maxCount 1 ; sh:datatype xsd:string ] ;
+    sh:property [ sh:path nuproc:hasResolutionStatus ; sh:minCount 1 ; sh:maxCount 1 ;
+                  sh:node nuproc:ResolutionStatusConceptShape ;
+                  sh:message "Every actor reference carries exactly one resolution status: resolving a reference is what this pattern represents, so a reference without a status is not a complete reference (ADR-0031, ADR-0039)."@en ] ;
+    #: v0.9 (ADR-0041 §3) — 해소 대상은 많아야 하나다 (패턴). 컨소시엄을 가리킨 지칭은 컨소시엄 조직 하나로 해소된다.
+    sh:property [ sh:path nuproc:resolvedTo ; sh:maxCount 1 ; sh:class nuproc:Organization ;
+                  sh:message "A reference resolves to at most one organization: a group of organizations acting together as one party, such as a consortium, is one organization (ADR-0031, ADR-0041)."@en ] ;
+    #: ADR-0043 §2.3 — 해소 판단은 주장이다. 최종 주장은 많아야 하나 (패턴). 주장과 지칭의 값이 맞는가는 ResolutionClaimShape 가 (주장
+    #: 쪽에서 — 이 shape 는 노드 메시지를 가지므로 SPARQL 을 더하지 않는다), 지칭마다 최종 주장이 있는가는 프로파일이 본다.
+    sh:property [ sh:path nuproc:hasFinalResolutionClaim ; sh:maxCount 1 ; sh:class nuproc:ResolutionClaim ;
+                  sh:message "A reference has at most one final resolution claim (ADR-0043)."@en ] ;
+    sh:property [ sh:path [ sh:alternativePath ( [ sh:inversePath nuproc:hasParticipantReference ]
+                                                 [ sh:inversePath nuproc:hasActorReference ] ) ] ;
+                  sh:maxCount 1 ;
+                  sh:message "A reference is used in at most one participation (ADR-0031)."@en ] ;
+    sh:or (
+        [ sh:property [ sh:path nuproc:hasResolutionStatus ; sh:hasValue rstat:resolved ] ;
+          sh:property [ sh:path nuproc:resolvedTo ; sh:minCount 1 ] ]
+        [ sh:not [ sh:property [ sh:path nuproc:hasResolutionStatus ; sh:hasValue rstat:resolved ] ] ;
+          sh:property [ sh:path nuproc:resolvedTo ; sh:maxCount 0 ] ]
+    ) ;
+    sh:message "A reference carries resolvedTo exactly when its status is rstat:resolved (ADR-0031)."@en ;
+    sh:severity sh:Violation .
+
+## 종류 ↔ 상태 표 (ADR-0031 §3). 추론 없이 **단언된 종류**로만 본다 — 적재기는 가장 아래
+## 종류를 단언한다. SHACL 은 제약 SPARQL 에 VALUES 를 허락하지 않으므로 FILTER IN 을 쓴다.
+nuproc:ReferenceKindStatusShape
+    a sh:NodeShape ;
+    nuproc:shapeLayer "pattern" ;
+    nuproc:ruleKind "ontology invariant"@en ;
+    sh:targetClass nuproc:ActorReference ;
+    sh:sparql [
+        sh:message "The resolution status is not admissible for the referential kind of this reference (ADR-0031)."@en ;
+        sh:select """
+            SELECT $this ?value WHERE {
+              {
+                $this <https://w3id.org/nuproc/ns#hasResolutionStatus> ?value . $this a ?k .
+                FILTER(?k IN (<https://w3id.org/nuproc/ns#CollectiveActorReference>, <https://w3id.org/nuproc/ns#AnonymousSingularReference>, <https://w3id.org/nuproc/ns#NationalSideReference>))
+                FILTER(?value != <https://w3id.org/nuproc/resolutionstatus/unresolvable_collective>)
+              } UNION {
+                $this <https://w3id.org/nuproc/ns#hasResolutionStatus> ?value . $this a <https://w3id.org/nuproc/ns#AmbiguousOrganizationReference> .
+                FILTER(?value != <https://w3id.org/nuproc/resolutionstatus/unresolvable_candidate_set>)
+              } UNION {
+                $this <https://w3id.org/nuproc/ns#hasResolutionStatus> ?value . $this a <https://w3id.org/nuproc/ns#DefiniteOrganizationReference> .
+                FILTER(?value NOT IN (<https://w3id.org/nuproc/resolutionstatus/resolved>, <https://w3id.org/nuproc/resolutionstatus/unresolved>))
+              } UNION {
+                $this <https://w3id.org/nuproc/ns#hasResolutionStatus> ?value . $this a <https://w3id.org/nuproc/ns#UnnamedActorReference> .
+                FILTER(?value = <https://w3id.org/nuproc/resolutionstatus/resolved>)
+              }
+            }
+        """ ;
+    ] ;
+    sh:severity sh:Violation .
+
+## 조직과 지칭이 어긋나지 않는가 (ADR-0031 §5·§6). 해소된 지칭은 슬롯에 서지 않는다.
+## 슬롯의 지칭이 지칭 링크에 명시됐는가는 **적재 완결성**이지 정의에서 나오는 규칙이
+## 아니므로 여기 두지 않는다 (check_kg 가 센다).
+nuproc:CodedParticipationReferenceCoherenceShape
+    a sh:NodeShape ;
+    nuproc:shapeLayer "pattern" ;
+    nuproc:ruleKind "ontology invariant"@en ;
+    sh:targetClass nuproc:CodedParticipation ;
+    sh:sparql [
+        sh:message "namesParticipant and the resolvedTo of this participation's reference must agree, and a resolved reference never stands in the hasParticipantReference slot (ADR-0031)."@en ;
+        sh:select """
+            SELECT $this ?value WHERE {
+              { $this <https://w3id.org/nuproc/ns#hasActorReference> ?r . ?r <https://w3id.org/nuproc/ns#resolvedTo> ?value .
+                FILTER NOT EXISTS { $this <https://w3id.org/nuproc/ns#namesParticipant> ?value } }
+              UNION
+              { $this <https://w3id.org/nuproc/ns#namesParticipant> ?value ; <https://w3id.org/nuproc/ns#hasActorReference> ?r .
+                FILTER NOT EXISTS { ?r <https://w3id.org/nuproc/ns#resolvedTo> ?value } }
+              UNION
+              { $this <https://w3id.org/nuproc/ns#hasParticipantReference> ?value . ?value <https://w3id.org/nuproc/ns#resolvedTo> ?o }
+            }
+        """ ;
+    ] ;
+    sh:severity sh:Violation .
+
+## 모호한 조직 지칭은 **후보가 둘 이상**이어야 한다. 하나면 그것은 모호한 지칭이
+## 아니라 해소된 지칭이다 — 정의문이 그렇게 적고 있는데 제약이 없었다.
+## 후보는 IRI(등재된 조직) 또는 표기 문자열 어느 쪽으로도 실릴 수 있으므로 둘을
+## 합쳐 센다. **v0.5 에서 고쳤다** — 종전 판은 두 OPTIONAL 을 COALESCE 로 묶어 후보
+## IRI 하나 + 표기 하나를 한 행으로 셌고, IRI 후보가 0건이라 드러나지 않았다 (ADR-0031 §9).
+## **v0.7 에서 다시 고쳤다 (ADR-0039 §3)** — v0.5 판은 후보 조직과 **그 조직의 이름**을 후보 둘로
+## 셌다. 이제 서로 다른 후보 조직 수에, 어느 후보 조직의 rdfs:label · skos:prefLabel 과도 (대소문자를
+## 무시하고) 같지 않은 표기 수를 더한다. 이름이 없는 조직의 표기는 같은 조직인지 알 수 없으므로 따로 센다.
+nuproc:AmbiguousReferenceCandidateShape
+    a sh:NodeShape ;
+    nuproc:shapeLayer "pattern" ;
+    nuproc:ruleKind "ontology invariant"@en ;
+    sh:targetClass nuproc:AmbiguousOrganizationReference ;
+    sh:sparql [
+        sh:message "An ambiguous organization reference must carry at least two candidates: with one candidate it is resolved, not ambiguous. A candidate organization and a candidate label naming that organization count as one candidate (ADR-0026, ADR-0039)."@en ;
+        sh:select """
+            SELECT $this WHERE {
+              $this a ?anyType .
+              OPTIONAL { SELECT $this (COUNT(DISTINCT ?o) AS ?nOrg) WHERE {
+                  $this <https://w3id.org/nuproc/ns#hasCandidateOrganization> ?o .
+                } GROUP BY $this }
+              OPTIONAL { SELECT $this (COUNT(DISTINCT LCASE(STR(?lab))) AS ?nLab) WHERE {
+                  $this <https://w3id.org/nuproc/ns#hasCandidateLabel> ?lab .
+                  FILTER NOT EXISTS {
+                    $this <https://w3id.org/nuproc/ns#hasCandidateOrganization> ?o2 .
+                    ?o2 <http://www.w3.org/2000/01/rdf-schema#label>|<http://www.w3.org/2004/02/skos/core#prefLabel> ?name .
+                    FILTER(LCASE(STR(?name)) = LCASE(STR(?lab)))
+                  }
+                } GROUP BY $this }
+              BIND(COALESCE(?nOrg, 0) + COALESCE(?nLab, 0) AS ?n)
+              FILTER(?n < 2)
+            }
+        """ ;
+    ] ;
+    sh:severity sh:Violation .
+
+nuproc:CollectiveActorReferenceShape
+    a sh:NodeShape ;
+    nuproc:shapeLayer "pattern" ;
+    nuproc:ruleKind "ontology invariant"@en ;
+    sh:targetClass nuproc:CollectiveActorReference ;
+    rdfs:comment "assertedParticipantCount carries no sh:minCount on purpose: it is asserted only where the source stated a number, and estimating one would fabricate data."@en ;
+    sh:property [ sh:path nuproc:assertedParticipantCount ; sh:maxCount 1 ;
+                  sh:datatype xsd:positiveInteger ; sh:minInclusive 2 ;
+                  sh:message "A collective reference denotes two or more organizations, so a count it states is at least two (ADR-0043)."@en ] ;
+    sh:severity sh:Violation .
+
+## 해소 상태는 **지칭**에 붙는다. 그리고 **금지를 명시한다** — 빼기만 하면 '검사하지
+## 않는다' 가 되지 '금지한다' 가 되지 않는다. 조직에 붙이면 SHACL 위반이기 이전에
+## OWL 비일관이다.
+nuproc:OrganizationNoResolutionStatusShape
+    a sh:NodeShape ;
+    nuproc:shapeLayer "pattern" ;
+    nuproc:ruleKind "ontology invariant"@en ;
+    sh:targetClass nuproc:Organization ;
+    sh:property [ sh:path nuproc:hasResolutionStatus ; sh:maxCount 0 ;
+                  sh:message "Resolution status belongs to an actor reference, not to an organization. Organization and ActorReference are disjoint (ADR-0026, ADR-0031)."@en ] ;
+    sh:severity sh:Violation .
+
+nuproc:ResolutionStatusConceptShape a sh:NodeShape ;
+    nuproc:shapeLayer "pattern" ;
+    nuproc:ruleKind "ontology invariant"@en ;
+    sh:property [ sh:path skos:inScheme ; sh:hasValue <https://w3id.org/nuproc/resolutionstatus/> ;
+        sh:message "The resolution status must come from the ResolutionStatus scheme."@en ] .
+
+
+########################################################################
+## CP. 코딩 출처 — ADR-0003 · ADR-0027 · ADR-0033
+##
+##    기록은 근거 엔터티에서 파생되고, 하나의 사건 군집을 기술하며, 최대 하나의 코딩
+##    활동이 만든다. 근거가 **뉴스 기사**이고 군집이 **NuProc 사건**이어야 한다는 것은
+##    프로파일이 본다 (EventRecordProfileShape).
+########################################################################
+
+nuproc:EventRecordShape
+    a sh:NodeShape ;
+    nuproc:shapeLayer "pattern" ;
+    nuproc:ruleKind "ontology invariant"@en ;
+    sh:targetClass nuproc:EventRecord ;
+    sh:targetSubjectsOf nuproc:describesEvent ;
+    sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:class prov:Entity ;
+                  sh:message "Every record must name the source entity it was derived from. Evidence attaches to the record, not to the analytical cluster it contributes to (ADR-0027)."@en ] ;
+    sh:property [ sh:path nuproc:describesEvent ; sh:minCount 1 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path prov:wasGeneratedBy ; sh:maxCount 1 ; sh:class nuproc:CodingActivity ] ;
+    sh:severity sh:Violation .
+
+## **v0.8 (ADR-0040 §7) — 출처를 제약한다.** 종전에는 한정 연관 (prov:qualifiedAssociation) 이 그래프에 있었으나
+## 어떤 shape 도 그것을 요구하지 않았다. PROV-DM 의 연관은 계획을 하나만 가지므로 계획마다 연관이
+## 하나다 — 연관은 하나 이상, 연관마다 행위자 하나 · 계획 최대 하나, 활동마다 계획 하나 이상. used* 로 적은 계획은
+## 연관에도 있어야 한다 (모델 활동의 프롬프트 명세 규칙은 프로파일 CodingActivityProfileShape 에 있다).
+## 행위자 · 계획의 클래스는 보지 않는다 — PROV-O 의 클래스 계층은 검증 그래프에 병합되지 않는다 (core 만 가져온다).
+nuproc:CodingActivityShape
+    a sh:NodeShape ;
+    nuproc:shapeLayer "pattern" ;
+    nuproc:ruleKind "ontology invariant"@en ;
+    sh:targetClass nuproc:CodingActivity ;
+    sh:property [ sh:path nuproc:usedCodebookVersion ; sh:maxCount 1 ;
+                  sh:class nuproc:CodebookVersion ] ;
+    sh:property [ sh:path nuproc:usedPromptSpecification ; sh:maxCount 1 ;
+                  sh:class nuproc:PromptSpecification ] ;
+    sh:property [ sh:path prov:qualifiedAssociation ; sh:minCount 1 ; sh:node nuproc:AssociationShape ;
+                  sh:message "A coding activity carries at least one qualified association naming the agent that coded; each association has exactly one agent and at most one plan (PROV-DM; ADR-0033, ADR-0040)."@en ] ;
+    sh:property [ sh:path ( prov:qualifiedAssociation prov:hadPlan ) ; sh:minCount 1 ;
+                  sh:message "A coding activity followed at least one plan, a codebook version or a prompt specification, recorded on a qualified association (ADR-0040)."@en ] ;
+    #: ADR-0040 덧붙임 2 · 20항 — '모델의 코딩 활동은 프롬프트 명세' 제약은 CodingActivityProfileShape (프로파일) 로
+    #: 옮겼다. 0.8.0 외부 사후 회귀에서 POLECAT 의 (프롬프트를 쓰지 않는) 기계 코더에 걸렸다 — 근거가 NuProc 코딩의 사실이다 (T3).
+    sh:sparql [
+        sh:message "A codebook version or prompt specification that the activity used is also the plan of one of its qualified associations (ADR-0033, ADR-0040)."@en ;
+        sh:select """
+            SELECT $this ?value WHERE {
+              $this <https://w3id.org/nuproc/ns#usedCodebookVersion>|<https://w3id.org/nuproc/ns#usedPromptSpecification> ?value .
+              FILTER NOT EXISTS {
+                $this <http://www.w3.org/ns/prov#qualifiedAssociation>/<http://www.w3.org/ns/prov#hadPlan> ?value .
+              }
+            }
+        """ ;
+    ] ;
+    sh:severity sh:Violation .
+
+## 한정 연관 하나 — 행위자 하나, 계획 최대 하나 (PROV-DM: association(a, ag, pl)). 대상 없이 sh:node 로만 쓴다.
+nuproc:AssociationShape
+    a sh:NodeShape ;
+    nuproc:shapeLayer "pattern" ;
+    nuproc:ruleKind "ontology invariant"@en ;
+    sh:property [ sh:path prov:agent ; sh:minCount 1 ; sh:maxCount 1 ;
+                  sh:message "A qualified association names exactly one agent (PROV-DM)."@en ] ;
+    sh:property [ sh:path prov:hadPlan ; sh:maxCount 1 ;
+                  sh:message "A qualified association has at most one plan (PROV-DM); an activity that followed two plans has two associations (ADR-0033)."@en ] .
+
+########################################################################
+## CP (계속). 역할 주장 — ADR-0039 §2 · ADR-0040 §3 — **v0.8 에서 패턴으로 올렸다**
+##
+##    코딩된 값마다 그 값을 낸 주장이 하나 있고 (최종 주장), 주장마다 그것을 낸 활동이 하나 있다.
+##    주장은 값 하나에 하나다 — 한 활동이 한 참여에 역할 셋을 주장하면 주장도 셋이다. 주장은 그것이
+##    개정하는 주장을 prov:wasRevisionOf 로 가리킬 수 있다. 주장된 값이 NuProc 어휘인지는 프로파일이 본다.
+########################################################################
+
+nuproc:RoleClaimShape
+    a sh:NodeShape ;
+    nuproc:shapeLayer "pattern" ;
+    nuproc:ruleKind "ontology invariant"@en ;
+    sh:targetClass nuproc:RoleClaim ;
+    sh:property [ sh:path nuproc:claimAbout ; sh:minCount 1 ; sh:maxCount 1 ;
+                  sh:class nuproc:CodedParticipation ;
+                  sh:message "A role claim is about exactly one coded participation (ADR-0039, ADR-0040)."@en ] ;
+    sh:property [ sh:path nuproc:claimedRole ; sh:minCount 1 ; sh:maxCount 1 ;
+                  sh:message "A role claim gives exactly one value: an activity that claims several roles for a participation makes one claim per role (ADR-0040)."@en ] ;
+    sh:property [ sh:path prov:wasGeneratedBy ; sh:minCount 1 ; sh:maxCount 1 ;
+                  sh:class prov:Activity ;
+                  sh:message "A role claim was made by exactly one coding or adjudication activity: the activity, the participation and the value identify the claim (ADR-0039, ADR-0040)."@en ] ;
+    sh:property [ sh:path prov:wasRevisionOf ; sh:maxCount 1 ; sh:class nuproc:RoleClaim ] ;
+    sh:sparql [
+        sh:message "A revised role claim must be about the same participation as the claim it revises (ADR-0039)."@en ;
+        sh:select """
+            SELECT $this ?value WHERE {
+              $this <http://www.w3.org/ns/prov#wasRevisionOf> ?value .
+              $this <https://w3id.org/nuproc/ns#claimAbout> ?p .
+              FILTER NOT EXISTS { ?value <https://w3id.org/nuproc/ns#claimAbout> ?p }
+            }
+        """ ;
+    ] ;
+    #: **v0.9 (ADR-0041 §6, 빈틈 (b))** — 최종 주장을 낸 활동은 누가 어떤 계획으로 했는지 한정 연관에 적는다.
+    #: 종전에는 코딩 활동 클래스의 활동만 연관을 요구받아, 판정 · 조정 활동 (prov:Activity) 이 낸 최종 주장의 출처가 비어도 통과했다.
+    sh:sparql [
+        sh:message "The activity that made a final role claim names its agent and its plan on at least one qualified association: the provenance of an asserted value says who coded it under which plan (ADR-0041)."@en ;
+        sh:select """
+            SELECT $this ?value WHERE {
+              ?p <https://w3id.org/nuproc/ns#hasFinalRoleClaim> $this .
+              $this <http://www.w3.org/ns/prov#wasGeneratedBy> ?value .
+              FILTER NOT EXISTS {
+                ?value <http://www.w3.org/ns/prov#qualifiedAssociation> ?a .
+                ?a <http://www.w3.org/ns/prov#agent> ?ag ; <http://www.w3.org/ns/prov#hadPlan> ?pl .
+              }
+            }
+        """ ;
+    ] ;
+    sh:severity sh:Violation .
+
+nuproc:CodedParticipationRoleClaimShape
+    a sh:NodeShape ;
+    nuproc:shapeLayer "pattern" ;
+    nuproc:ruleKind "ontology invariant"@en ;
+    sh:targetClass nuproc:CodedParticipation ;
+    sh:property [ sh:path nuproc:hasFinalRoleClaim ; sh:class nuproc:RoleClaim ] ;
+    sh:sparql [
+        sh:message "Each engagement role value of a participation has exactly one final role claim; that claim is about this participation and claims that value, and every final claim claims a value the participation carries (ADR-0040)."@en ;
+        sh:select """
+            SELECT $this ?value WHERE {
+              {
+                $this <https://w3id.org/nuproc/ns#hasEngagementRole> ?value .
+                FILTER NOT EXISTS { $this <https://w3id.org/nuproc/ns#hasFinalRoleClaim>/<https://w3id.org/nuproc/ns#claimedRole> ?value }
+              } UNION {
+                $this <https://w3id.org/nuproc/ns#hasFinalRoleClaim> ?c .
+                ?c <https://w3id.org/nuproc/ns#claimedRole> ?value .
+                FILTER NOT EXISTS { $this <https://w3id.org/nuproc/ns#hasEngagementRole> ?value }
+              } UNION {
+                $this <https://w3id.org/nuproc/ns#hasFinalRoleClaim> ?value .
+                FILTER NOT EXISTS { ?value <https://w3id.org/nuproc/ns#claimAbout> $this }
+              } UNION {
+                $this <https://w3id.org/nuproc/ns#hasFinalRoleClaim> ?c1 , ?c2 .
+                FILTER(?c1 != ?c2)
+                ?c1 <https://w3id.org/nuproc/ns#claimedRole> ?value .
+                ?c2 <https://w3id.org/nuproc/ns#claimedRole> ?value .
+              }
+            }
+        """ ;
+    ] ;
+    sh:severity sh:Violation .
+
+## **v0.9 (ADR-0041 §1) — 발생 주장.** 역할 주장과 같은 꼴: 주장마다 군집 하나 · 값 하나 · 활동 하나. 군집의 값과 최종 주장의 맞물림은
+## EngagementClusterShape 가 본다. 주장이 관한 노드의 클래스는 요구하지 않는다 (사건 클래스는 패턴 어휘가 아니다 — 대상 자리 전용).
+## 값의 어휘 (넷) 는 식별 상태처럼 패턴이다 — 보도된 사건이면 어느 자료에서나 쓰는 값이다.
+nuproc:OccurrenceClaimShape
+    a sh:NodeShape ;
+    nuproc:shapeLayer "pattern" ;
+    nuproc:ruleKind "ontology invariant"@en ;
+    sh:targetClass nuproc:OccurrenceClaim ;
+    sh:property [ sh:path nuproc:occurrenceClaimAbout ; sh:minCount 1 ; sh:maxCount 1 ;
+                  sh:message "An occurrence claim is about exactly one engagement-event cluster (ADR-0041)."@en ] ;
+    sh:property [ sh:path nuproc:claimedOccurrence ; sh:minCount 1 ; sh:maxCount 1 ;
+                  sh:in ( ostat:occurred ostat:planned ostat:denied ostat:unclear ) ;
+                  sh:message "An occurrence claim gives exactly one value of the occurrence status vocabulary (ADR-0041)."@en ] ;
+    sh:property [ sh:path prov:wasGeneratedBy ; sh:minCount 1 ; sh:maxCount 1 ;
+                  sh:class prov:Activity ;
+                  sh:message "An occurrence claim was made by exactly one coding or adjudication activity: the activity, the cluster and the value identify the claim (ADR-0041)."@en ] ;
+    sh:property [ sh:path prov:wasRevisionOf ; sh:maxCount 1 ; sh:class nuproc:OccurrenceClaim ] ;
+    sh:sparql [
+        sh:message "A revised occurrence claim must be about the same cluster as the claim it revises (ADR-0041)."@en ;
+        sh:select """
+            SELECT $this ?value WHERE {
+              $this <http://www.w3.org/ns/prov#wasRevisionOf> ?value .
+              $this <https://w3id.org/nuproc/ns#occurrenceClaimAbout> ?k .
+              FILTER NOT EXISTS { ?value <https://w3id.org/nuproc/ns#occurrenceClaimAbout> ?k }
+            }
+        """ ;
+    ] ;
+    sh:sparql [
+        sh:message "The activity that made a final occurrence claim names its agent and its plan on at least one qualified association (ADR-0041)."@en ;
+        sh:select """
+            SELECT $this ?value WHERE {
+              ?k <https://w3id.org/nuproc/ns#hasFinalOccurrenceClaim> $this .
+              $this <http://www.w3.org/ns/prov#wasGeneratedBy> ?value .
+              FILTER NOT EXISTS {
+                ?value <http://www.w3.org/ns/prov#qualifiedAssociation> ?a .
+                ?a <http://www.w3.org/ns/prov#agent> ?ag ; <http://www.w3.org/ns/prov#hadPlan> ?pl .
+              }
+            }
+        """ ;
+    ] ;
+    sh:severity sh:Violation .
+
+## **ADR-0043 §2.3 — 해소 주장.** 역할 · 발생 주장과 같은 꼴: 주장마다 지칭 하나 · 상태 하나 · 활동 하나, 해소된 주장의 조직 하나.
+## 최종 주장과 지칭의 값이 맞는가도 여기서 본다 (주장 쪽에서 — ActorReferenceShape 는 노드 메시지를 가져 SPARQL 을 더하지 않는다).
+## 주장이 관한 노드의 클래스는 요구하지 않는다 (발생 주장과 같다). 지칭마다 최종 주장이 있는가는 프로파일이다 (ActorReferenceProfileShape)
+## — 외부 자료의 지칭에는 상태가 있고 주장이 없다.
+nuproc:ResolutionClaimShape
+    a sh:NodeShape ;
+    nuproc:shapeLayer "pattern" ;
+    nuproc:ruleKind "ontology invariant"@en ;
+    sh:targetClass nuproc:ResolutionClaim ;
+    sh:property [ sh:path nuproc:resolutionClaimAbout ; sh:minCount 1 ; sh:maxCount 1 ;
+                  sh:message "A resolution claim is about exactly one actor reference (ADR-0043)."@en ] ;
+    sh:property [ sh:path nuproc:claimedResolutionStatus ; sh:minCount 1 ; sh:maxCount 1 ;
+                  sh:in ( rstat:resolved rstat:unresolved rstat:unresolvable_candidate_set rstat:unresolvable_collective ) ;
+                  sh:message "A resolution claim gives exactly one value of the resolution status vocabulary (ADR-0043)."@en ] ;
+    sh:property [ sh:path nuproc:claimedResolvedTo ; sh:maxCount 1 ; sh:class nuproc:Organization ;
+                  sh:message "A resolution claim resolves the reference to at most one organization (ADR-0043)."@en ] ;
+    sh:property [ sh:path prov:wasGeneratedBy ; sh:minCount 1 ; sh:maxCount 1 ;
+                  sh:class prov:Activity ;
+                  sh:message "A resolution claim was made by exactly one judging activity: the activity, the reference and the value identify the claim (ADR-0043)."@en ] ;
+    sh:property [ sh:path prov:wasRevisionOf ; sh:maxCount 1 ; sh:class nuproc:ResolutionClaim ] ;
+    sh:sparql [
+        sh:message "A resolution claim names an organization exactly when the status it claims is resolved (ADR-0043)."@en ;
+        sh:select """
+            SELECT $this ?value WHERE {
+              {
+                $this <https://w3id.org/nuproc/ns#claimedResolutionStatus> ?value .
+                FILTER(?value = <https://w3id.org/nuproc/resolutionstatus/resolved>)
+                FILTER NOT EXISTS { $this <https://w3id.org/nuproc/ns#claimedResolvedTo> ?o }
+              } UNION {
+                $this <https://w3id.org/nuproc/ns#claimedResolvedTo> ?value .
+                FILTER NOT EXISTS { $this <https://w3id.org/nuproc/ns#claimedResolutionStatus> <https://w3id.org/nuproc/resolutionstatus/resolved> }
+              }
+            }
+        """ ;
+    ] ;
+    sh:sparql [
+        sh:message "The final resolution claim of a reference is about that reference and claims the status and organization the reference carries (ADR-0043)."@en ;
+        sh:select """
+            SELECT $this ?value WHERE {
+              {
+                ?value <https://w3id.org/nuproc/ns#hasFinalResolutionClaim> $this .
+                FILTER NOT EXISTS { $this <https://w3id.org/nuproc/ns#resolutionClaimAbout> ?value }
+              } UNION {
+                ?r <https://w3id.org/nuproc/ns#hasFinalResolutionClaim> $this .
+                $this <https://w3id.org/nuproc/ns#claimedResolutionStatus> ?value .
+                FILTER NOT EXISTS { ?r <https://w3id.org/nuproc/ns#hasResolutionStatus> ?value }
+              } UNION {
+                ?r <https://w3id.org/nuproc/ns#hasFinalResolutionClaim> $this .
+                ?r <https://w3id.org/nuproc/ns#hasResolutionStatus> ?value .
+                FILTER NOT EXISTS { $this <https://w3id.org/nuproc/ns#claimedResolutionStatus> ?value }
+              } UNION {
+                ?r <https://w3id.org/nuproc/ns#hasFinalResolutionClaim> $this .
+                $this <https://w3id.org/nuproc/ns#claimedResolvedTo> ?value .
+                FILTER NOT EXISTS { ?r <https://w3id.org/nuproc/ns#resolvedTo> ?value }
+              } UNION {
+                ?r <https://w3id.org/nuproc/ns#hasFinalResolutionClaim> $this .
+                ?r <https://w3id.org/nuproc/ns#resolvedTo> ?value .
+                FILTER NOT EXISTS { $this <https://w3id.org/nuproc/ns#claimedResolvedTo> ?value }
+              }
+            }
+        """ ;
+    ] ;
+    sh:sparql [
+        sh:message "A revised resolution claim must be about the same reference as the claim it revises (ADR-0043)."@en ;
+        sh:select """
+            SELECT $this ?value WHERE {
+              $this <http://www.w3.org/ns/prov#wasRevisionOf> ?value .
+              $this <https://w3id.org/nuproc/ns#resolutionClaimAbout> ?k .
+              FILTER NOT EXISTS { ?value <https://w3id.org/nuproc/ns#resolutionClaimAbout> ?k }
+            }
+        """ ;
+    ] ;
+    sh:sparql [
+        sh:message "The activity that made a final resolution claim names its agent and its plan on at least one qualified association (ADR-0043)."@en ;
+        sh:select """
+            SELECT $this ?value WHERE {
+              ?k <https://w3id.org/nuproc/ns#hasFinalResolutionClaim> $this .
+              $this <http://www.w3.org/ns/prov#wasGeneratedBy> ?value .
+              FILTER NOT EXISTS {
+                ?value <http://www.w3.org/ns/prov#qualifiedAssociation> ?a .
+                ?a <http://www.w3.org/ns/prov#agent> ?ag ; <http://www.w3.org/ns/prov#hadPlan> ?pl .
+              }
+            }
+        """ ;
+    ] ;
+    sh:severity sh:Violation .
+
+## **ADR-0044 §2.2 — 식별 주장.** 발생 · 해소 주장과 같은 꼴: 주장마다 군집 하나 · 식별 상태 하나 · 활동 하나. 최종 주장과 군집의 값이 맞는가도
+## 여기서 본다 (주장 쪽에서). 상태를 가진 군집마다 최종 주장이 있는가는 프로파일이다 (EngagementClusterProfileShape) — 외부 자료의 군집에는
+## 식별 판단의 주장이 없다.
+nuproc:IdentificationClaimShape
+    a sh:NodeShape ;
+    nuproc:shapeLayer "pattern" ;
+    nuproc:ruleKind "ontology invariant"@en ;
+    sh:targetClass nuproc:IdentificationClaim ;
+    sh:property [ sh:path nuproc:identificationClaimAbout ; sh:minCount 1 ; sh:maxCount 1 ;
+                  sh:message "An identification claim is about exactly one engagement-event cluster (ADR-0044)."@en ] ;
+    sh:property [ sh:path nuproc:claimedIdentification ; sh:minCount 1 ; sh:maxCount 1 ;
+                  sh:in ( eident:key_based eident:verified eident:merged ) ;
+                  sh:message "An identification claim gives exactly one value of the engagement identification vocabulary (ADR-0044)."@en ] ;
+    sh:property [ sh:path prov:wasGeneratedBy ; sh:minCount 1 ; sh:maxCount 1 ;
+                  sh:class prov:Activity ;
+                  sh:message "An identification claim was made by exactly one activity: the activity, the cluster and the value identify the claim (ADR-0044)."@en ] ;
+    sh:property [ sh:path prov:wasRevisionOf ; sh:maxCount 1 ; sh:class nuproc:IdentificationClaim ] ;
+    sh:sparql [
+        sh:message "The final identification claim of a cluster is about that cluster and claims the identification status the cluster carries (ADR-0044)."@en ;
+        sh:select """
+            SELECT $this ?value WHERE {
+              {
+                ?value <https://w3id.org/nuproc/ns#hasFinalIdentificationClaim> $this .
+                FILTER NOT EXISTS { $this <https://w3id.org/nuproc/ns#identificationClaimAbout> ?value }
+              } UNION {
+                ?k <https://w3id.org/nuproc/ns#hasFinalIdentificationClaim> $this .
+                $this <https://w3id.org/nuproc/ns#claimedIdentification> ?value .
+                FILTER NOT EXISTS { ?k <https://w3id.org/nuproc/ns#hasEngagementIdentification> ?value }
+              } UNION {
+                ?k <https://w3id.org/nuproc/ns#hasFinalIdentificationClaim> $this .
+                ?k <https://w3id.org/nuproc/ns#hasEngagementIdentification> ?value .
+                FILTER NOT EXISTS { $this <https://w3id.org/nuproc/ns#claimedIdentification> ?value }
+              }
+            }
+        """ ;
+    ] ;
+    sh:sparql [
+        sh:message "A revised identification claim must be about the same cluster as the claim it revises (ADR-0044)."@en ;
+        sh:select """
+            SELECT $this ?value WHERE {
+              $this <http://www.w3.org/ns/prov#wasRevisionOf> ?value .
+              $this <https://w3id.org/nuproc/ns#identificationClaimAbout> ?k .
+              FILTER NOT EXISTS { ?value <https://w3id.org/nuproc/ns#identificationClaimAbout> ?k }
+            }
+        """ ;
+    ] ;
+    sh:sparql [
+        sh:message "The activity that made a final identification claim names its agent and its plan on at least one qualified association (ADR-0044)."@en ;
+        sh:select """
+            SELECT $this ?value WHERE {
+              ?k <https://w3id.org/nuproc/ns#hasFinalIdentificationClaim> $this .
+              $this <http://www.w3.org/ns/prov#wasGeneratedBy> ?value .
+              FILTER NOT EXISTS {
+                ?value <http://www.w3.org/ns/prov#qualifiedAssociation> ?a .
+                ?a <http://www.w3.org/ns/prov#agent> ?ag ; <http://www.w3.org/ns/prov#hadPlan> ?pl .
+              }
+            }
+        """ ;
+    ] ;
+    sh:severity sh:Violation .
+
+
+########################################################################
+## RW. 실세계 관여와 역할 — ADR-0040 §1 · §2 · §6 (v0.8 신설)
+##
+##    관여 (Engagement, BFO process) 에 조직이 참여하고 (RO has participant), 관여 역할은 조직 하나가 조달 사례 하나에서
+##    갖는 역할이며 (RO role of · concernsCase) 그 사례의 관여 0..n 에서 실현된다 (BFO has realization). 정보 층의 군집 · 기록은 관여를 보도한다
+##    (reportsEngagement). **실세계 층은 자료가 식별한 것만 단언한다** — 참여자와 역할은 그 관여를 보도한 군집의
+##    코딩된 참여에서 온다 (해소된 참여의 참여자 · 측 값 · 최종 역할 주장). 그래서 참여자를 지어내지 않는다.
+##    존재는 자료다 — 관여의 사례 · facet 역할의 주장은 프로파일, 관여를 실어야 하는 군집 (병합되지 않고 occurred) 과 그
+##    기록마다 관여가 실렸는가는 check_kg 다.
+########################################################################
+
+nuproc:ReportsEngagementShape
+    a sh:NodeShape ;
+    nuproc:shapeLayer "pattern" ;
+    nuproc:ruleKind "ontology invariant"@en ;
+    sh:targetSubjectsOf nuproc:reportsEngagement ;
+    sh:property [ sh:path nuproc:reportsEngagement ; sh:maxCount 1 ; sh:class nuproc:Engagement ;
+                  sh:message "A record or a cluster reports at most one engagement: reportsEngagement is functional (ADR-0040)."@en ] ;
+    #: v0.9 (ADR-0041 §2, 빈틈 (a)) —관여를 보도하지 않는 군집 (병합 · 발생하지 않음) 의 기록은 관여를 보도하지
+    #: 않는다. 종전에는 '기록과 군집이 같은 관여' 만 보아, 군집이 관여를 갖지 않으면 기록의 관여가 검사되지 않았다.
+    sh:sparql [
+        sh:message "A record and the cluster it contributes to report the same engagement, a record whose cluster reports no engagement reports none, and a cluster and the engagement it reports concern the same case (ADR-0040, ADR-0041)."@en ;
+        sh:select """
+            SELECT $this ?value WHERE {
+              {
+                $this <https://w3id.org/nuproc/ns#describesEvent> ?k ; <https://w3id.org/nuproc/ns#reportsEngagement> ?value .
+                ?k <https://w3id.org/nuproc/ns#reportsEngagement> ?e .
+                FILTER(?value != ?e)
+              } UNION {
+                $this <https://w3id.org/nuproc/ns#describesEvent> ?k ; <https://w3id.org/nuproc/ns#reportsEngagement> ?value .
+                FILTER NOT EXISTS { ?k <https://w3id.org/nuproc/ns#reportsEngagement> ?e }
+              } UNION {
+                $this <https://w3id.org/nuproc/ns#concernsCase> ?value ; <https://w3id.org/nuproc/ns#reportsEngagement> ?e .
+                ?e <https://w3id.org/nuproc/ns#concernsCase> ?c .
+                FILTER(?value != ?c)
+              }
+            }
+        """ ;
+    ] ;
+    sh:severity sh:Violation .
+
+## ADR-0043 §2.7 e — 실세계 층이 무엇을 단언하는가의 규칙 (존재 조건이 아니다): 규칙 종류 assertion rule, 심각도 Violation 그대로.
+nuproc:EngagementShape
+    a sh:NodeShape ;
+    nuproc:shapeLayer "pattern" ;
+    nuproc:ruleKind "assertion rule"@en ;
+    sh:targetClass nuproc:Engagement ;
+    sh:sparql [
+        sh:message "The organization that bears a role realized in an engagement participates in that engagement (RO has participant; ADR-0040)."@en ;
+        sh:select """
+            SELECT $this ?value WHERE {
+              ?r <http://purl.obolibrary.org/obo/BFO_0000054> $this ; <http://purl.obolibrary.org/obo/RO_0000081> ?value .
+              FILTER NOT EXISTS { $this <http://purl.obolibrary.org/obo/RO_0000057> ?value }
+            }
+        """ ;
+    ] ;
+    sh:sparql [
+        sh:message "A participant of an engagement is the participant of a coded participation of a cluster that reports the engagement: the real-world layer asserts only what the data identify (ADR-0040)."@en ;
+        sh:select """
+            SELECT $this ?value WHERE {
+              $this <http://purl.obolibrary.org/obo/RO_0000057> ?value .
+              FILTER NOT EXISTS {
+                ?k <https://w3id.org/nuproc/ns#reportsEngagement> $this ; <https://w3id.org/nuproc/ns#hasParticipation> ?p .
+                ?p <https://w3id.org/nuproc/ns#namesParticipant> ?value .
+              }
+            }
+        """ ;
+    ] ;
+    #: v0.9 (ADR-0041 §6, 빈틈 (c)) —자료의 관여는 그것을 보도하는 군집 (참여를 가진 사건) 이 하나 이상 있다.
+    #: 종전에는 어느 군집도 보도하지 않는 관여가 통과했다 — 실세계 층은 자료가 식별한 것만 단언한다.
+    sh:sparql [
+        sh:message "An engagement in the data is reported by at least one cluster: the real-world layer asserts only what the data identify (ADR-0040, ADR-0041)."@en ;
+        sh:select """
+            SELECT DISTINCT $this WHERE {
+              $this a ?anyType .
+              FILTER NOT EXISTS {
+                ?k <https://w3id.org/nuproc/ns#reportsEngagement> $this ; <https://w3id.org/nuproc/ns#hasParticipation> ?p .
+              }
+            }
+        """ ;
+    ] ;
+    sh:severity sh:Violation .
+
+## 역할은 **사례 수준** 이다: 동일성 (담지 조직, 조달 사례, 유형) · 담지 하나 · 사례 하나 · 실현 0..n.
+## BFO 의 역할처럼 실현되지 않은 채로도, 여러 관여에서 실현되어도 같은 역할이다. 역할이 어디서 왔는지: facet 역할은 그것을
+## 뒷받침하는 최종 주장들 (값의 roleClass 가 역할의 클래스, 주장의 참여자가 담지 조직, 그 참여의 군집이 역할의 사례에 속한다),
+## 측 역할은 측 값의 roleClass 가 역할의 클래스인 해소된 참여. 실현은 근거와 맞물린다 — 뒷받침하는 주장의 군집이 관여를 보도하면
+## 역할은 그 관여에서 실현되고, 실현된 관여마다 그것을 보도한 군집에 근거 (facet: 뒷받침하는 주장 · 측: 그 측의 참여) 가 있다.
+## 사람이 여러 관여를 묶었다고 판단한 군집 (보도하는 관여가 없다) 의 주장은 역할을 뒷받침하지만 실현을 낳지 않는다.
+## **역할의 근거는 발생 상태가 occurred 인 군집뿐이다 (ADR-0041 덧붙임 4 · 5)** — 다른 군집 (예정 · 부인 · 불명, 또는 상태를 적지
+## 않은 군집) 의 주장은 역할을 뒷받침하지 않고, 그 참여는 측 역할을 낳지 않는다. 관여의 단언 (EngagementClusterShape) 과 같은 조건이다.
+## 역할을 단언하는 규칙이지 역할이 있기 위한 조건이 아니다 — 계약을 맺은 공급자의 역할처럼 역할은 관여 전에도 있을 수 있지만, 일어났다고
+## 보도되지 않은 관여의 보도를 그 근거로 삼지 않는다.
+## 클래스는 **단언된** 것만 본다 — 적재기는 가장 아래 역할 클래스를 단언한다.
+## ADR-0043 §2.7 e — 실세계 층이 무엇을 단언하는가의 규칙 (존재 조건이 아니다): 규칙 종류 assertion rule, 심각도 Violation 그대로.
+nuproc:EngagementRoleShape
+    a sh:NodeShape ;
+    nuproc:shapeLayer "pattern" ;
+    nuproc:ruleKind "assertion rule"@en ;
+    sh:targetClass nuproc:EngagementRole ;
+    sh:property [ sh:path obo:RO_0000081 ; sh:minCount 1 ; sh:maxCount 1 ; sh:class nuproc:Organization ;
+                  sh:message "An engagement role is the role of exactly one organization (RO role of; ADR-0040)."@en ] ;
+    sh:property [ sh:path nuproc:concernsCase ; sh:minCount 1 ; sh:maxCount 1 ;
+                  sh:message "An engagement role is a role of its bearer in exactly one procurement case (ADR-0040)."@en ] ;
+    sh:property [ sh:path obo:BFO_0000054 ; sh:class nuproc:Engagement ;
+                  sh:message "An engagement role is realized only in engagements, possibly several or none (BFO has realization; ADR-0040)."@en ] ;
+    sh:property [ sh:path nuproc:supportedByClaim ; sh:class nuproc:RoleClaim ] ;
+    sh:sparql [
+        sh:message "An organization has at most one role of each kind in one procurement case: the bearer, the case and the kind identify a role (ADR-0040)."@en ;
+        sh:select """
+            SELECT $this ?value WHERE {
+              $this a ?k ; <http://purl.obolibrary.org/obo/RO_0000081> ?o ; <https://w3id.org/nuproc/ns#concernsCase> ?case .
+              ?k <http://www.w3.org/2000/01/rdf-schema#subClassOf> <https://w3id.org/nuproc/ns#EngagementRole> .
+              ?value a ?k ; <http://purl.obolibrary.org/obo/RO_0000081> ?o ; <https://w3id.org/nuproc/ns#concernsCase> ?case .
+              FILTER(?value != $this)
+            }
+        """ ;
+    ] ;
+    sh:sparql [
+        sh:message "A role is realized only in engagements of its own procurement case (ADR-0040)."@en ;
+        sh:select """
+            SELECT $this ?value WHERE {
+              $this <https://w3id.org/nuproc/ns#concernsCase> ?case ; <http://purl.obolibrary.org/obo/BFO_0000054> ?value .
+              ?value <https://w3id.org/nuproc/ns#concernsCase> ?other .
+              FILTER(?other != ?case)
+            }
+        """ ;
+    ] ;
+    sh:sparql [
+        sh:message "A role supported by a claim must agree with it: the claim is a final claim whose value stands for the role's class, about a participation whose participant is the role's bearer, in a cluster of the role's procurement case (ADR-0040)."@en ;
+        sh:select """
+            SELECT $this ?value WHERE {
+              $this <https://w3id.org/nuproc/ns#supportedByClaim> ?value .
+              FILTER NOT EXISTS {
+                ?p <https://w3id.org/nuproc/ns#hasFinalRoleClaim> ?value .
+                ?value <https://w3id.org/nuproc/ns#claimAbout> ?p ; <https://w3id.org/nuproc/ns#claimedRole> ?v .
+                ?v <https://w3id.org/nuproc/ns#roleClass> ?k . $this a ?k .
+                ?p <https://w3id.org/nuproc/ns#namesParticipant> ?o . $this <http://purl.obolibrary.org/obo/RO_0000081> ?o .
+                ?c <https://w3id.org/nuproc/ns#hasParticipation> ?p ; <https://w3id.org/nuproc/ns#concernsCase> ?case .
+                $this <https://w3id.org/nuproc/ns#concernsCase> ?case .
+              }
+            }
+        """ ;
+    ] ;
+    sh:sparql [
+        sh:message "A role is supported only by claims about a cluster whose occurrence status is occurred; the claims of a cluster that is planned, denied or unclear, or that states no status, stay claims. This is a rule for asserting roles, not a condition of their existence: a role can exist before any engagement takes place, but the report of an engagement not stated to have taken place is not taken as evidence for it (ADR-0041)."@en ;
+        sh:select """
+            SELECT $this ?value WHERE {
+              $this <https://w3id.org/nuproc/ns#supportedByClaim> ?value .
+              ?value <https://w3id.org/nuproc/ns#claimAbout> ?p .
+              ?c <https://w3id.org/nuproc/ns#hasParticipation> ?p .
+              FILTER NOT EXISTS {
+                ?c <https://w3id.org/nuproc/ns#hasOccurrenceStatus> <https://w3id.org/nuproc/occurrencestatus/occurred> .
+              }
+            }
+        """ ;
+    ] ;
+    sh:sparql [
+        sh:message "A role is realized in every engagement reported by a cluster whose final claim supports it (ADR-0040)."@en ;
+        sh:select """
+            SELECT $this ?value WHERE {
+              $this <https://w3id.org/nuproc/ns#supportedByClaim> ?cl .
+              ?cl <https://w3id.org/nuproc/ns#claimAbout> ?p .
+              ?c <https://w3id.org/nuproc/ns#hasParticipation> ?p ; <https://w3id.org/nuproc/ns#reportsEngagement> ?value .
+              FILTER NOT EXISTS { $this <http://purl.obolibrary.org/obo/BFO_0000054> ?value }
+            }
+        """ ;
+    ] ;
+    sh:sparql [
+        sh:message "A role facet is realized only in an engagement reported by a cluster whose final claim supports the role: the real-world layer asserts only what the data identify (ADR-0040)."@en ;
+        sh:select """
+            SELECT $this ?value WHERE {
+              $this a ?k ; <http://purl.obolibrary.org/obo/BFO_0000054> ?value .
+              ?k <http://www.w3.org/2000/01/rdf-schema#subClassOf> <https://w3id.org/nuproc/ns#EngagementRole> .
+              FILTER NOT EXISTS {
+                ?v <https://w3id.org/nuproc/ns#roleClass> ?k ;
+                   <http://www.w3.org/2004/02/skos/core#inScheme> <https://w3id.org/nuproc/siderole/> .
+              }
+              FILTER NOT EXISTS {
+                $this <https://w3id.org/nuproc/ns#supportedByClaim> ?cl . ?cl <https://w3id.org/nuproc/ns#claimAbout> ?p .
+                ?c <https://w3id.org/nuproc/ns#hasParticipation> ?p ; <https://w3id.org/nuproc/ns#reportsEngagement> ?value .
+              }
+            }
+        """ ;
+    ] ;
+    sh:sparql [
+        sh:message "A side role comes from a resolved participation on that side: its bearer is the participant of a coded participation whose side value stands for the role's class, in a cluster of the role's procurement case whose occurrence status is occurred, and each engagement in which it is realized is reported by such a cluster (ADR-0040, ADR-0041)."@en ;
+        sh:select """
+            SELECT $this ?value WHERE {
+              {
+                $this a ?k ; <http://purl.obolibrary.org/obo/RO_0000081> ?o ; <https://w3id.org/nuproc/ns#concernsCase> ?value .
+                ?v <https://w3id.org/nuproc/ns#roleClass> ?k ;
+                   <http://www.w3.org/2004/02/skos/core#inScheme> <https://w3id.org/nuproc/siderole/> .
+                FILTER NOT EXISTS {
+                  ?p <https://w3id.org/nuproc/ns#hasSide> ?v ; <https://w3id.org/nuproc/ns#namesParticipant> ?o .
+                  ?c <https://w3id.org/nuproc/ns#hasParticipation> ?p ; <https://w3id.org/nuproc/ns#concernsCase> ?value ;
+                     <https://w3id.org/nuproc/ns#hasOccurrenceStatus> <https://w3id.org/nuproc/occurrencestatus/occurred> .
+                }
+              } UNION {
+                $this a ?k ; <http://purl.obolibrary.org/obo/RO_0000081> ?o ; <http://purl.obolibrary.org/obo/BFO_0000054> ?value .
+                ?v <https://w3id.org/nuproc/ns#roleClass> ?k ;
+                   <http://www.w3.org/2004/02/skos/core#inScheme> <https://w3id.org/nuproc/siderole/> .
+                FILTER NOT EXISTS {
+                  ?p <https://w3id.org/nuproc/ns#hasSide> ?v ; <https://w3id.org/nuproc/ns#namesParticipant> ?o .
+                  ?c <https://w3id.org/nuproc/ns#hasParticipation> ?p ; <https://w3id.org/nuproc/ns#reportsEngagement> ?value .
+                }
+              }
+            }
+        """ ;
+    ] ;
+    sh:severity sh:Violation .
+
+
+########################################################################
+########################################################################
+##  프로파일 층 — NuProc 자료와 코드북을 적은 규칙 (ADR-0034)
+##
+##  사례(원전 신규건설 사업) · 채널 · 사건 유형 · 뉴스 기사 출처 · 월 정밀도 · 코딩된
+##  어휘 · 수출 측 완결성. 프로파일에도 불변식(sh:Violation)이 있다 — 층은 등급을
+##  바꾸지 않는다.
+########################################################################
+########################################################################
+
+## 수출 측 완결성 — ADR-0013 의 "수출 측 (종전 주도측) 은 두 슬롯 중 하나를 갖는다". 근거가 ADR-0013 의
+## 자료 표(996 + 30 / 1,026)뿐이므로 프로파일이다 — **점유자는 자료다** (ADR-0034).
+##
+## 측 필수 (v0.6 ADR-0036 V4 · v0.8 ADR-0040 §4) — NuProc 원자료는 수출 측 (player 계열) 과 발주 측
+## (counterparty 계열) 을 늘 가른다. 근거가 자료의 사실이고, 패턴 용어를 정의대로 쓰는 자료(EC 면담 등록부)에는
+## 두 측이 없으므로 프로파일이다.
+##
+## 역할 값 (v0.8) — 다중값이다 (상한 없음). 어휘 · 'other 는 홀로' · '수출 측에만' 은 codebook v3.0 의 규칙이라
+## 프로파일이다 (EngagementRoleValueProfileShape).
+nuproc:CodedParticipationProfileShape
+    a sh:NodeShape ;
+    nuproc:shapeLayer "profile" ;
+    nuproc:ruleKind "ontology invariant"@en ;
+    sh:targetClass nuproc:CodedParticipation ;
+    sh:property [ sh:path nuproc:hasSide ; sh:minCount 1 ;
+                  sh:message "In NuProc data every participation carries its side: the NuProc source separates the export side from the host side in every engagement (ADR-0001, ADR-0036, ADR-0040)."@en ] ;
+    sh:property [ sh:path nuproc:hasCodedPlayerCategory ; sh:maxCount 1 ;
+                  sh:node nuproc:PlayerRoleConceptShape ] ;
+    sh:property [ sh:path nuproc:hasCounterpartyRole ; sh:maxCount 1 ;
+                  sh:node nuproc:CounterpartyRoleConceptShape ] ;
+    sh:property [ sh:path nuproc:hasEngagementRole ;
+                  sh:node nuproc:EngagementRoleConceptShape ] ;
+    sh:or (
+        [ sh:not [ sh:property [ sh:path nuproc:hasSide ; sh:hasValue srole:export_side ] ] ]
+        [ sh:property [ sh:path nuproc:namesParticipant ;          sh:minCount 1 ] ]
+        [ sh:property [ sh:path nuproc:hasParticipantReference ; sh:minCount 1 ] ]
+    ) ;
+    sh:property [ sh:path [ sh:inversePath nuproc:hasParticipation ] ;
+                  sh:class nuproc:EngagementCluster ;
+                  sh:message "In a NuProc graph the event a participation belongs to is an asserted EngagementCluster, a reported engagement-event cluster (ADR-0027)."@en ] ;
+    ## v0.9 (ADR-0041 §3) — 참여자 하나 · 지칭의 해소 대상 하나는 패턴으로 옮겼다 (CodedParticipationShape · ActorReferenceShape):
+    ## 컨소시엄은 조직 하나다. 0.8.0 은 이 둘을 여기 (프로파일) 에 두었다.
+    sh:message "In NuProc data an export-side participation carries exactly one of namesParticipant / hasParticipantReference (ADR-0013, ADR-0040)."@en ;
+    sh:severity sh:Violation .
+
+## codebook v3.0 의 두 규칙 — other 는 다른 값과 함께 쓰지 않는다 · 역할은 수출 측 참여에만 코딩된다 (코딩 규약 v3 §2).
+nuproc:EngagementRoleValueProfileShape
+    a sh:NodeShape ;
+    nuproc:shapeLayer "profile" ;
+    nuproc:ruleKind "ontology invariant"@en ;
+    sh:targetClass nuproc:CodedParticipation ;
+    sh:sparql [
+        sh:message "In NuProc data the engagement role 'other' is coded only when none of the five other roles applies, so it never stands beside another role value; and roles are coded only for the export-side participation (codebook v3.0, ADR-0040)."@en ;
+        sh:select """
+            SELECT $this ?value WHERE {
+              {
+                $this <https://w3id.org/nuproc/ns#hasEngagementRole> <https://w3id.org/nuproc/engagementrole/other> , ?value .
+                FILTER(?value != <https://w3id.org/nuproc/engagementrole/other>)
+              } UNION {
+                $this <https://w3id.org/nuproc/ns#hasEngagementRole> ?value .
+                FILTER NOT EXISTS { $this <https://w3id.org/nuproc/ns#hasSide> <https://w3id.org/nuproc/siderole/export_side> }
+              }
+            }
+        """ ;
+    ] ;
+    sh:severity sh:Violation .
+
+nuproc:EngagementClusterProfileShape
+    a sh:NodeShape ;
+    nuproc:shapeLayer "profile" ;
+    nuproc:ruleKind "ontology invariant"@en ;
+    sh:targetClass nuproc:EngagementCluster ;
+    sh:property [ sh:path nuproc:concernsCase ; sh:minCount 1 ; sh:maxCount 1 ;
+                  sh:class nuproc:ProcurementCase ] ;
+    sh:property [ sh:path nuproc:hasEngagementChannel ; sh:minCount 1 ; sh:maxCount 1 ;
+                  sh:node nuproc:ChannelConceptShape ] ;
+    sh:property [ sh:path nuproc:hasEventType ; sh:minCount 1 ; sh:maxCount 1 ;
+                  sh:node nuproc:EventTypeConceptShape ] ;
+    sh:property [ sh:path nuproc:hasSelectedPlayerRole ; sh:maxCount 1 ;
+                  sh:node nuproc:PlayerRoleConceptShape ] ;
+    sh:property [ sh:path nuproc:uniqueSourceArticleCount ; sh:maxCount 1 ;
+                  sh:datatype xsd:nonNegativeInteger ;
+                  sh:message "uniqueSourceArticleCount is transcribed from the source data. The number of mentions is derived by counting EventRecords and is deliberately not stored (ADR-0019)."@en ] ;
+    sh:property [ sh:path nuproc:monthRelativeToT0 ; sh:maxCount 1 ; sh:datatype xsd:integer ] ;
+    sh:property [ sh:path time:hasTime ; sh:maxCount 1 ; sh:node nuproc:MonthPrecisionShape ] ;
+    ## v0.8 (ADR-0040 덧붙임 2) — 'EngagementCluster ⊑ ∃ reportsEngagement' 제한을 뺐다: 병합된 군집은 관여 하나를 보도하지 않는다.
+    ## v0.9 (ADR-0041 §2) — 관여를 보도하는 군집은 병합되지 않고 최종 발생 상태가 occurred 인 군집뿐이다. 모든 군집이 식별 상태를
+    ## 가졌는가, 그런 군집과 그 기록이 관여를 실었는가는 **적재 완결성**이라 check_kg 가 센다 (지칭 완결성과 같은 처리).
+    ## **ADR-0041 §2 · 덧붙임 4** — NuProc 의 군집은 모두 발생 상태를 코딩했다 (1,026건 전체): 군집마다 발생 상태가 있다는 프로파일을
+    ## 여기 둔다 (check_kg 도 센다).
+    ## fixture 는 생성기가 군집마다 발생 상태와 그 최종 주장을 더한다 (`_with_occurrence`) — 한 반례가 한 shape 를 시험하게.
+    sh:property [ sh:path nuproc:hasOccurrenceStatus ; sh:minCount 1 ;
+                  sh:message "A NuProc cluster carries its occurrence status: the occurrence status of every design cluster was coded (ADR-0041)."@en ] ;
+    ## ADR-0044 §2.2 — NuProc 자료는 군집의 식별 판단을 주장으로 적는다: 식별 상태를 가진 군집은 그 최종 주장이 있다. 모든 군집이 상태를
+    ## 가졌는가는 지금처럼 적재 완결성 (check_kg). fixture 는 생성기가 상태를 가진 군집마다 최종 주장을 더한다 (`_with_identification`).
+    sh:sparql [
+        sh:message "A NuProc cluster that carries an identification status has its final identification claim: every identification judgement in NuProc data is recorded as a claim with the activity that made it (ADR-0044)."@en ;
+        sh:select """
+            SELECT $this ?value WHERE {
+              $this <https://w3id.org/nuproc/ns#hasEngagementIdentification> ?value .
+              FILTER NOT EXISTS { $this <https://w3id.org/nuproc/ns#hasFinalIdentificationClaim> ?c }
+            }
+        """ ;
+    ] ;
+    sh:severity sh:Violation .
+
+## **ADR-0043 §2.3** — NuProc 자료는 지칭마다 해소 판단을 주장으로 적는다: 최종 해소 주장이 꼭 하나 (패턴은 많아야 하나). 외부 자료의
+## 지칭은 상태만 갖고 주장이 없으므로 패턴이 아니라 여기 둔다 (CodingActivityProfileShape 의 프롬프트 계획 규칙과 같은 처리).
+## fixture 는 생성기가 지칭마다 그 값의 최종 주장을 더한다 (`_with_resolution`) — 한 반례가 한 shape 를 시험하게.
+nuproc:ActorReferenceProfileShape
+    a sh:NodeShape ;
+    nuproc:shapeLayer "profile" ;
+    nuproc:ruleKind "ontology invariant"@en ;
+    sh:targetClass nuproc:ActorReference ;
+    sh:property [ sh:path nuproc:hasFinalResolutionClaim ; sh:minCount 1 ;
+                  sh:message "A NuProc reference has its final resolution claim: every resolution judgement in NuProc data is recorded as a claim with the activity that made it (ADR-0043)."@en ] ;
+    sh:severity sh:Violation .
+
+nuproc:EventRecordProfileShape
+    a sh:NodeShape ;
+    nuproc:shapeLayer "profile" ;
+    nuproc:ruleKind "ontology invariant"@en ;
+    sh:targetClass nuproc:EventRecord ;
+    sh:property [ sh:path prov:wasDerivedFrom ; sh:class nuproc:SourceArticle ;
+                  sh:message "A NuProc record is derived from a news article (ADR-0027)."@en ] ;
+    sh:property [ sh:path nuproc:describesEvent ; sh:class nuproc:EngagementCluster ] ;
+    sh:property [ sh:path nuproc:hasObservedPlayerRole ; sh:maxCount 1 ;
+                  sh:node nuproc:PlayerRoleConceptShape ;
+                  sh:message "The record-level coded category may differ from the event-level one. 49 events disagree, and both are asserted so the disagreement surfaces by query rather than being hidden (ADR-0019)."@en ] ;
+    ## NuProc 의 기록은 모두 추출 활동이 낸다. 패턴은 이것을 요구하지 않는다: 등록부 · 데이터셋의 레코드를 옮긴 그래프
+    ## (EC · UCDP) 에는 기록을 낸 활동이 없다.
+    sh:property [ sh:path prov:wasGeneratedBy ; sh:minCount 1 ;
+                  sh:message "A NuProc record was generated by the extraction activity that coded it from its article (ADR-0003)."@en ] ;
+    sh:severity sh:Violation .
+
+## ADR-0040 덧붙임 2 · 20항 (사후 변경) — NuProc 의 소프트웨어 코더는 모두 프롬프트를 따른 언어모델이다. 그래서
+## 모델의 코딩 활동은 프롬프트 명세를 계획으로 적는다. 0.8.0 첫 판은 이것을 패턴 (CodingActivityShape) 에 두었고, 외부 그래프의 0.8.0
+## 사후 회귀에서 POLECAT 의 기계 코더 (프롬프트를 쓰지 않는다) 에 걸렸다 — 근거가 NuProc 코딩의 사실이므로 프로파일이다 (ADR-0034 T3).
+nuproc:CodingActivityProfileShape
+    a sh:NodeShape ;
+    nuproc:shapeLayer "profile" ;
+    nuproc:ruleKind "ontology invariant"@en ;
+    sh:targetClass nuproc:CodingActivity ;
+    sh:sparql [
+        sh:message "In NuProc data every software coder is a language model that followed a prompt specification, so a coding activity carried out by a software agent records that prompt specification as a plan of a qualified association (ADR-0003, ADR-0040)."@en ;
+        sh:select """
+            SELECT $this WHERE {
+              $this <http://www.w3.org/ns/prov#qualifiedAssociation>/<http://www.w3.org/ns/prov#agent> ?a .
+              ?a a <http://www.w3.org/ns/prov#SoftwareAgent> .
+              FILTER NOT EXISTS {
+                $this <http://www.w3.org/ns/prov#qualifiedAssociation>/<http://www.w3.org/ns/prov#hadPlan> ?p .
+                ?p a <https://w3id.org/nuproc/ns#PromptSpecification> .
+              }
+            }
+        """ ;
+    ] ;
+    sh:severity sh:Violation .
+
+## v0.8 (ADR-0040) — NuProc 의 관여는 사례 정확히 하나에 속하고 (OWL 제한과 같은 내용을 닫힌 세계에서 센다), 참여자는 조직이다.
+nuproc:EngagementProfileShape
+    a sh:NodeShape ;
+    nuproc:shapeLayer "profile" ;
+    nuproc:ruleKind "ontology invariant"@en ;
+    sh:targetClass nuproc:Engagement ;
+    sh:property [ sh:path nuproc:concernsCase ; sh:minCount 1 ; sh:maxCount 1 ; sh:class nuproc:ProcurementCase ;
+                  sh:message "A NuProc engagement concerns exactly one procurement case (ADR-0040)."@en ] ;
+    sh:property [ sh:path obo:RO_0000057 ; sh:class nuproc:Organization ;
+                  sh:message "In NuProc data the participants of an engagement are organizations from the actor registry (ADR-0040)."@en ] ;
+    sh:severity sh:Violation .
+
+## v0.8 (ADR-0040 §2) — NuProc 의 facet 역할은 최종 역할 주장에서만 단언된다 (값마다 출처). 측 역할에는 주장이 없다.
+nuproc:FacetRoleProfileShape
+    a sh:NodeShape ;
+    nuproc:shapeLayer "profile" ;
+    nuproc:ruleKind "ontology invariant"@en ;
+    sh:targetClass nuproc:TechnologySupplyRole , nuproc:ConstructionContractRole , nuproc:FinancingRole ,
+                   nuproc:StateSponsorRole , nuproc:CommercialSupplyRole , nuproc:OtherEngagementRole ;
+    sh:property [ sh:path nuproc:supportedByClaim ; sh:minCount 1 ;
+                  sh:message "In NuProc data a role facet is asserted only from final role claims, so every facet role names at least one claim that supports it (ADR-0040)."@en ] ;
+    sh:severity sh:Violation .
+
+## **기사에 사건을 요구하지 않는다.** design 세트 in-scope 기사의 38.0%(1,680/4,416)가
+## 사건을 갖지 않으며, 이는 결측이 아니라 설계상의 성질이다.
+nuproc:SourceArticleShape
+    a sh:NodeShape ;
+    nuproc:shapeLayer "profile" ;
+    nuproc:ruleKind "ontology invariant"@en ;
+    sh:targetClass nuproc:SourceArticle ;
+    rdfs:comment "No constraint requires an article to yield an event: presence was coded broadly and events strictly, so 38.0% of in-scope articles legitimately have none."@en ;
+    sh:property [ sh:path time:hasTime ; sh:maxCount 1 ; sh:node nuproc:DayPrecisionShape ] ;
+    sh:severity sh:Violation .
+
+nuproc:OrganizationShape
+    a sh:NodeShape ;
+    nuproc:shapeLayer "profile" ;
+    nuproc:ruleKind "ontology invariant"@en ;
+    sh:targetClass nuproc:Organization ;
+    sh:property [ sh:path nuproc:hasTypeClassificationStatus ; sh:maxCount 1 ;
+                  sh:node nuproc:TypeClassificationStatusConceptShape ] ;
+    sh:property [ sh:path nuproc:hasOrganizationType ; sh:maxCount 1 ;
+                  sh:node nuproc:OrganizationTypeConceptShape ;
+                  sh:message "Organization type is fixed by the researcher in the actor registry. It is never promoted from a coded player category (ADR-0014)."@en ] ;
+    sh:severity sh:Violation .
+
+
+########################################################################
+## 역할 주장의 어휘 — ADR-0040 §3 — 프로파일
+##
+##    주장의 구조 (참여 하나 · 값 하나 · 활동 하나, 값마다 최종 주장 하나) 는 v0.8 에서 패턴으로 올렸다
+##    (RoleClaimShape · CodedParticipationRoleClaimShape). 주장된 값이 NuProc 어휘인지만 여기서 본다. 최종 주장의
+##    값은 참여의 역할 값과 같아야 하므로 (패턴) 그 값의 어휘는 참여 쪽에서 본다 — 여기서 다시 보면 반례 하나가
+##    두 shape 를 울린다. 최종이 아닌 주장 (검증 코더 · 표본 사건의 모델) 의 값은 여기서 본다.
+########################################################################
+
+nuproc:RoleClaimProfileShape
+    a sh:NodeShape ;
+    nuproc:shapeLayer "profile" ;
+    nuproc:ruleKind "ontology invariant"@en ;
+    sh:targetClass nuproc:RoleClaim ;
+    sh:or (
+        [ sh:property [ sh:path nuproc:claimedRole ; sh:node nuproc:EngagementRoleConceptShape ] ]
+        [ sh:property [ sh:path [ sh:inversePath nuproc:hasFinalRoleClaim ] ; sh:minCount 1 ] ]
+    ) ;
+    sh:message "In NuProc data a role claim that is not a final claim claims a value of the EngagementRoleType scheme (ADR-0040)."@en ;
+    sh:severity sh:Violation .
+
+## state_sponsorship 의 정의 (*"정부 (국가 기관 · 정부간 기구) 가 수출 측을 대표 · 후원하는 역할"*) 는 행위자 유형을 전제한다 —
+## 그 한 값에서는 역할과 유형이 독립이 아니다. 역할은 사건 증거로만 부여하고 조직 조회로 부여하지 않으므로 (ADR-0024 ·
+## 코딩 규약 v3 §3) 막지 않고 경고한다. 유형이 단언된 조직 참여자만 본다 — 지칭이 선 참여 (국가 쪽 지칭 등) 와 유형이 없는
+## 조직은 시험하지 못한다.
+nuproc:StateSponsorParticipantTypeShape
+    a sh:NodeShape ;
+    nuproc:shapeLayer "profile" ;
+    nuproc:ruleKind "domain regularity"@en ;
+    sh:targetClass nuproc:CodedParticipation ;
+    nuproc:measuredViolations "0 warnings among the 11 participations coded state_sponsorship whose participant is an organization with an asserted type, in the design set; the other 194 carry a national-side reference instead of a participant and are not tested." ;
+    rdfs:comment "The codebook defines state_sponsorship as the role of a government representing or sponsoring the export side, so the value presupposes an actor type. Roles are coded from event evidence and never assigned by organization lookup, so the dependence is reported as a warning, not enforced. Only participants that are organizations with an asserted type are tested."@en ;
+    sh:sparql [
+        sh:message "The engagement role state_sponsorship presupposes a government, but the participant organization is typed {?value} (domain regularity, sh:Warning — ADR-0040)."@en ;
+        sh:select """
+            SELECT $this ?value WHERE {
+              $this <https://w3id.org/nuproc/ns#hasEngagementRole> <https://w3id.org/nuproc/engagementrole/state_sponsorship> ;
+                    <https://w3id.org/nuproc/ns#namesParticipant> ?org .
+              ?org <https://w3id.org/nuproc/ns#hasOrganizationType> ?value .
+              FILTER(?value != <https://w3id.org/nuproc/organizationtype/Government>)
+            }
+        """ ;
+    ] ;
+    sh:severity sh:Warning .
+
+########################################################################
+## 품질 측정 — ADR-0009 · ADR-0016
+##
+##    측정은 **검증 표본**에 붙는다. 개별 사건 군집에 붙이지 않는다. 세 분석 계층은 NuProc
+##    의 것이므로 프로파일이다 — 품질 측정은 사전 등록된 세 패턴(RP·RR·CP) 밖이다.
+########################################################################
+
+nuproc:DataQualityMeasurementShape
+    a sh:NodeShape ;
+    nuproc:shapeLayer "profile" ;
+    nuproc:ruleKind "ontology invariant"@en ;
+    sh:targetClass nuproc:DataQualityMeasurement ;
+    sh:property [ sh:path nuproc:hasSampleSize ; sh:minCount 1 ; sh:maxCount 1 ;
+                  sh:datatype xsd:positiveInteger ;
+                  sh:message "A quality measurement without its sample size cannot be read: the same property scores 0.88 at one layer and 0.60 at another, and the sample sizes differ (ADR-0009)."@en ] ;
+    sh:property [ sh:path nuproc:measuresProperty ; sh:minCount 1 ; sh:maxCount 1 ] ;
+    #: 비교 유형은 ADR-0009 가 병기를 요구한 것이다. 종전에는 rdfs:comment 에만 있어 CQ16 이 낼 수 없었다.
+    sh:property [ sh:path nuproc:comparisonType ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ;
+                  sh:message "A quality measurement states what was compared with what, for example two human coders before adjudication, or a model against a two-coder consensus (ADR-0009)."@en ] ;
+    sh:property [ sh:path nuproc:appliesToLayer ; sh:minCount 1 ; sh:maxCount 1 ;
+                  sh:in ( nuproc:EngagementCluster nuproc:EventRecord nuproc:SourceArticle ) ;
+                  sh:message "appliesToLayer must name one of the three analytic layers. Its range is left unasserted in OWL because that would be metamodelling; the constraint lives here instead."@en ] ;
+    sh:severity sh:Violation .
+
+
+########################################################################
+## 시간 정밀도 — ADR-0015
+##
+##    정밀도를 값으로 적지 않고 **속성과 리터럴 타입으로** 나타낸다.
+##    사건은 월, 기사는 일이며 그 차이가 계층 간 정밀도 차이를 그대로 드러낸다.
+##    원자료의 정밀도이므로 프로파일이다.
+########################################################################
+
+nuproc:MonthPrecisionShape a sh:NodeShape ;
+    nuproc:shapeLayer "profile" ;
+    nuproc:ruleKind "ontology invariant"@en ;
+    sh:property [ sh:path time:inXSDgYearMonth ; sh:minCount 1 ; sh:maxCount 1 ;
+                  sh:datatype xsd:gYearMonth ;
+                  sh:message "An engagement event is dated to the month. Its time must be given as time:inXSDgYearMonth with an xsd:gYearMonth literal (ADR-0015)."@en ] ;
+    sh:property [ sh:path time:inXSDDate ; sh:maxCount 0 ;
+                  sh:message "Day precision is not available for events: the source data has month granularity only, and interpolating a day would invent information (ADR-0015)."@en ] .
+
+nuproc:DayPrecisionShape a sh:NodeShape ;
+    nuproc:shapeLayer "profile" ;
+    nuproc:ruleKind "ontology invariant"@en ;
+    sh:property [ sh:path time:inXSDDate ; sh:minCount 1 ; sh:maxCount 1 ;
+                  sh:datatype xsd:date ;
+                  sh:message "An article publication date is a day. It must be given as time:inXSDDate with an xsd:date literal (ADR-0015)."@en ] ;
+    sh:property [ sh:path time:inXSDgYearMonth ; sh:maxCount 0 ] .
+
+
+########################################################################
+## 통제어휘 — 값이 그 scheme 안에 있어야 한다 (NuProc 코드북, 프로파일)
+########################################################################
+
+nuproc:ChannelConceptShape a sh:NodeShape ;
+    nuproc:shapeLayer "profile" ;
+    nuproc:ruleKind "ontology invariant"@en ;
+    sh:property [ sh:path skos:inScheme ; sh:hasValue <https://w3id.org/nuproc/channel/> ;
+        sh:message "The engagement channel must be a concept of the EngagementChannel scheme."@en ] .
+
+nuproc:EventTypeConceptShape a sh:NodeShape ;
+    nuproc:shapeLayer "profile" ;
+    nuproc:ruleKind "ontology invariant"@en ;
+    sh:property [ sh:path skos:inScheme ; sh:hasValue <https://w3id.org/nuproc/eventtype/> ;
+        sh:message "The event type must be a concept of the EventType scheme."@en ] .
+
+nuproc:PlayerRoleConceptShape a sh:NodeShape ;
+    nuproc:shapeLayer "profile" ;
+    nuproc:ruleKind "ontology invariant"@en ;
+    sh:property [ sh:path skos:inScheme ; sh:hasValue <https://w3id.org/nuproc/playerrole/> ;
+        sh:message "A coded player category must come from the CodedPlayerCategory scheme (namespace …/playerrole/). The counterparty scheme shares three words with it but not their position in the event (ADR-0014, ADR-0024)."@en ] .
+
+nuproc:CounterpartyRoleConceptShape a sh:NodeShape ;
+    nuproc:shapeLayer "profile" ;
+    nuproc:ruleKind "ontology invariant"@en ;
+    sh:property [ sh:path skos:inScheme ; sh:hasValue <https://w3id.org/nuproc/counterpartyrole/> ;
+        sh:message "A counterparty role must come from the CounterpartyRole scheme (ADR-0014)."@en ] .
+
+nuproc:OrganizationTypeConceptShape a sh:NodeShape ;
+    nuproc:shapeLayer "profile" ;
+    nuproc:ruleKind "ontology invariant"@en ;
+    sh:property [ sh:path skos:inScheme ; sh:hasValue <https://w3id.org/nuproc/organizationtype/> ;
+        sh:message "An organization type must come from the OrganizationType scheme, whose members the researcher fixed in the actor registry (ADR-0021). A coded player category is not an organization type (ADR-0014)."@en ] .
+
+## v0.3 이 새로 낸 두 축. **선언만 하고 제약을 두지 않으면 어휘 밖 값이 조용히
+## 들어간다** — 앞선 여섯 축은 전부 이 shape 을 갖고 있었는데 신설 축 둘만 없었다.
+## 기여로 내세우는 축일수록 검사가 있어야 한다. v0.8 — 역할 축 (ADR-0040).
+nuproc:EngagementRoleConceptShape a sh:NodeShape ;
+    nuproc:shapeLayer "profile" ;
+    nuproc:ruleKind "ontology invariant"@en ;
+    sh:property [ sh:path skos:inScheme ; sh:hasValue <https://w3id.org/nuproc/engagementrole/> ;
+        sh:message "An engagement role must come from the EngagementRoleType scheme. It is assigned from event evidence only, never by an organization lookup (ADR-0024, ADR-0040)."@en ] .
+
+nuproc:TypeClassificationStatusConceptShape a sh:NodeShape ;
+    nuproc:shapeLayer "profile" ;
+    nuproc:ruleKind "ontology invariant"@en ;
+    sh:property [ sh:path skos:inScheme ; sh:hasValue <https://w3id.org/nuproc/typeclassificationstatus/> ;
+        sh:message "A type classification status must come from the TypeClassificationStatus scheme. It records the researcher's evidential state, not a property of the organization (ADR-0025)."@en ] .
+
+
+########################################################################
+## 채널 의미규칙 — ADR-0020 (규칙) · ADR-0028 (등급) — 프로파일
+##
+##    등급은 **규칙의 종류**가 정한다. 다섯 R 규칙은 모두 '도메인 규칙성' 이므로
+##    sh:Warning 이다. 실측 위반 수 (설계 세트 1,026건) 는
+##    nuproc:measuredViolations 에 기록할 뿐 등급을 정하지 않는다:
+##
+##      R1 0 · R3 1 · R4 0 · R5 4 · R6 0 → 전부 Warning
+##      R2 15/235 = 6.4% → **구현하지 않는다** (ADR-0020, ADR-0028 §3)
+########################################################################
+
+nuproc:R1_G2GExportSideIsGovernment
+    a sh:NodeShape ;
+    nuproc:shapeLayer "profile" ;
+    nuproc:ruleKind "domain regularity"@en ;
+    sh:targetClass nuproc:CodedParticipation ;
+    nuproc:measuredViolations "0 violations among 235 G2G events in the design set" ;
+    rdfs:comment "Domain regularity: in the design data the export side of a government-to-government engagement is coded 'government'. sh:Warning by kind; the zero count does not raise it to a violation."@en ;
+    sh:or (
+        [ sh:not [ sh:property [ sh:path nuproc:hasSide ; sh:hasValue srole:export_side ] ] ]
+        [ sh:not [ sh:property [ sh:path ( [ sh:inversePath nuproc:hasParticipation ] nuproc:hasEngagementChannel ) ;
+                                 sh:hasValue channel:G2G ] ] ]
+        [ sh:property [ sh:path nuproc:hasCodedPlayerCategory ; sh:hasValue prole:government ] ]
+    ) ;
+    sh:message "R1: the export side of a G2G event is normally coded 'government' in the coded player category (domain regularity, sh:Warning — ADR-0020, ADR-0028)."@en ;
+    sh:severity sh:Warning .
+
+nuproc:R4_B2BExportSideIsNotGovernment
+    a sh:NodeShape ;
+    nuproc:shapeLayer "profile" ;
+    nuproc:ruleKind "domain regularity"@en ;
+    sh:targetClass nuproc:CodedParticipation ;
+    nuproc:measuredViolations "0 violations among 216 B2B events in the design set" ;
+    rdfs:comment "Domain regularity: in a firm-to-firm engagement the export side is normally not coded 'government'. sh:Warning by kind."@en ;
+    sh:or (
+        [ sh:not [ sh:property [ sh:path nuproc:hasSide ; sh:hasValue srole:export_side ] ] ]
+        [ sh:not [ sh:property [ sh:path ( [ sh:inversePath nuproc:hasParticipation ] nuproc:hasEngagementChannel ) ;
+                                 sh:hasValue channel:B2B ] ] ]
+        [ sh:not [ sh:property [ sh:path nuproc:hasCodedPlayerCategory ; sh:hasValue prole:government ] ] ]
+    ) ;
+    sh:message "R4: the export side of a B2B event is normally not coded 'government' (domain regularity, sh:Warning — ADR-0020, ADR-0028)."@en ;
+    sh:severity sh:Warning .
+
+nuproc:R3_B2GExportSideIsNotGovernment
+    a sh:NodeShape ;
+    nuproc:shapeLayer "profile" ;
+    nuproc:ruleKind "domain regularity"@en ;
+    sh:targetClass nuproc:CodedParticipation ;
+    nuproc:measuredViolations "1 violation among 575 B2G events in the design set. The individual record is not named here: derived event codes are record-level data and are not published." ;
+    rdfs:comment "Domain regularity: sh:Warning by kind. The design set shows one explicable departure (nuproc:measuredViolations); the count does not set the severity."@en ;
+    sh:or (
+        [ sh:not [ sh:property [ sh:path nuproc:hasSide ; sh:hasValue srole:export_side ] ] ]
+        [ sh:not [ sh:property [ sh:path ( [ sh:inversePath nuproc:hasParticipation ] nuproc:hasEngagementChannel ) ;
+                                 sh:hasValue channel:B2G ] ] ]
+        [ sh:not [ sh:property [ sh:path nuproc:hasCodedPlayerCategory ; sh:hasValue prole:government ] ] ]
+    ) ;
+    sh:message "R3: the export side of a B2G event is normally a firm, not coded 'government' (domain regularity, sh:Warning — ADR-0020, ADR-0028)."@en ;
+    sh:severity sh:Warning .
+
+nuproc:R5_B2BCounterpartyIsNotHostGovernment
+    a sh:NodeShape ;
+    nuproc:shapeLayer "profile" ;
+    nuproc:ruleKind "domain regularity"@en ;
+    sh:targetClass nuproc:CodedParticipation ;
+    nuproc:measuredViolations "4 violations among 216 B2B events in the design set, all within one case and one 13-month window. The individual records are not named here: derived event codes are record-level data and are not published." ;
+    rdfs:comment "Domain regularity: sh:Warning by kind. The design set shows four explicable departures (nuproc:measuredViolations); the count does not set the severity."@en ;
+    sh:or (
+        [ sh:not [ sh:property [ sh:path nuproc:hasSide ; sh:hasValue srole:host_side ] ] ]
+        [ sh:not [ sh:property [ sh:path ( [ sh:inversePath nuproc:hasParticipation ] nuproc:hasEngagementChannel ) ;
+                                 sh:hasValue channel:B2B ] ] ]
+        [ sh:not [ sh:property [ sh:path nuproc:hasCounterpartyRole ; sh:hasValue crole:host_government ] ] ]
+    ) ;
+    sh:message "R5: the host side of a B2B event is normally not the host government (domain regularity, sh:Warning — ADR-0020, ADR-0028)."@en ;
+    sh:severity sh:Warning .
+
+## R6 만 SPARQL 이 필요하다 — 두 속성의 **문자열 접두**를 비교하기 때문이다.
+## 이를 피하려고 EventType→Channel 링크 속성을 새로 만들 수도 있었으나, ADR-0020 이
+## 그런 우회 속성(`functionalStance` 등)의 신설을 금지했고 레지스트리에도 없다.
+## 그래서 우회하지 않고 SHACL-SPARQL 을 쓴다 (pySHACL 은 sh:sparql 을 기본으로 검사한다).
+nuproc:R6_EventTypePrefixMatchesChannel
+    a sh:NodeShape ;
+    nuproc:shapeLayer "profile" ;
+    nuproc:ruleKind "domain regularity"@en ;
+    sh:targetClass nuproc:EngagementCluster ;
+    nuproc:measuredViolations "0 violations in the design set" ;
+    rdfs:comment "The event type notation carries the channel as its prefix (G2G-1, B2G-2, ...), so the two assertions normally agree. Residual 'Unknown' values on either side are excluded: they carry no channel prefix by construction. Domain regularity, sh:Warning by kind."@en ;
+    sh:sparql [
+        a sh:SPARQLConstraint ;
+        sh:message "R6: event type {?etype} does not carry the prefix of engagement channel {?chan} (domain regularity, sh:Warning — ADR-0020, ADR-0028)."@en ;
+        sh:prefixes nuproc:prefixes ;
+        sh:select """
+            SELECT $this ?chan ?etype
+            WHERE {
+                $this nuproc:hasEngagementChannel ?c .
+                $this nuproc:hasEventType         ?e .
+                # R6 는 두 값이 이미 제 어휘 안에 있다고 전제한다. 어휘를 벗어난 값은
+                # ChannelConceptShape·EventTypeConceptShape 가 잡을 일이지 여기서 중복해
+                # 울릴 일이 아니다 — 반례 하나가 두 규칙을 동시에 울리면 어느 제약이
+                # 실제로 동작했는지 판정할 수 없다.
+                ?c skos:inScheme <https://w3id.org/nuproc/channel/> .
+                ?e skos:inScheme <https://w3id.org/nuproc/eventtype/> .
+                ?c skos:notation ?chan .
+                ?e skos:notation ?etype .
+                FILTER ( STR(?chan) != "Unknown" && STR(?etype) != "Unknown" )
+                FILTER ( ! STRSTARTS( STR(?etype), CONCAT(STR(?chan), "-") ) )
+            }
+        """ ;
+    ] ;
+    sh:severity sh:Warning .
+
+## R2 는 없다. 여기에 없다는 사실 자체가 결정이다.
+<https://w3id.org/nuproc/shapes> rdfs:comment """R2 ("a G2G event's counterparty is the host government") is deliberately not implemented. It failed on 15 of 235 G2G events in the design set, a 6.4% rate. That is too high to call an exception: the rule was wrong, not the data. Encoding it as a warning would still assert a norm the evidence does not support."""@en .

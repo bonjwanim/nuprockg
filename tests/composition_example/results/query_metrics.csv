@@ -1,0 +1,7 @@
+query,encoding,rows,triple_patterns,property_paths,variables,join_variables,optional,union,exists,adhoc_terms,vocabularies,same_answer_as_other_encoding
+q1,composition,2,10,0,10,5,2,0,0,ex:actorReference ex:candidate ex:resolutionStatus,GAF PROV-O RDFS SEM SKOS ad hoc,yes
+q1,nuproc,2,11,0,11,6,2,0,0,,NuProc RDFS SKOS,yes
+q2,composition,4,19,0,14,8,1,0,2,,PROV-O RDF RDFS SEM SKOS,yes
+q2,nuproc,4,19,0,16,11,1,0,2,,BFO/RO NuProc PROV-O RDFS SKOS,yes
+q3,composition,1,7,0,6,4,0,0,0,,RDF RDFS SEM SKOS,yes
+q3,nuproc,1,7,0,7,4,0,0,0,,BFO/RO NuProc RDF RDFS SKOS,yes

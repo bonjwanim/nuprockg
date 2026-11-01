@@ -1,0 +1,45 @@
+PREFIX nuproc:  <https://w3id.org/nuproc/ns#>
+PREFIX skos:    <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX prov:    <http://www.w3.org/ns/prov#>
+PREFIX dqv:     <http://www.w3.org/ns/dqv#>
+PREFIX time:    <http://www.w3.org/2006/time#>
+PREFIX xsd:     <http://www.w3.org/2001/XMLSchema#>
+PREFIX channel: <https://w3id.org/nuproc/channel/>
+PREFIX prole:   <https://w3id.org/nuproc/playerrole/>
+PREFIX crole:   <https://w3id.org/nuproc/counterpartyrole/>
+PREFIX srole:   <https://w3id.org/nuproc/siderole/>
+PREFIX erole:   <https://w3id.org/nuproc/engagementrole/>
+PREFIX obo:     <http://purl.obolibrary.org/obo/>
+PREFIX rstat:   <https://w3id.org/nuproc/resolutionstatus/>
+
+# CQ17 (quality) How many organisation references are there per resolution status?
+# CQ17 (Q) 조직 참조는 해소 상태별로 몇 건인가?
+# 기대 (0.9.0 — evaluation/cq/v0.9/expected_results.csv) — **사건 기준, 분모 1,026**:
+#   resolved 725 (70.7%) · unresolvable_candidate_set 25 (2.4%) ·
+#   unresolvable_collective 276 (26.9%) · unresolved 0
+# 유형 기준 (표기 → 조직) 은 분모가 다르며 **두 분모를 합산하지 않는다.**
+# 해소 실패(0)와 해소 불가(301)도 합산하지 않는다 (ADR-0008·0010·0023).
+# VALUES 로 4분류를 모두 세워 관측 0 인 상태도 행으로 나오게 한다.
+# v0.5 (ADR-0031): 해소 상태는 지칭에 있고, 모든 주도측 참여가 hasActorReference 로 지칭
+#   하나를 갖는다. 슬롯 경로(hasParticipantReference)도 함께 따라가므로 지칭 링크를
+#   명시하지 않은 그래프에서도 슬롯의 지칭은 센다. 조직은 해소 상태를 갖지 않는다.
+# 2026-09-28 실행 뒤 수정 — 처음 판은 두 속성을 대안 경로
+#   `(hasParticipantReference|hasActorReference)` 로 적었다. SPARQL 1.1 §18.4 는 대안 경로를 두
+#   패턴의 UNION 으로 번역하므로 답은 같다. 그러나 rdflib 가 그 경로를 이 OPTIONAL 안에서 30분이 넘도록
+#   끝내지 못해 재실행 확인이 시간을 넘겼다. UNION 으로 적은 지금 판은 42초에
+#   끝나고, 결과 파일은 대안 경로 판이 낸 것과 바이트가 같다. 기대결과는 건드리지 않았다.
+SELECT ?status (COUNT(DISTINCT ?ev) AS ?n)
+WHERE {
+  VALUES ?st { rstat:resolved rstat:unresolvable_candidate_set
+               rstat:unresolvable_collective rstat:unresolved }
+  ?st skos:notation ?status .
+  OPTIONAL {
+    ?ev a nuproc:EngagementCluster ; nuproc:hasParticipation ?p .
+    ?p  nuproc:hasSide srole:export_side .
+    { ?p nuproc:hasParticipantReference ?ref } UNION { ?p nuproc:hasActorReference ?ref }
+    ?ref nuproc:hasResolutionStatus ?st .
+  }
+}
+GROUP BY ?status
+ORDER BY DESC(?n)

@@ -1,0 +1,1646 @@
+@prefix channel: <https://w3id.org/nuproc/channel/> .
+@prefix crole: <https://w3id.org/nuproc/counterpartyrole/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix dqv: <http://www.w3.org/ns/dqv#> .
+@prefix eident: <https://w3id.org/nuproc/engagementidentification/> .
+@prefix erole: <https://w3id.org/nuproc/engagementrole/> .
+@prefix etype: <https://w3id.org/nuproc/eventtype/> .
+@prefix nuproc: <https://w3id.org/nuproc/ns#> .
+@prefix org: <http://www.w3.org/ns/org#> .
+@prefix ostat: <https://w3id.org/nuproc/occurrencestatus/> .
+@prefix otype: <https://w3id.org/nuproc/organizationtype/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix prole: <https://w3id.org/nuproc/playerrole/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rstat: <https://w3id.org/nuproc/resolutionstatus/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix srole: <https://w3id.org/nuproc/siderole/> .
+@prefix tcstat: <https://w3id.org/nuproc/typeclassificationstatus/> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+dcterms:bibliographicCitation a owl:AnnotationProperty .
+
+dcterms:creator a owl:AnnotationProperty .
+
+dcterms:description a owl:AnnotationProperty .
+
+dcterms:issued a owl:AnnotationProperty .
+
+dcterms:license a owl:AnnotationProperty .
+
+dcterms:modified a owl:AnnotationProperty .
+
+dcterms:source a owl:AnnotationProperty .
+
+dcterms:title a owl:AnnotationProperty .
+
+vann:preferredNamespacePrefix a owl:AnnotationProperty .
+
+vann:preferredNamespaceUri a owl:AnnotationProperty .
+
+dqv:QualityMeasurement a owl:Class .
+
+org:Organization a owl:Class .
+
+channel:B2B a skos:Concept ;
+    rdfs:label "firm-to-firm engagement"@en ;
+    dcterms:source "registry/codebook_v1.0.csv (activity_type, observed_n=304, status=in_use)"@en ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0005>,
+        <https://w3id.org/nuproc/adr/ADR-0006> ;
+    skos:altLabel "B2B"@en,
+        "Interfirm"@en ;
+    skos:definition "Contractual, financial, supply-chain, technology-transfer and life-cycle acts between firms and project organizations. It is also called interfirm engagement."@en,
+        "기업 및 사업조직 사이의 계약·금융·공급망·기술이전·생애주기 행위. 원고 표기는 Interfirm engagement."@ko ;
+    skos:example "A case in which an export-side vendor and a local firm form a consortium or conclude a supply contract for equipment and materials."@en,
+        "수출측 벤더와 현지 기업이 컨소시엄을 구성하거나 기자재 공급 계약을 체결한 경우."@ko ;
+    skos:inScheme channel: ;
+    skos:notation "B2B" ;
+    skos:prefLabel "firm-to-firm engagement"@en,
+        "기업 간 관여"@ko ;
+    skos:scopeNote "Definition carried over from codebook v1.0 (registry/codebook_v1.0.csv)."@en,
+        "Excludes activities initiated by host-country actors (`scope.importing_country_actor`). Excludes third-party NGOs (`scope.third_party_ngo`). G2B has been retired and is reassigned to G2G (`scope.g2b_retired`, `g2b_redirect`)."@en,
+        "Only export-side nuclear power plant export marketing activities are coded. The channel is determined by the combination of the acting party and the counterparty."@en,
+        "The data code and the descriptive name differ on purpose. The code is the stable machine identifier used by the dataset, the logs and the existing replication package; the descriptive name says who the counterparty actually is — for B2G these include regulators, the project-owning state-owned enterprise and the public, which 'business-to-government' does not convey. Both are kept as altLabel so neither reading is lost."@en,
+        "도입국 행위자 주도 활동 제외 (`scope.importing_country_actor`). 제3자 NGO 제외 (`scope.third_party_ngo`). G2B는 폐기되었으며 G2G로 재배정한다 (`scope.g2b_retired`, `g2b_redirect`)."@ko,
+        "수출측(export-side) 원전 수출 마케팅 활동만 코딩한다 (manual `scope.rule`). 채널은 행위 주체와 상대의 조합으로 결정된다."@ko,
+        "정의문은 codebook v1.0 의 것을 그대로 옮겼다 (registry/codebook_v1.0.csv)."@ko ;
+    skos:topConceptOf channel: ;
+    nuproc:justifyingCompetencyQuestion "CQ01;CQ09" ;
+    nuproc:status "codebook v1.0 v2.6.5c; observed_n=304; status=in_use" .
+
+channel:B2G a skos:Concept ;
+    rdfs:label "firm-to-authority engagement"@en ;
+    dcterms:source "registry/codebook_v1.0.csv (activity_type, observed_n=652, status=in_use)"@en ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0005>,
+        <https://w3id.org/nuproc/adr/ADR-0006> ;
+    skos:altLabel "B2G"@en,
+        "F2A"@en ;
+    skos:definition "Engagement carried out by firms towards the decision-making interfaces of the host country. The counterparties are authorities, regulators and the project-owning entity, and public and community communication (B2G-4) is included. It is also called F2A (firm-to-authority)."@en,
+        "기업이 도입국의 의사결정 인터페이스를 상대로 수행하는 관여. 상대는 당국, 규제기관, 발주 사업주이며 공중·지역사회 소통(B2G-4)을 포함한다. 원고 표기는 F2A (firm-to-authority)."@ko ;
+    skos:example "A case in which a vendor submits a proposal in the tender procedure of a host-country procuring agency, or submits licensing documents to a regulator."@en,
+        "벤더가 도입국 발주기관의 입찰 절차에 제안서를 제출하거나, 규제기관에 인허가 서류를 제출한 경우."@ko ;
+    skos:inScheme channel: ;
+    skos:notation "B2G" ;
+    skos:prefLabel "firm-to-authority engagement"@en,
+        "기업–당국 관여"@ko ;
+    skos:scopeNote "Definition carried over from codebook v1.0 (registry/codebook_v1.0.csv)."@en,
+        "Excludes activities initiated by host-country actors (`scope.importing_country_actor`). Excludes third-party NGOs (`scope.third_party_ngo`). G2B has been retired and is reassigned to G2G (`scope.g2b_retired`, `g2b_redirect`)."@en,
+        "Only export-side nuclear power plant export marketing activities are coded. The channel is determined by the combination of the acting party and the counterparty."@en,
+        "The data code and the descriptive name differ on purpose. The code is the stable machine identifier used by the dataset, the logs and the existing replication package; the descriptive name says who the counterparty actually is — for B2G these include regulators, the project-owning state-owned enterprise and the public, which 'business-to-government' does not convey. Both are kept as altLabel so neither reading is lost."@en,
+        "도입국 행위자 주도 활동 제외 (`scope.importing_country_actor`). 제3자 NGO 제외 (`scope.third_party_ngo`). G2B는 폐기되었으며 G2G로 재배정한다 (`scope.g2b_retired`, `g2b_redirect`)."@ko,
+        "수출측(export-side) 원전 수출 마케팅 활동만 코딩한다 (manual `scope.rule`). 채널은 행위 주체와 상대의 조합으로 결정된다."@ko,
+        "정의문은 codebook v1.0 의 것을 그대로 옮겼다 (registry/codebook_v1.0.csv)."@ko ;
+    skos:topConceptOf channel: ;
+    nuproc:justifyingCompetencyQuestion "CQ01;CQ09" ;
+    nuproc:status "codebook v1.0 v2.6.5c; observed_n=652; status=in_use" .
+
+channel:G2G a skos:Concept ;
+    rdfs:label "government-to-government engagement"@en ;
+    dcterms:source "registry/codebook_v1.0.csv (activity_type, observed_n=254, status=in_use)"@en ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0005>,
+        <https://w3id.org/nuproc/adr/ADR-0006> ;
+    skos:altLabel "G2G"@en ;
+    skos:definition "Sovereign and export-support acts led by government. It includes the strategic industrial support that an exporting government provides to its own firms and state-owned enterprises (G2G-5)."@en,
+        "정부가 주도하는 주권적 행위 및 수출지원 행위. 수출국 정부가 자국 기업·SOE에 제공하는 전략적 산업지원(G2G-5)을 포함한다."@ko ;
+    skos:example "A case in which representatives of the exporting government and of the host-country government hold talks with nuclear cooperation on the agenda and adopt a joint declaration."@en,
+        "수출국 정부 대표와 도입국 정부 대표가 원자력 협력을 의제로 회담하고 공동선언을 채택한 경우."@ko ;
+    skos:inScheme channel: ;
+    skos:notation "G2G" ;
+    skos:prefLabel "government-to-government engagement"@en,
+        "정부 간 관여"@ko ;
+    skos:scopeNote "Definition carried over from codebook v1.0 (registry/codebook_v1.0.csv)."@en,
+        "Excludes activities initiated by host-country actors (`scope.importing_country_actor`). Excludes third-party NGOs (`scope.third_party_ngo`). G2B has been retired and is reassigned to G2G (`scope.g2b_retired`, `g2b_redirect`)."@en,
+        "Only export-side nuclear power plant export marketing activities are coded. The channel is determined by the combination of the acting party and the counterparty."@en,
+        "도입국 행위자 주도 활동 제외 (`scope.importing_country_actor`). 제3자 NGO 제외 (`scope.third_party_ngo`). G2B는 폐기되었으며 G2G로 재배정한다 (`scope.g2b_retired`, `g2b_redirect`)."@ko,
+        "수출측(export-side) 원전 수출 마케팅 활동만 코딩한다 (manual `scope.rule`). 채널은 행위 주체와 상대의 조합으로 결정된다."@ko,
+        "정의문은 codebook v1.0 의 것을 그대로 옮겼다 (registry/codebook_v1.0.csv)."@ko ;
+    skos:topConceptOf channel: ;
+    nuproc:justifyingCompetencyQuestion "CQ01;CQ09" ;
+    nuproc:status "codebook v1.0 v2.6.5c; observed_n=254; status=in_use" .
+
+channel:Unknown a skos:Concept ;
+    rdfs:label "engagement channel not determined"@en ;
+    dcterms:source "registry/codebook_v1.0.csv (activity_type, observed_n=0, status=allowed_unused)"@en ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0005>,
+        <https://w3id.org/nuproc/adr/ADR-0006> ;
+    skos:altLabel "Unknown"@en ;
+    skos:definition "Residual value used where the channel cannot be determined."@en,
+        "채널을 판정할 수 없는 경우의 잔여 값."@ko ;
+    skos:editorialNote "Permitted by the codebook but observed zero times in the dataset. It is kept so that codebook coverage stays complete."@en ;
+    skos:example "A case coded with the residual value because the article contains no basis for determining the channel."@en,
+        "채널을 판정할 근거가 기사에 없어 잔여 값으로 코딩한 경우."@ko ;
+    skos:inScheme channel: ;
+    skos:notation "Unknown" ;
+    skos:prefLabel "engagement channel not determined"@en,
+        "채널 미판정"@ko ;
+    skos:scopeNote "Definition carried over from codebook v1.0 (registry/codebook_v1.0.csv)."@en,
+        "Excludes activities initiated by host-country actors (`scope.importing_country_actor`). Excludes third-party NGOs (`scope.third_party_ngo`). G2B has been retired and is reassigned to G2G (`scope.g2b_retired`, `g2b_redirect`)."@en,
+        "Only export-side nuclear power plant export marketing activities are coded. The channel is determined by the combination of the acting party and the counterparty."@en,
+        "도입국 행위자 주도 활동 제외 (`scope.importing_country_actor`). 제3자 NGO 제외 (`scope.third_party_ngo`). G2B는 폐기되었으며 G2G로 재배정한다 (`scope.g2b_retired`, `g2b_redirect`)."@ko,
+        "수출측(export-side) 원전 수출 마케팅 활동만 코딩한다 (manual `scope.rule`). 채널은 행위 주체와 상대의 조합으로 결정된다."@ko,
+        "정의문은 codebook v1.0 의 것을 그대로 옮겼다 (registry/codebook_v1.0.csv)."@ko ;
+    skos:topConceptOf channel: ;
+    nuproc:justifyingCompetencyQuestion "CQ01;CQ09" ;
+    nuproc:status "codebook v1.0 v2.6.5c; observed_n=0; status=allowed_unused" .
+
+crole:host_firm a skos:Concept ;
+    rdfs:label "host-country firm"@en ;
+    dcterms:source "registry/codebook_v1.0.csv (counterparty_role, observed_n=142, status=in_use)"@en ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0005>,
+        <https://w3id.org/nuproc/adr/ADR-0006> ;
+    skos:definition "A firm of the host country, whether private or otherwise not the project owner."@en,
+        "도입국의 기업(민간 또는 비사업주)."@ko ;
+    skos:example "A case in which a host-country firm becomes a contracting, supply or investment counterparty."@en,
+        "도입국 기업으로서 계약·공급·투자 상대가 된 경우."@ko ;
+    skos:inScheme crole: ;
+    skos:notation "host_firm" ;
+    skos:prefLabel "host-country firm"@en ;
+    skos:scopeNote "A project-owning state-owned enterprise is project_owner_soe."@en,
+        "Definition carried over from codebook v1.0 (registry/codebook_v1.0.csv)."@en,
+        "When the counterparty, as a host-country firm, is a contracting, supply or investment counterparty."@en,
+        "사업주 국유기업은 project_owner_soe."@ko,
+        "상대가 도입국 기업으로서 계약·공급·투자 상대일 때."@ko,
+        "정의문은 codebook v1.0 의 것을 그대로 옮겼다 (registry/codebook_v1.0.csv)."@ko ;
+    skos:topConceptOf crole: ;
+    nuproc:justifyingCompetencyQuestion "CQ03;CQ11" ;
+    nuproc:status "codebook v1.0 v1.0-draft; observed_n=142; status=in_use" .
+
+crole:host_government a skos:Concept ;
+    rdfs:label "host government"@en ;
+    dcterms:source "registry/codebook_v1.0.csv (counterparty_role, observed_n=564, status=in_use)"@en ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0005>,
+        <https://w3id.org/nuproc/adr/ADR-0006> ;
+    skos:definition "The central government of the host country and its ministries."@en,
+        "도입국 중앙정부 및 그 부처."@ko ;
+    skos:example "Central government bodies of the host country, such as the ministry of industry or the ministry of energy."@en,
+        "도입국 산업부·에너지부 등 중앙정부 기관."@ko ;
+    skos:inScheme crole: ;
+    skos:notation "host_government" ;
+    skos:prefLabel "host government"@en ;
+    skos:scopeNote "Definition carried over from codebook v1.0 (registry/codebook_v1.0.csv)."@en,
+        "If the function is regulatory review or licensing, regulator; if it is the procuring entity, project_owner_soe."@en,
+        "When the counterparty, as the host government, performs policy, approval or sovereign decision-making functions."@en,
+        "규제 심사·인허가 기능이면 regulator, 발주 주체이면 project_owner_soe."@ko,
+        "상대가 도입국 정부로서 정책·승인·주권적 결정 기능을 수행할 때."@ko,
+        "정의문은 codebook v1.0 의 것을 그대로 옮겼다 (registry/codebook_v1.0.csv)."@ko ;
+    skos:topConceptOf crole: ;
+    nuproc:justifyingCompetencyQuestion "CQ03;CQ11" ;
+    nuproc:status "codebook v1.0 v1.0-draft; observed_n=564; status=in_use" .
+
+crole:host_utility a skos:Concept ;
+    rdfs:label "host-country utility"@en ;
+    dcterms:source "registry/codebook_v1.0.csv (counterparty_role, observed_n=28, status=in_use)"@en ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0005>,
+        <https://w3id.org/nuproc/adr/ADR-0006> ;
+    skos:definition "An electric utility or operator of the host country."@en,
+        "도입국의 전력회사·운영사."@ko ;
+    skos:example "An electric utility or power generation asset operator of the host country."@en,
+        "도입국의 전력회사·발전자산 운영사."@ko ;
+    skos:inScheme crole: ;
+    skos:notation "host_utility" ;
+    skos:prefLabel "host-country utility"@en ;
+    skos:scopeNote "Definition carried over from codebook v1.0 (registry/codebook_v1.0.csv)."@en,
+        "If it procures as the owner of a new-build project, project_owner_soe."@en,
+        "When the counterparty is the operating or purchasing entity for generation assets."@en,
+        "상대가 발전 자산의 운영·구매 주체일 때."@ko,
+        "신규건설 사업주로서 발주하면 project_owner_soe."@ko,
+        "정의문은 codebook v1.0 의 것을 그대로 옮겼다 (registry/codebook_v1.0.csv)."@ko ;
+    skos:topConceptOf crole: ;
+    nuproc:justifyingCompetencyQuestion "CQ03;CQ11" ;
+    nuproc:status "codebook v1.0 v1.0-draft; observed_n=28; status=in_use" .
+
+crole:project_owner_soe a skos:Concept ;
+    rdfs:label "project-owner SOE"@en ;
+    dcterms:source "registry/codebook_v1.0.csv (counterparty_role, observed_n=317, status=in_use)"@en ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0005>,
+        <https://w3id.org/nuproc/adr/ADR-0006> ;
+    skos:definition "The project-owning state-owned enterprise of the host country."@en,
+        "도입국의 사업주 국유기업."@ko ;
+    skos:inScheme crole: ;
+    skos:notation "project_owner_soe" ;
+    skos:prefLabel "project-owner SOE"@en ;
+    skos:scopeNote "Definition carried over from codebook v1.0 (registry/codebook_v1.0.csv)."@en,
+        "If it exercises a regulatory function, regulator."@en,
+        "When the counterparty is an organization on the per-country list of project-owning state-owned enterprises in the source dataset's coding manual (not distributed)."@en,
+        "manual `project_owner_soe` 의 국가별 목록에 해당하는 조직이 상대일 때."@ko,
+        "규제 기능을 행사하면 regulator."@ko,
+        "정의문은 codebook v1.0 의 것을 그대로 옮겼다 (registry/codebook_v1.0.csv)."@ko ;
+    skos:topConceptOf crole: ;
+    nuproc:justifyingCompetencyQuestion "CQ03;CQ11" ;
+    nuproc:status "codebook v1.0 v1.0-draft; observed_n=317; status=in_use" .
+
+crole:public_community a skos:Concept ;
+    rdfs:label "public and community"@en ;
+    dcterms:source "registry/codebook_v1.0.csv (counterparty_role, observed_n=90, status=in_use)"@en ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0005>,
+        <https://w3id.org/nuproc/adr/ADR-0006> ;
+    skos:definition "Targets of social acceptance such as the public, local communities and the media."@en,
+        "공중, 지역사회, 미디어 등 사회적 수용성 대상."@ko ;
+    skos:example "Residents near the site, community groups, and members of the public attending a public hearing."@en,
+        "부지 인근 주민, 지역사회 단체, 공청회 참석 공중."@ko ;
+    skos:inScheme crole: ;
+    skos:notation "public_community" ;
+    skos:prefLabel "public and community"@en ;
+    skos:scopeNote "A counterparty in a public, community, media or social-acceptance context, as the source dataset's coding manual (not distributed) requires for B2G-4."@en,
+        "An administrative or regulatory counterparty is host_government or regulator."@en,
+        "Definition carried over from codebook v1.0 (registry/codebook_v1.0.csv)."@en,
+        "manual B2G-4 의 `requires_one_of` (public/community/media/social acceptance context) 를 충족하는 상대."@ko,
+        "정의문은 codebook v1.0 의 것을 그대로 옮겼다 (registry/codebook_v1.0.csv)."@ko,
+        "행정·규제 상대는 host_government 또는 regulator."@ko ;
+    skos:topConceptOf crole: ;
+    nuproc:justifyingCompetencyQuestion "CQ03;CQ11" ;
+    nuproc:status "codebook v1.0 v1.0-draft; observed_n=90; status=in_use" .
+
+crole:regulator a skos:Concept ;
+    rdfs:label "regulator"@en ;
+    dcterms:source "registry/codebook_v1.0.csv (counterparty_role, observed_n=28, status=in_use)"@en ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0005>,
+        <https://w3id.org/nuproc/adr/ADR-0006> ;
+    skos:definition "A host-country body exercising formal authority such as licensing, review or competition oversight."@en,
+        "인허가·심사·경쟁 감독 등 형식적 권한을 행사하는 도입국 기관."@ko ;
+    skos:example "A licensing, review or competition oversight body. The source dataset's coding manual (not distributed) codes bid challenges addressed to a competition authority as B2G-2."@en,
+        "인허가·심사·경쟁감독 기관. 매뉴얼은 경쟁당국에 대한 입찰 이의를 B2G-2 로 라우팅한다 (`lawsuit_against_regulator_or_antitrust_office`)."@ko ;
+    skos:inScheme crole: ;
+    skos:notation "regulator" ;
+    skos:prefLabel "regulator"@en ;
+    skos:scopeNote "Authority is defined by function, not by ownership: a body holds authority when it exercises responsibility for evaluation, licensing, approval or selection at the decision gateway in question."@en,
+        "Definition carried over from codebook v1.0 (registry/codebook_v1.0.csv)."@en,
+        "If the same organization acts as a contracting, investment or supply counterparty, it has a different role in that event."@en,
+        "TERMINOLOGY_CROSSWALK.md: 권한은 소유가 아니라 기능으로 정의된다 — 해당 결정 관문에서 평가·인허가·승인·선정 책임을 행사할 때."@ko,
+        "같은 조직이 계약·투자·공급 상대로 행위하면 그 사건에서는 다른 역할이다."@ko,
+        "정의문은 codebook v1.0 의 것을 그대로 옮겼다 (registry/codebook_v1.0.csv)."@ko ;
+    skos:topConceptOf crole: ;
+    nuproc:justifyingCompetencyQuestion "CQ03;CQ11" ;
+    nuproc:status "codebook v1.0 v1.0-draft; observed_n=28; status=in_use" .
+
+eident:key_based a skos:Concept ;
+    rdfs:label "key-based"@en ;
+    dcterms:source "evaluation/coding/v3.0/VALIDATION_PROTOCOL.md §2.5" ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0027>,
+        <https://w3id.org/nuproc/adr/ADR-0040> ;
+    skos:definition "A cluster identified with one engagement only because its records share the key of the clustering rule. No person's check has settled whether the records report one engagement: either no one checked, or the checks did not settle it."@en,
+        "기록들이 군집 규칙의 키를 공유한다는 것만으로 관여 하나로 식별된 군집. 기록들이 한 관여를 보도하는지는 사람의 확인으로 정해지지 않았다 — 아무도 확인하지 않았거나, 확인이 그것을 정하지 못했다."@ko ;
+    skos:inScheme eident: ;
+    skos:notation "key_based" ;
+    skos:prefLabel "key-based"@en ;
+    skos:scopeNote "The default in NuProc data: before the human validation every cluster is key-based"@en,
+        "NuProc 자료의 기본값이다 — 사람 검증 전에는 모든 군집이 key_based 다"@ko ;
+    skos:topConceptOf eident: ;
+    nuproc:justifyingCompetencyQuestion "CQ18" .
+
+eident:merged a skos:Concept ;
+    rdfs:label "merged"@en ;
+    dcterms:source "evaluation/coding/v3.0/VALIDATION_PROTOCOL.md §2.5" ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0040> ;
+    skos:definition "A cluster whose records a person has read and judged to report two or more engagements: the clustering rule brought different engagements together. Such a cluster does not report one engagement, so it has no reportsEngagement."@en,
+        "사람이 군집의 기록들을 읽고 둘 이상의 관여를 보도한다고 판단한 군집 — 군집 규칙이 서로 다른 관여를 하나로 묶었다. 이 군집은 관여 하나를 보도하지 않으므로 reportsEngagement 를 갖지 않는다."@ko ;
+    skos:inScheme eident: ;
+    skos:notation "merged" ;
+    skos:prefLabel "merged"@en ;
+    skos:scopeNote "Because the data do not separate those engagements, no engagement individual is created: the real-world layer asserts only what the data identify. The cluster's coded values and role claims stay in the information layer; where its final occurrence status is occurred, as for every merged cluster in the NuProc data, its final role claims about a participation resolved to an organization support that organization's role in the case but yield no realization"@en,
+        "자료가 그 관여들을 가르지 않으므로 관여 개체를 만들지 않는다 — 실세계 층은 자료가 식별한 것만 단언한다 (ADR-0040 §1). 군집의 코딩된 값 · 역할 주장은 정보 층에 그대로 남고, 최종 발생 상태가 occurred 이면 (NuProc 자료의 병합 군집은 모두 그렇다) 조직으로 해소된 참여에 관한 최종 역할 주장은 그 조직의 사례 수준 역할을 뒷받침하되 실현을 낳지 않는다 (ADR-0040 덧붙임 4 · ADR-0041 덧붙임 4 · 5)"@ko ;
+    skos:topConceptOf eident: ;
+    nuproc:justifyingCompetencyQuestion "CQ18" .
+
+eident:verified a skos:Concept ;
+    rdfs:label "verified"@en ;
+    dcterms:source "evaluation/coding/v3.0/VALIDATION_PROTOCOL.md §2.5" ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0040> ;
+    skos:definition "A cluster whose records a person has read and judged to report one engagement. Whether that engagement took place is recorded by the occurrence status, not by this state."@en,
+        "사람이 군집의 기록들을 읽고 한 관여를 보도한다고 판단한 군집. 그 관여가 일어났는지는 이 상태가 아니라 발생 상태가 적는다."@ko ;
+    skos:inScheme eident: ;
+    skos:notation "verified" ;
+    skos:prefLabel "verified"@en ;
+    skos:topConceptOf eident: ;
+    nuproc:justifyingCompetencyQuestion "CQ18" .
+
+erole:commercial_supply a skos:Concept ;
+    rdfs:label "commercial supply"@en ;
+    dcterms:source "codebook v3.0" ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0040> ;
+    skos:definition "The role of commercially supplying equipment, components or services other than the major equipment."@en,
+        "주기기 이외의 기자재 · 부품 · 서비스를 상업적으로 공급하는 역할."@ko ;
+    skos:example "A component supplier discusses joining the local supply chain"@en,
+        "부품사가 현지 공급망 참여를 논의한다"@ko ;
+    skos:inScheme erole: ;
+    skos:notation "commercial_supply" ;
+    skos:prefLabel "commercial supply"@en ;
+    skos:scopeNote "Supply of the reactor design or major equipment is technology_supply; winning an EPC contract is construction_contract."@en,
+        "When the act concerns the supply of equipment, components or services other than the major equipment."@en,
+        "노형 · 주기기 공급은 technology_supply, EPC 수주는 construction_contract."@ko,
+        "행위가 주기기 이외의 기자재 · 부품 · 서비스 공급과 관련될 때."@ko ;
+    skos:topConceptOf erole: ;
+    nuproc:justifyingCompetencyQuestion "CQ02;CQ18" ;
+    nuproc:roleClass nuproc:CommercialSupplyRole ;
+    nuproc:status "codebook v3.0; frozen before coding on 2026-10-14" .
+
+erole:construction_contract a skos:Concept ;
+    rdfs:label "construction contract"@en ;
+    dcterms:source "codebook v3.0" ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0040> ;
+    skos:definition "The role of winning or performing an engineering, procurement and construction (EPC) contract."@en,
+        "설계 · 조달 · 시공 (EPC) 을 수주하거나 수행하는 역할."@ko ;
+    skos:example "A construction firm negotiates its construction share in an EPC consortium"@en,
+        "건설사가 EPC 컨소시엄의 시공 몫을 협상한다"@ko ;
+    skos:inScheme erole: ;
+    skos:notation "construction_contract" ;
+    skos:prefLabel "construction contract"@en ;
+    skos:scopeNote "Supply of the reactor design alone is technology_supply. If the actor also supplies the reactor design in the same event, both are recorded."@en,
+        "When the act concerns an EPC contract, the scope of construction, a consortium's construction share or the construction supply chain."@en,
+        "노형 공급만이면 technology_supply. 같은 사건에서 노형 공급도 맡으면 둘 다 적는다."@ko,
+        "행위가 EPC 계약 · 시공 범위 · 컨소시엄의 시공 몫 · 건설 공급망과 관련될 때."@ko ;
+    skos:topConceptOf erole: ;
+    nuproc:justifyingCompetencyQuestion "CQ02;CQ18" ;
+    nuproc:roleClass nuproc:ConstructionContractRole ;
+    nuproc:status "codebook v3.0; frozen before coding on 2026-10-14" .
+
+erole:financing a skos:Concept ;
+    rdfs:label "financing"@en ;
+    dcterms:source "codebook v3.0" ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0040> ;
+    skos:definition "The role of providing or offering equity, financing or guarantees."@en,
+        "지분 · 금융 · 보증을 제공하거나 제안하는 역할."@ko ;
+    skos:example "An export credit agency offers a financing package"@en,
+        "수출신용기관이 금융 패키지를 제안한다"@ko ;
+    skos:inScheme erole: ;
+    skos:notation "financing" ;
+    skos:prefLabel "financing"@en ;
+    skos:scopeNote "Not recorded when financing is mentioned only as background and is not the actor's part."@en,
+        "When public finance, export credit, an equity stake, financing terms or a guarantee is the actor's part in that event (even when the actor is a government)."@en,
+        "공적금융 · 수출신용 · 지분참여 · 자금조달 조건 · 보증이 그 사건에서 행위자의 몫일 때 (정부가 하더라도)."@ko,
+        "금융이 배경으로만 언급되고 행위자의 몫이 아니면 적지 않는다."@ko ;
+    skos:topConceptOf erole: ;
+    nuproc:justifyingCompetencyQuestion "CQ02;CQ18" ;
+    nuproc:roleClass nuproc:FinancingRole ;
+    nuproc:status "codebook v3.0; frozen before coding on 2026-10-14" .
+
+erole:other a skos:Concept ;
+    rdfs:label "other"@en ;
+    dcterms:source "codebook v3.0" ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0040> ;
+    skos:definition "An export-side role for which the evidence shows none of the five roles above."@en,
+        "위 다섯 가운데 어느 것도 근거에 없는 수출 측 역할."@ko ;
+    skos:example "An export-side body holds a training or promotional event"@en,
+        "수출 측 기관이 교육 · 홍보 행사를 연다"@ko ;
+    skos:inScheme erole: ;
+    skos:notation "other" ;
+    skos:prefLabel "other"@en ;
+    skos:scopeNote "Only when none of the five applies: never used together with another value."@en,
+        "When no judgement can be made, the event is marked '?', not other."@en,
+        "다섯 가운데 어느 것도 없을 때만 — 다른 값과 함께 쓰지 않는다."@ko,
+        "판단이 서지 않으면 other 가 아니라 '?' 로 표시한다."@ko ;
+    skos:topConceptOf erole: ;
+    nuproc:justifyingCompetencyQuestion "CQ02;CQ18" ;
+    nuproc:roleClass nuproc:OtherEngagementRole ;
+    nuproc:status "codebook v3.0; frozen before coding on 2026-10-14" .
+
+erole:state_sponsorship a skos:Concept ;
+    rdfs:label "state sponsorship"@en ;
+    dcterms:source "codebook v3.0" ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0040> ;
+    skos:definition "The role of a government (a state body or an intergovernmental body) representing or sponsoring the export side."@en,
+        "정부 (국가 기관 · 정부간 기구) 가 수출 측을 대표하거나 후원하는 역할."@ko ;
+    skos:example "A minister of the exporting country signs an intergovernmental memorandum of cooperation"@en,
+        "수출국 장관이 정부간 협력 각서에 서명한다"@ko ;
+    skos:inScheme erole: ;
+    skos:notation "state_sponsorship" ;
+    skos:prefLabel "state sponsorship"@en ;
+    skos:scopeNote "Not recorded when the actor is not a government. Acting as a regulator or licensing authority is a counterparty role."@en,
+        "When the actor is a government, a state body or an intergovernmental body and represents or sponsors the export side through political support, an intergovernmental agreement or support for its own industry."@en,
+        "행위자가 정부 · 국가 기관 · 정부간 기구이고 정치적 지지 · 정부간 협정 · 자국 산업 지원으로 수출 측을 대표 · 후원할 때."@ko,
+        "행위자가 정부가 아니면 적지 않는다. 규제 · 인허가 주체로서의 행위는 상대측 역할이다."@ko ;
+    skos:topConceptOf erole: ;
+    nuproc:justifyingCompetencyQuestion "CQ02;CQ18" ;
+    nuproc:roleClass nuproc:StateSponsorRole ;
+    nuproc:status "codebook v3.0; frozen before coding on 2026-10-14" .
+
+erole:technology_supply a skos:Concept ;
+    rdfs:label "technology supply"@en ;
+    dcterms:source "codebook v3.0" ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0040> ;
+    skos:definition "The role of proposing, negotiating or performing the supply of a reactor design or major equipment."@en,
+        "원자로 노형 · 주기기의 공급을 제안 · 협상 · 수행하는 역할."@ko ;
+    skos:example "A vendor proposes its reactor design and negotiates the supply terms"@en,
+        "벤더가 노형을 제안하고 공급 조건을 협상한다"@ko ;
+    skos:inScheme erole: ;
+    skos:notation "technology_supply" ;
+    skos:prefLabel "technology supply"@en ;
+    skos:scopeNote "Single items of equipment other than the major equipment are commercial_supply. If the actor also takes on construction in the same event, construction_contract is recorded as well."@en,
+        "When the act concerns a reactor design proposal, a supply contract, delivery of major equipment or technology transfer."@en,
+        "주기기 이외 기자재 단품은 commercial_supply. 같은 사건에서 시공도 맡으면 construction_contract 도 함께 적는다."@ko,
+        "행위가 노형 제안 · 공급 계약 · 주기기 납품 · 기술이전과 관련될 때."@ko ;
+    skos:topConceptOf erole: ;
+    nuproc:justifyingCompetencyQuestion "CQ02;CQ18" ;
+    nuproc:roleClass nuproc:TechnologySupplyRole ;
+    nuproc:status "codebook v3.0; frozen before coding on 2026-10-14" .
+
+etype:B2B-1 a skos:Concept ;
+    rdfs:label "Deal structure & financial negotiation"@en ;
+    dcterms:source "registry/codebook_v1.0.csv (primary_code, observed_n=82, status=in_use)"@en ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0005>,
+        <https://w3id.org/nuproc/adr/ADR-0006> ;
+    skos:definition "An activity in which firms and project organizations negotiate or settle the ownership and revenue structure of a project and its contractual terms. It includes equity structure negotiation, operatorship agreements, EPC contracts and decisions on BOO, BOT and BOOT arrangements, and it also covers commercial disputes between bidding firms, merger and acquisition disputes and shareholder disputes. Where the counterparty is the host-country project-owner state-owned enterprise, this code applies if that enterprise acts as a contracting, investment or supply party; if it acts at an evaluation or selection gateway it is B2G-2. A bid challenge addressed to a regulator is B2G-2, an intellectual property or technology-transfer dispute is B2B-4, and forming an alliance is B2B-3."@en,
+        "기업·사업조직 사이에서 사업의 소유·수익 구조와 계약 조건을 협상하거나 확정하는 활동. 지분구조 협상, 운영권 계약, EPC 계약, BOO·BOT·BOOT 방식 결정을 포함하며, 입찰 참여사 간 상업분쟁, 인수합병 분쟁, 주주 분쟁도 이에 속한다. 상대가 도입국 사업주 SOE인 경우에도 그 SOE가 계약·투자·공급 당사자로 행위하면 이 코드이며, 평가·선정 관문에서 행위하면 B2G-2이다. 규제기관을 상대로 한 입찰 이의는 B2G-2, 지식재산·기술이전 분쟁은 B2B-4, 제휴 형성은 B2B-3이다."@ko ;
+    skos:example "A case in which an equity structure or operating rights are negotiated or an EPC contract is concluded. It includes commercial disputes between bidding firms."@en,
+        "지분 구조나 운영권을 협상하거나 EPC 계약을 체결한 경우. 입찰 참여사 간 상업 분쟁을 포함한다."@ko ;
+    skos:inScheme etype: ;
+    skos:notation "B2B-1" ;
+    skos:prefLabel "Deal structure & financial negotiation"@en,
+        "거래 구조 및 금융 협상"@ko ;
+    skos:scopeNote "tender_appeal_to_government_regulator → B2G-2 | ip_or_tech_transfer_dispute → B2B-4 | strategic_alliance → B2B-3",
+        "Definition carried over from codebook v1.0 (registry/codebook_v1.0.csv)."@en,
+        "Included activities: equity_structure_negotiation, operation_rights_agreement, epc_contract_or_agreement, boo_bot_boot_model, inter_bidder_commercial_dispute, m_and_a_dispute, shareholder_dispute"@en,
+        "정의문은 codebook v1.0 의 것을 그대로 옮겼다 (registry/codebook_v1.0.csv)."@ko,
+        "포함 활동: equity_structure_negotiation, operation_rights_agreement, epc_contract_or_agreement, boo_bot_boot_model, inter_bidder_commercial_dispute, m_and_a_dispute, shareholder_dispute"@ko ;
+    skos:topConceptOf etype: ;
+    nuproc:justifyingCompetencyQuestion "CQ10;CQ11" ;
+    nuproc:status "codebook v1.0 v2.6.5c; observed_n=82; status=in_use" .
+
+etype:B2B-2 a skos:Concept ;
+    rdfs:label "Technology demonstration & differentiation"@en ;
+    dcterms:source "registry/codebook_v1.0.csv (primary_code, observed_n=21, status=in_use)"@en ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0005>,
+        <https://w3id.org/nuproc/adr/ADR-0006> ;
+    skos:definition "An activity in which a firm demonstrates and explains the performance and distinctiveness of its own technology to a potential customer or business partner. It includes technical design proposals, performance demonstrations, support for reactor-type selection, and sharing of reference plant operating experience. Technology transfer that has led to a contract is B2B-4, and forming an alliance or consortium is B2B-3."@en,
+        "기업이 잠재 고객이나 사업 파트너를 상대로 자사 기술의 성능과 차별성을 입증·설명하는 활동. 기술설계 제안, 성능 시연, 노형 선정 지원, 기준플랜트 운전실적 공유를 포함한다. 계약으로 이어진 기술이전은 B2B-4, 제휴·컨소시엄 형성은 B2B-3이다."@ko ;
+    skos:example "A case in which a vendor demonstrates the performance of a reactor type to a potential customer or shares the operating record of a reference plant."@en,
+        "벤더가 잠재 고객에게 노형 성능을 시연하거나 기준플랜트 운전 실적을 공유한 경우."@ko ;
+    skos:inScheme etype: ;
+    skos:notation "B2B-2" ;
+    skos:prefLabel "Technology demonstration & differentiation"@en,
+        "기술 시연 및 차별화"@ko ;
+    skos:scopeNote "tech_transfer_contract → B2B-4 | alliance_or_consortium_formation → B2B-3",
+        "Definition carried over from codebook v1.0 (registry/codebook_v1.0.csv)."@en,
+        "Included activities: technical_design_proposal_to_potential_customer, performance_demonstration, reactor_type_selection_support, reference_plant_operational_data_sharing"@en,
+        "정의문은 codebook v1.0 의 것을 그대로 옮겼다 (registry/codebook_v1.0.csv)."@ko,
+        "포함 활동: technical_design_proposal_to_potential_customer, performance_demonstration, reactor_type_selection_support, reference_plant_operational_data_sharing"@ko ;
+    skos:topConceptOf etype: ;
+    nuproc:justifyingCompetencyQuestion "CQ10;CQ11" ;
+    nuproc:status "codebook v1.0 v2.6.5c; observed_n=21; status=in_use" .
+
+etype:B2B-3 a skos:Concept ;
+    rdfs:label "Alliance & supply-chain formation"@en ;
+    dcterms:source "registry/codebook_v1.0.csv (primary_code, observed_n=165, status=in_use)"@en ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0005>,
+        <https://w3id.org/nuproc/adr/ADR-0006> ;
+    skos:definition "An activity in which firms and project organizations form cooperative relationships and supply-chain structures. It includes establishing joint ventures, forming consortia, strategic alliances, local procurement partnerships and expressions of intent to cooperate. Settling a specific transaction structure is B2B-1, a technology transfer contract is B2B-4, and cooperation at government level is G2G-2."@en,
+        "기업·사업조직 사이에서 협력 관계와 공급망 구조를 형성하는 활동. 합작법인 설립, 컨소시엄 구성, 전략적 제휴, 현지 조달 파트너십, 협력 의향 표명을 포함한다. 구체적 거래 구조 확정은 B2B-1, 기술이전 계약은 B2B-4, 정부 차원 협력은 G2G-2이다."@ko ;
+    skos:example "A case in which a joint venture or consortium is formed or a local procurement partnership is concluded."@en,
+        "합작법인이나 컨소시엄을 구성하거나 현지 조달 파트너십을 체결한 경우."@ko ;
+    skos:inScheme etype: ;
+    skos:notation "B2B-3" ;
+    skos:prefLabel "Alliance & supply-chain formation"@en,
+        "제휴 및 공급망 형성"@ko ;
+    skos:scopeNote "concrete_deal_structuring → B2B-1 | tech_transfer_contract → B2B-4 | government_level_cooperation → G2G-2",
+        "Definition carried over from codebook v1.0 (registry/codebook_v1.0.csv)."@en,
+        "Included activities: joint_venture_formation, consortium_formation, strategic_alliance, local_procurement_partnership, expressed_interest_in_cooperation"@en,
+        "정의문은 codebook v1.0 의 것을 그대로 옮겼다 (registry/codebook_v1.0.csv)."@ko,
+        "포함 활동: joint_venture_formation, consortium_formation, strategic_alliance, local_procurement_partnership, expressed_interest_in_cooperation"@ko ;
+    skos:topConceptOf etype: ;
+    nuproc:justifyingCompetencyQuestion "CQ10;CQ11" ;
+    nuproc:status "codebook v1.0 v2.6.5c; observed_n=165; status=in_use" .
+
+etype:B2B-4 a skos:Concept ;
+    rdfs:label "Tech transfer, O&M & lifecycle services (incl. IP disputes)"@en ;
+    dcterms:source "registry/codebook_v1.0.csv (primary_code, observed_n=36, status=in_use)"@en ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0005>,
+        <https://w3id.org/nuproc/adr/ADR-0006> ;
+    skos:definition "An activity in which firms and project organizations contract for and carry out the transfer of technology itself and plant life-cycle services. It includes technology transfer contracts, operator training programmes, operations and maintenance contracts, fuel supply, waste management and decommissioning, and it also covers copyright and patent disputes and arbitration proceedings. Technology transfer at government level is G2G-3 or G2G-4, pre-contract demonstration is B2B-2, and a procurement dispute against a regulator is B2G-2."@en,
+        "기업·사업조직 사이에서 기술 자체의 이전과 발전소 생애주기 서비스를 계약·수행하는 활동. 기술이전 계약, 운전요원 훈련 프로그램, 운영·정비 계약, 연료 공급, 폐기물 관리, 해체를 포함하며, 저작권·특허 분쟁과 중재 절차도 이에 속한다. 정부 차원의 기술이전은 G2G-3 또는 G2G-4, 계약 이전 단계의 시연은 B2B-2, 규제기관 상대 조달 분쟁은 B2G-2이다."@ko ;
+    skos:example "A case in which a technology transfer contract, operator training, or a fuel supply and maintenance contract is concluded. It includes patent and copyright disputes."@en,
+        "기술이전 계약, 운영요원 훈련, 연료공급·정비 계약을 체결한 경우. 특허·저작권 분쟁을 포함한다."@ko ;
+    skos:inScheme etype: ;
+    skos:notation "B2B-4" ;
+    skos:prefLabel "Tech transfer, O&M & lifecycle services (incl. IP disputes)"@en,
+        "기술이전, 운영·정비 (IP 분쟁 포함)"@ko ;
+    skos:scopeNote "government_level_tech_transfer → G2G-3_or_G2G-4 | pre_contract_demo → B2B-2 | procurement_dispute_vs_regulator → B2G-2",
+        "Definition carried over from codebook v1.0 (registry/codebook_v1.0.csv)."@en,
+        "Included activities: technology_transfer_contract, operator_training_program, o_and_m_contract, fuel_supply, waste_management, decommissioning, copyright_or_patent_dispute, arbitration_tribunal_proceeding"@en,
+        "정의문은 codebook v1.0 의 것을 그대로 옮겼다 (registry/codebook_v1.0.csv)."@ko,
+        "포함 활동: technology_transfer_contract, operator_training_program, o_and_m_contract, fuel_supply, waste_management, decommissioning, copyright_or_patent_dispute, arbitration_tribunal_proceeding"@ko ;
+    skos:topConceptOf etype: ;
+    nuproc:justifyingCompetencyQuestion "CQ10;CQ11" ;
+    nuproc:status "codebook v1.0 v2.6.5c; observed_n=36; status=in_use" .
+
+etype:B2B-Other a skos:Concept ;
+    rdfs:label "Other business-to-business activity"@en ;
+    dcterms:source "registry/codebook_v1.0.csv (primary_code, observed_n=0, status=allowed_unused)"@en ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0005>,
+        <https://w3id.org/nuproc/adr/ADR-0006> ;
+    skos:definition "Residual code for a business-to-business activity that, after the interpretation procedure, falls under none of B2B-1 to B2B-4."@en,
+        "B2B-1 B2B-2 B2B-3 B2B-4에 분류되지 않는 기타 B2B"@ko ;
+    skos:editorialNote "Permitted by the codebook but observed zero times in the dataset. It is kept so that codebook coverage stays complete."@en ;
+    skos:example "A case in which the channel is clearly B2B but none of B2B-1~4 applies, so it is handled with the residual code."@en,
+        "채널은 B2B 로 명확하나 B2B-1~4 어디에도 해당하지 않아 잔여 코드로 처리한 경우."@ko ;
+    skos:inScheme etype: ;
+    skos:notation "B2B-Other" ;
+    skos:prefLabel "Other business-to-business activity"@en ;
+    skos:scopeNote "Condition of use: B2B channel is clear but B2B-1..B2B-4 do not match after resolver."@en,
+        "Definition carried over from codebook v1.0 (registry/codebook_v1.0.csv)."@en,
+        "Derived from the structure of the source dataset's coding manual (not distributed) — condition of use: B2B channel is clear but B2B-1..B2B-4 do not match after resolver."@en,
+        "매뉴얼 구조에서 도출 — 사용 조건: B2B channel is clear but B2B-1..B2B-4 do not match after resolver."@ko,
+        "사용 조건: B2B channel is clear but B2B-1..B2B-4 do not match after resolver."@ko,
+        "정의문은 codebook v1.0 의 것을 그대로 옮겼다 (registry/codebook_v1.0.csv)."@ko ;
+    skos:topConceptOf etype: ;
+    nuproc:justifyingCompetencyQuestion "CQ10;CQ11" ;
+    nuproc:status "codebook v1.0 v2.6.5c; observed_n=0; status=allowed_unused" .
+
+etype:B2G-1 a skos:Concept ;
+    rdfs:label "Strategic engagement & market shaping"@en ;
+    dcterms:source "registry/codebook_v1.0.csv (primary_code, observed_n=203, status=in_use)"@en ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0005>,
+        <https://w3id.org/nuproc/adr/ADR-0006> ;
+    skos:definition "An activity in which a firm builds market conditions and relationships with the host government and its authorities at a stage before the formal procurement procedure. It includes early market entry, market shaping, policy briefings to the host government, value propositions at ministerial level, pre-feasibility work and strategic relationship building. Responding to a formal tender is B2G-2, a financing or localisation proposal is B2G-3, and public acceptance activity is B2G-4."@en,
+        "기업이 도입국 정부·당국을 상대로 공식 조달 절차 이전 단계에서 시장 환경과 관계를 형성하는 활동. 조기 시장진입, 시장 형성, 도입국 정부 대상 정책 브리핑, 장관급 대상 가치제안, 사전 타당성 검토, 전략적 관계 구축을 포함한다. 공식 입찰 대응은 B2G-2, 금융·현지화 제안은 B2G-3, 사회적 수용성 활동은 B2G-4이다."@ko ;
+    skos:example "A case in which a vendor presents the value proposition of its own reactor type to ministerial-level officials of the host country, or proposes a pre-feasibility study."@en,
+        "벤더가 도입국 장관급을 대상으로 자사 노형의 가치제안을 설명하거나 사전 타당성 검토를 제안한 경우."@ko ;
+    skos:inScheme etype: ;
+    skos:notation "B2G-1" ;
+    skos:prefLabel "Strategic engagement & market shaping"@en,
+        "전략적 영업 및 시장 형성"@ko ;
+    skos:scopeNote "formal_tender_response → B2G-2 | financing_or_localization_proposal → B2G-3 | public_social_acceptance_activity → B2G-4",
+        "Definition carried over from codebook v1.0 (registry/codebook_v1.0.csv)."@en,
+        "Included activities: early_market_entry, market_shaping, policy_briefing_to_importing_government, value_proposition_to_ministers, pre_feasibility_study, strategic_relationship_building"@en,
+        "정의문은 codebook v1.0 의 것을 그대로 옮겼다 (registry/codebook_v1.0.csv)."@ko,
+        "포함 활동: early_market_entry, market_shaping, policy_briefing_to_importing_government, value_proposition_to_ministers, pre_feasibility_study, strategic_relationship_building"@ko ;
+    skos:topConceptOf etype: ;
+    nuproc:justifyingCompetencyQuestion "CQ10;CQ11" ;
+    nuproc:status "codebook v1.0 v2.6.5c; observed_n=203; status=in_use" .
+
+etype:B2G-2 a skos:Concept ;
+    rdfs:label "Procurement & regulatory response (incl. tender appeals)"@en ;
+    dcterms:source "registry/codebook_v1.0.csv (primary_code, observed_n=280, status=in_use)"@en ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0005>,
+        <https://w3id.org/nuproc/adr/ADR-0006> ;
+    skos:definition "An activity in which a firm formally responds to a host country's procurement or regulatory procedure. It includes responses to pre-qualification and requests for proposals, bid submission, technical and price proposals, licence and permit applications, and submission of regulatory compliance documents, and it also covers procurement disputes such as bid challenges and litigation or injunctions against regulators and competition authorities. A response addressed to the host-country project-owner state-owned enterprise also takes this code where that enterprise acts at an evaluation, licensing, approval or selection gateway. Because authority is determined by function rather than by ownership, the same enterprise acting as a contracting, investment or supply counterparty is B2B-1."@en,
+        "기업이 도입국의 조달 절차나 규제 절차에 공식적으로 대응하는 활동. PQ·RFP 응답, 입찰서 제출, 기술제안, 가격제안, 인허가·허가 신청, 규제 준수 서류 제출을 포함하며, 입찰 이의제기와 규제기관·경쟁당국을 상대로 한 소송·가처분 등 조달 분쟁도 이에 속한다. 도입국 사업주 SOE를 상대로 한 대응도 그 SOE가 평가·인허가·승인·선정 관문에서 행위할 때 이 코드로 배정한다. 권한은 소유가 아니라 기능으로 판정하므로, 같은 SOE라도 계약·투자·공급 상대로 행위하면 B2B-1이다."@ko ;
+    skos:example "A case in which a vendor submits a technical proposal and a price offer in response to the procuring entity's RFP, or lodges a challenge against the tender result with the competition authority."@en,
+        "벤더가 발주처의 RFP 에 기술제안서와 가격제안을 제출하거나, 입찰 결과에 대해 경쟁당국에 이의를 제기한 경우."@ko ;
+    skos:inScheme etype: ;
+    skos:notation "B2G-2" ;
+    skos:prefLabel "Procurement & regulatory response (incl. tender appeals)"@en,
+        "조달 및 규제 응답 (입찰 항의 포함)"@ko ;
+    skos:scopeNote "Definition carried over from codebook v1.0 (registry/codebook_v1.0.csv)."@en,
+        "Firm bid/RFP/licensing/procurement response to importing-country project-owner SOE routes to B2G-2."@en,
+        "Included activities: pq_response, rfp_response, bid_submission, technical_proposal, price_offer, licensing_application, permit_application, regulatory_compliance_document, tender_appeal, lawsuit_against_regulator_or_antitrust_office, preliminary_injunction_in_procurement_dispute"@en,
+        "정의문은 codebook v1.0 의 것을 그대로 옮겼다 (registry/codebook_v1.0.csv)."@ko,
+        "포함 활동: pq_response, rfp_response, bid_submission, technical_proposal, price_offer, licensing_application, permit_application, regulatory_compliance_document, tender_appeal, lawsuit_against_regulator_or_antitrust_office, preliminary_injunction_in_procurement_dispute"@ko ;
+    skos:topConceptOf etype: ;
+    nuproc:justifyingCompetencyQuestion "CQ10;CQ11" ;
+    nuproc:status "codebook v1.0 v2.6.5c; observed_n=280; status=in_use" .
+
+etype:B2G-3 a skos:Concept ;
+    rdfs:label "Financing & localization proposal"@en ;
+    dcterms:source "registry/codebook_v1.0.csv (primary_code, observed_n=88, status=in_use)"@en ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0005>,
+        <https://w3id.org/nuproc/adr/ADR-0006> ;
+    skos:definition "An activity in which a firm proposes or commits financing terms or local industrial participation to the host government or its authorities. It includes firm-level financing terms, risk-sharing arrangements, localisation commitments, technology-transfer undertakings given to a government, and industrial participation programmes, and it carries an economic element tag. Financing at government level is G2G-3."@en,
+        "기업이 도입국 정부·당국을 상대로 자금 조달 조건이나 현지 산업 참여를 제안·약정하는 활동. 기업 차원의 금융 조건, 리스크 분담 방안, 현지화 약속, 정부를 상대로 한 기술이전 약정, 산업참여 프로그램을 포함하며 경제적 요소 태그를 수반한다. 정부 차원의 금융은 G2G-3이다."@ko ;
+    skos:example "A case in which a vendor proposes financing terms, risk sharing and localisation implementation to the host government."@en,
+        "벤더가 도입국 정부에 금융 조건, 리스크 분담, 현지화 이행을 제안한 경우."@ko ;
+    skos:inScheme etype: ;
+    skos:notation "B2G-3" ;
+    skos:prefLabel "Financing & localization proposal"@en,
+        "금융 및 현지화 제안"@ko ;
+    skos:scopeNote "government_level_financing → G2G-3",
+        "Definition carried over from codebook v1.0 (registry/codebook_v1.0.csv)."@en,
+        "Included activities: firm_financing_terms, risk_sharing_arrangement, localization_commitment, tech_transfer_commitment_to_government, industrial_participation_program | Requirement: secondary economic tag required"@en,
+        "정의문은 codebook v1.0 의 것을 그대로 옮겼다 (registry/codebook_v1.0.csv)."@ko,
+        "포함 활동: firm_financing_terms, risk_sharing_arrangement, localization_commitment, tech_transfer_commitment_to_government, industrial_participation_program | 요건: secondary economic tag 필요"@ko ;
+    skos:topConceptOf etype: ;
+    nuproc:justifyingCompetencyQuestion "CQ10;CQ11" ;
+    nuproc:status "codebook v1.0 v2.6.5c; observed_n=88; status=in_use" .
+
+etype:B2G-4 a skos:Concept ;
+    rdfs:label "Public communication & social acceptance"@en ;
+    dcterms:source "registry/codebook_v1.0.csv (primary_code, observed_n=78, status=in_use)"@en ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0005>,
+        <https://w3id.org/nuproc/adr/ADR-0006> ;
+    skos:definition "A communication activity carried out by a firm towards the public and local communities in order to obtain understanding of and acceptance for a project. It includes residents' briefings, company-hosted public hearings, information campaigns aimed at local residents, trust building in the siting community, and crisis communication. At least one of a public, community, media or social-acceptance context must be confirmed and a policy_target must be recorded. General predicates such as 'announced' or 'stressed' do not displace B2G-2 or B2G-3 where tender, procurement, financing or localisation cues are present."@en,
+        "기업이 공중·지역사회를 대상으로 사업에 대한 이해와 수용을 얻기 위해 수행하는 소통 활동. 주민설명회, 기업 주최 공청회, 지역주민 대상 정보 캠페인, 입지 지역사회 신뢰 구축, 위기 커뮤니케이션을 포함한다. 공중·지역사회·미디어·사회적 수용성 맥락 중 하나 이상이 확인되고 policy_target 이 기재되어야 한다. '발표했다·강조했다' 같은 일반적 서술어는 입찰·조달·금융·현지화 단서가 있을 때 B2G-2·B2G-3를 대체하지 못한다."@ko ;
+    skos:example "A case in which a vendor holds a briefing for residents near the site or carries out an information campaign."@en,
+        "벤더가 부지 인근 주민을 대상으로 설명회를 열거나 정보 캠페인을 수행한 경우."@ko ;
+    skos:inScheme etype: ;
+    skos:notation "B2G-4" ;
+    skos:prefLabel "Public communication & social acceptance"@en,
+        "공중 소통 및 사회적 수용성"@ko ;
+    skos:scopeNote "Broad verbs such as presented, demonstrated, highlighted, emphasized, or press release do not override B2G-2/B2G-3 when tender/procurement/financing/localization cues are present."@en,
+        "Definition carried over from codebook v1.0 (registry/codebook_v1.0.csv)."@en,
+        "Included activities: townhall_meeting, public_hearing_sponsored_by_firm, information_campaign_to_local_residents, host_community_trust_building, crisis_communication | Requirements (at least one): public_context, community_context, media_context, social_acceptance_context | Mandatory field: policy_target"@en,
+        "정의문은 codebook v1.0 의 것을 그대로 옮겼다 (registry/codebook_v1.0.csv)."@ko,
+        "포함 활동: townhall_meeting, public_hearing_sponsored_by_firm, information_campaign_to_local_residents, host_community_trust_building, crisis_communication | 요건(하나 이상): public_context, community_context, media_context, social_acceptance_context | 필수 필드: policy_target"@ko ;
+    skos:topConceptOf etype: ;
+    nuproc:justifyingCompetencyQuestion "CQ10;CQ11" ;
+    nuproc:status "codebook v1.0 v2.6.5c; observed_n=78; status=in_use" .
+
+etype:B2G-Other a skos:Concept ;
+    rdfs:label "Other business-to-government activity"@en ;
+    dcterms:source "registry/codebook_v1.0.csv (primary_code, observed_n=3, status=in_use)"@en ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0005>,
+        <https://w3id.org/nuproc/adr/ADR-0006> ;
+    skos:definition "Residual code assigned to an activity that is clearly in the B2G channel but, after the interpretation procedure, falls under none of B2G-1 to B2G-4."@en,
+        "채널이 B2G 임은 분명하나 해석 절차를 거친 뒤에도 B2G-1~B2G-4 중 어디에도 해당하지 않는 활동에 부여하는 잔여 코드."@ko ;
+    skos:example "A case in which the channel is clearly B2G but none of B2G-1~4 applies, so it is handled with the residual code."@en,
+        "채널은 B2G 로 명확하나 B2G-1~4 어디에도 해당하지 않아 잔여 코드로 처리한 경우."@ko ;
+    skos:inScheme etype: ;
+    skos:notation "B2G-Other" ;
+    skos:prefLabel "Other business-to-government activity"@en ;
+    skos:scopeNote "Condition of use: B2G channel is clear but B2G-1..B2G-4 do not match after resolver."@en,
+        "Definition carried over from codebook v1.0 (registry/codebook_v1.0.csv)."@en,
+        "Derived from the structure of the source dataset's coding manual (not distributed) — condition of use: B2G channel is clear but B2G-1..B2G-4 do not match after resolver."@en,
+        "매뉴얼 구조에서 도출 — 사용 조건: B2G channel is clear but B2G-1..B2G-4 do not match after resolver."@ko,
+        "사용 조건: B2G channel is clear but B2G-1..B2G-4 do not match after resolver."@ko,
+        "정의문은 codebook v1.0 의 것을 그대로 옮겼다 (registry/codebook_v1.0.csv)."@ko ;
+    skos:topConceptOf etype: ;
+    nuproc:justifyingCompetencyQuestion "CQ10;CQ11" ;
+    nuproc:status "codebook v1.0 v2.6.5c; observed_n=3; status=in_use" .
+
+etype:G2G-1 a skos:Concept ;
+    rdfs:label "High-level diplomacy & political support"@en ;
+    dcterms:source "registry/codebook_v1.0.csv (primary_code, observed_n=87, status=in_use)"@en ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0005>,
+        <https://w3id.org/nuproc/adr/ADR-0006> ;
+    skos:definition "An activity in which a government expresses and conveys political support for, and willingness to cooperate on, a nuclear project through high-level contact or a public statement of position. Summits and ministerial meetings, special envoys, joint statements, strategic partnership declarations and outward-facing trade missions belong here. This code applies where the outcome remains a statement of position or intent; if it establishes or modifies institutions or norms it is G2G-2, if it is a specific public financing commitment it is G2G-3, and if it is capacity-building support it is G2G-4."@en,
+        "정부가 고위급 접촉이나 공개 의사표시를 통해 원전 사업에 대한 정치적 지지와 협력 의사를 표명·전달하는 활동. 정상·장관급 회담, 특사 파견, 공동성명, 전략적 동반자 선언, 대외 무역사절단이 이에 속한다. 결과물이 입장·의사 표명에 머무는 경우가 이 코드이며, 제도·규범의 수립·변경으로 이어지면 G2G-2, 구체적 공적금융 확약이면 G2G-3, 역량구축 지원이면 G2G-4이다."@ko ;
+    skos:example "Public milestone examples (compiled by the author, not corpus records): President Macron state visit to Prague ; Czech–French Strategic Partnership Action Plan 2024–2028 backing EDF (France, 2024-03)"@en,
+        "공개 마일스톤 예 (저자 편찬, 코퍼스 기록 아님): President Macron state visit to Prague ; Czech–French Strategic Partnership Action Plan 2024–2028 backing EDF (France, 2024-03)"@ko ;
+    skos:inScheme etype: ;
+    skos:notation "G2G-1" ;
+    skos:prefLabel "High-level diplomacy & political support"@en,
+        "고위급 외교 및 정치적 지원"@ko ;
+    skos:scopeNote "formal_agreement_or_mou → G2G-2 | specific_public_financing → G2G-3 | capacity_building_or_training → G2G-4",
+        "Definition carried over from codebook v1.0 (registry/codebook_v1.0.csv)."@en,
+        "Included activities: summit, presidential_or_prime_ministerial_visit, ministerial_meeting, special_envoy, joint_statement, strategic_partnership_declaration, bilateral_consultation, export_government_information_sharing_with_foreign_firms, external_facing_trade_mission_or_supply_chain_forum"@en,
+        "정의문은 codebook v1.0 의 것을 그대로 옮겼다 (registry/codebook_v1.0.csv)."@ko,
+        "포함 활동: summit, presidential_or_prime_ministerial_visit, ministerial_meeting, special_envoy, joint_statement, strategic_partnership_declaration, bilateral_consultation, export_government_information_sharing_with_foreign_firms, external_facing_trade_mission_or_supply_chain_forum"@ko ;
+    skos:topConceptOf etype: ;
+    nuproc:justifyingCompetencyQuestion "CQ10;CQ11" ;
+    nuproc:status "codebook v1.0 v2.6.5c; observed_n=87; status=in_use" .
+
+etype:G2G-2 a skos:Concept ;
+    rdfs:label "Institutional / regulatory framework"@en ;
+    dcterms:source "registry/codebook_v1.0.csv (primary_code, observed_n=44, status=in_use)"@en ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0005>,
+        <https://w3id.org/nuproc/adr/ADR-0006> ;
+    skos:definition "An activity in which a government establishes or modifies the legal and regulatory basis for nuclear cooperation or for a project. It covers bilateral instruments such as intergovernmental agreements and MoUs, 123 and peaceful-uses agreements, non-proliferation and safeguards commitments, and frameworks for regulatory and licensing cooperation, and it also covers unilateral institutional and regulatory acts such as designating a project as nationally important, setting procurement security standards and establishing a licensing regime. This code applies where the outcome is a document, an institution or a standard; where it remains an expression of support or intervention it is G2G-1."@en,
+        "정부가 원자력 협력 또는 사업의 법적·규제적 기반을 수립하거나 변경하는 활동. 정부 간 협정과 MoU, 123협정·평화적이용협정, 핵비확산·안전조치 약속, 규제·인허가 협력 체계의 설정 등 양자 문서를 포함하며, 국가적 중요사업 지정, 조달 보안기준 설정, 인허가 체계 수립 등 일방적 제도·규제 행위도 이에 속한다(ADR-0006). 결과물이 문서·제도·기준이면 이 코드이고, 지지·개입 등 의사표시에 그치면 G2G-1이다."@ko ;
+    skos:example "Public milestone examples (compiled by the author, not corpus records): US–Poland Intergovernmental Agreement (IGA) on civil nuclear cooperation signed (United States, 2020-10) ; US–Bulgaria Strategic Civil Nuclear Cooperation MoU (NCMOU) (United States, 2020-09)"@en,
+        "공개 마일스톤 예 (저자 편찬, 코퍼스 기록 아님): US–Poland Intergovernmental Agreement (IGA) on civil nuclear cooperation signed (United States, 2020-10) ; US–Bulgaria Strategic Civil Nuclear Cooperation MoU (NCMOU) (United States, 2020-09)"@ko ;
+    skos:inScheme etype: ;
+    skos:notation "G2G-2" ;
+    skos:prefLabel "Institutional / regulatory framework"@en,
+        "제도·규제 프레임워크"@ko ;
+    skos:scopeNote "Definition carried over from codebook v1.0 (registry/codebook_v1.0.csv)."@en,
+        "Derived from the structure of the source dataset's coding manual (not distributed) — cases where the boundary rule of G2G-1 is 'formal_agreement_or_mou' are sent to this code → conversely, where that condition does not hold, G2G-1 | cases where the boundary rule of B2B-3 is 'government_level_cooperation' are sent to this code → conversely, where that condition does not hold, B2B-3"@en,
+        "Included activities: bilateral_mou, intergovernmental_agreement, 123_agreement, peaceful_uses_agreement, safeguards, nonproliferation_commitment, regulatory_cooperation, nuclear_safety_mou, licensing_cooperation_framework"@en,
+        "매뉴얼 구조에서 도출 — G2G-1 의 경계 규칙이 'formal_agreement_or_mou' 인 경우를 이 코드로 보낸다 → 역으로 해당 조건이 아니면 G2G-1 | B2B-3 의 경계 규칙이 'government_level_cooperation' 인 경우를 이 코드로 보낸다 → 역으로 해당 조건이 아니면 B2B-3"@ko,
+        "정의문은 codebook v1.0 의 것을 그대로 옮겼다 (registry/codebook_v1.0.csv)."@ko,
+        "포함 활동: bilateral_mou, intergovernmental_agreement, 123_agreement, peaceful_uses_agreement, safeguards, nonproliferation_commitment, regulatory_cooperation, nuclear_safety_mou, licensing_cooperation_framework"@ko ;
+    skos:topConceptOf etype: ;
+    nuproc:justifyingCompetencyQuestion "CQ10;CQ11" ;
+    nuproc:status "codebook v1.0 v2.6.5c; observed_n=44; status=in_use" .
+
+etype:G2G-3 a skos:Concept ;
+    rdfs:label "Public financing & industrial cooperation"@en ;
+    dcterms:source "registry/codebook_v1.0.csv (primary_code, observed_n=57, status=in_use)"@en ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0005>,
+        <https://w3id.org/nuproc/adr/ADR-0006> ;
+    skos:definition "An activity in which an exporting government or public body commits public funds or guarantees to a host-country project, or agrees industrial cooperation at government level. It includes sovereign loans, export credit agency financing, government and sovereign guarantees, EXIM, DFC and KEXIM commitments, and government-level localisation and industrial cooperation MoUs, and it carries an economic element tag. A financing proposal made by a firm is B2G-3."@en,
+        "수출국 정부 또는 공적기관이 도입국 사업에 공적 재원·보증을 투입하거나 정부 차원의 산업협력을 약정하는 활동. 국가 차관, 수출신용기관 금융, 정부·주권 보증, EXIM·DFC·KEXIM 확약, 정부 수준의 현지화·산업협력 MoU를 포함하며 경제적 요소 태그를 수반한다. 기업이 주체인 금융 제안은 B2G-3이다."@ko ;
+    skos:example "Public milestone examples (compiled by the author, not corpus records): US EXIM Bank USD 8.6bn Letter of Interest and financing meeting with Bulgaria's energy minister (United States, 2025-02) ; US EXIM Bank engagement on Kozloduy 7&8 financing structure (United States, 2024-05)"@en,
+        "공개 마일스톤 예 (저자 편찬, 코퍼스 기록 아님): US EXIM Bank USD 8.6bn Letter of Interest and financing meeting with Bulgaria's energy minister (United States, 2025-02) ; US EXIM Bank engagement on Kozloduy 7&8 financing structure (United States, 2024-05)"@ko ;
+    skos:inScheme etype: ;
+    skos:notation "G2G-3" ;
+    skos:prefLabel "Public financing & industrial cooperation"@en,
+        "공적금융 및 산업 협력"@ko ;
+    skos:scopeNote "firm_level_financing_proposal → B2G-3",
+        "Definition carried over from codebook v1.0 (registry/codebook_v1.0.csv)."@en,
+        "Included activities: sovereign_loan, eca_financing, government_guarantee, sovereign_guarantee, exim_commitment, dfc_commitment, kexim_commitment, government_level_localization_mou, government_level_industrial_cooperation | Requirement: secondary economic tag required"@en,
+        "정의문은 codebook v1.0 의 것을 그대로 옮겼다 (registry/codebook_v1.0.csv)."@ko,
+        "포함 활동: sovereign_loan, eca_financing, government_guarantee, sovereign_guarantee, exim_commitment, dfc_commitment, kexim_commitment, government_level_localization_mou, government_level_industrial_cooperation | 요건: secondary economic tag 필요"@ko ;
+    skos:topConceptOf etype: ;
+    nuproc:justifyingCompetencyQuestion "CQ10;CQ11" ;
+    nuproc:status "codebook v1.0 v2.6.5c; observed_n=57; status=in_use" .
+
+etype:G2G-4 a skos:Concept ;
+    rdfs:label "Capacity building & readiness"@en ;
+    dcterms:source "registry/codebook_v1.0.csv (primary_code, observed_n=12, status=in_use)"@en ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0005>,
+        <https://w3id.org/nuproc/adr/ADR-0006> ;
+    skos:definition "A support activity carried out by an exporting government to raise the host country's capability and institutional readiness for nuclear new build. It includes government-level workforce training, IAEA INIR readiness assessment, roadmap and institutional design support, research and development cooperation, and government-funded scholarships and training. Firm-to-firm training or technology transfer is B2B-4, and a specific licensing application is B2G-2."@en,
+        "수출국 정부가 도입국의 원전 도입 역량과 제도적 준비도를 높이기 위해 수행하는 지원 활동. 정부 차원 인력양성, IAEA INIR 준비도 평가, 로드맵·제도설계 지원, 연구개발 협력, 정부 재원 장학·훈련을 포함한다. 기업 간 훈련·기술이전은 B2B-4, 구체적 인허가 신청은 B2G-2이다."@ko ;
+    skos:example "Public milestone examples (compiled by the author, not corpus records): USTDA grant to PEJ for AP1000 FEED study (State Dept + DOE co-funded) (United States, 2021-06) ; USTDA grant agreements for Bulgarian nuclear projects (SMR study + used-fuel disposal study) (United States, 2024-12)"@en,
+        "공개 마일스톤 예 (저자 편찬, 코퍼스 기록 아님): USTDA grant to PEJ for AP1000 FEED study (State Dept + DOE co-funded) (United States, 2021-06) ; USTDA grant agreements for Bulgarian nuclear projects (SMR study + used-fuel disposal study) (United States, 2024-12)"@ko ;
+    skos:inScheme etype: ;
+    skos:notation "G2G-4" ;
+    skos:prefLabel "Capacity building & readiness"@en,
+        "역량 구축 및 준비도"@ko ;
+    skos:scopeNote "firm_to_firm_training_or_tech_transfer → B2B-4 | specific_licensing_application → B2G-2",
+        "Definition carried over from codebook v1.0 (registry/codebook_v1.0.csv)."@en,
+        "Included activities: workforce_training_government_level, iaea_inir_readiness_assessment, roadmap_support, institutional_design_assistance, r_and_d_cooperation, export_government_scholarship, government_funded_training"@en,
+        "정의문은 codebook v1.0 의 것을 그대로 옮겼다 (registry/codebook_v1.0.csv)."@ko,
+        "포함 활동: workforce_training_government_level, iaea_inir_readiness_assessment, roadmap_support, institutional_design_assistance, r_and_d_cooperation, export_government_scholarship, government_funded_training"@ko ;
+    skos:topConceptOf etype: ;
+    nuproc:justifyingCompetencyQuestion "CQ10;CQ11" ;
+    nuproc:status "codebook v1.0 v2.6.5c; observed_n=12; status=in_use" .
+
+etype:G2G-5 a skos:Concept ;
+    rdfs:label "Strategic industry support"@en ;
+    dcterms:source "registry/codebook_v1.0.csv (primary_code, observed_n=54, status=in_use)"@en ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0005>,
+        <https://w3id.org/nuproc/adr/ADR-0006> ;
+    skos:definition "Domestic industrial support that an exporting government provides to its own firms or state-owned enterprises in order to underpin nuclear export capability. It includes research and development subsidies to domestic nuclear firms, national R&D programmes underpinning exports, export credit and guarantees for domestic firms, and support to the domestic supply chain for export. It applies only where the actor is the exporting government, the counterparty is a firm or state-owned enterprise of that same exporting country, and the evidence of support for a domestic strategic industry are all confirmed."@en,
+        "수출국 정부가 자국 기업 또는 자국 SOE를 대상으로 원전 수출 역량을 뒷받침하기 위해 제공하는 국내 산업지원. 자국 원자력 기업에 대한 R&D 보조, 수출을 뒷받침하는 국가 R&D 사업, 자국 기업에 대한 수출신용·보증, 수출용 국내 공급망 지원을 포함한다. 행위자가 수출국 정부이고 상대가 같은 수출국의 기업·SOE이며 자국 전략산업 지원이라는 근거가 모두 확인될 때만 적용한다."@ko ;
+    skos:example "A case in which an exporting government provides domestic R&D subsidies or export credit aimed at the exports of its own nuclear firms."@en,
+        "수출국 정부가 자국 원자력 기업의 수출을 겨냥해 국내 R&D 보조나 수출신용을 제공한 경우."@ko ;
+    skos:inScheme etype: ;
+    skos:notation "G2G-5" ;
+    skos:prefLabel "Strategic industry support"@en,
+        "전략 산업 지원"@ko ;
+    skos:scopeNote "Definition carried over from codebook v1.0 (registry/codebook_v1.0.csv)."@en,
+        "Derived from the structure of the source dataset's coding manual (not distributed) — unless all of the following are met, it is not this code: actor_is_exporting_country_government, counterparty_is_same_exporting_country_firm_or_soe, evidence_has_domestic_own_national_strategic_industry_support"@en,
+        "Included activities: domestic_r_and_d_subsidy_for_own_nuclear_firm, national_r_and_d_program_supporting_nuclear_exports, export_credit_or_guarantee_to_own_firm, domestic_supply_chain_support_for_export | Requirements (all must be met): actor_is_exporting_country_government, counterparty_is_same_exporting_country_firm_or_soe, evidence_has_domestic_own_national_strategic_industry_support"@en,
+        "매뉴얼 구조에서 도출 — 다음을 모두 충족하지 않으면 이 코드가 아니다: actor_is_exporting_country_government, counterparty_is_same_exporting_country_firm_or_soe, evidence_has_domestic_own_national_strategic_industry_support"@ko,
+        "정의문은 codebook v1.0 의 것을 그대로 옮겼다 (registry/codebook_v1.0.csv)."@ko,
+        "포함 활동: domestic_r_and_d_subsidy_for_own_nuclear_firm, national_r_and_d_program_supporting_nuclear_exports, export_credit_or_guarantee_to_own_firm, domestic_supply_chain_support_for_export | 요건(전부 충족): actor_is_exporting_country_government, counterparty_is_same_exporting_country_firm_or_soe, evidence_has_domestic_own_national_strategic_industry_support"@ko ;
+    skos:topConceptOf etype: ;
+    nuproc:justifyingCompetencyQuestion "CQ10;CQ11" ;
+    nuproc:status "codebook v1.0 v2.6.5c; observed_n=54; status=in_use" .
+
+etype:G2G-Other a skos:Concept ;
+    rdfs:label "Other government-to-government activity"@en ;
+    dcterms:source "registry/codebook_v1.0.csv (primary_code, observed_n=0, status=allowed_unused)"@en ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0005>,
+        <https://w3id.org/nuproc/adr/ADR-0006> ;
+    skos:definition "Residual code for a government-to-government activity that, after the interpretation procedure, falls under none of G2G-1 to G2G-5."@en,
+        "G2G-1 G2G-2 G2G-3 G2G-4 G2G-5에 분류되지 않는 기타 G2G"@ko ;
+    skos:editorialNote "Permitted by the codebook but observed zero times in the dataset. It is kept so that codebook coverage stays complete."@en ;
+    skos:example "A case in which the channel is clearly G2G but none of G2G-1~5 applies, so it is handled with the residual code."@en,
+        "채널은 G2G 로 명확하나 G2G-1~5 어디에도 해당하지 않아 잔여 코드로 처리한 경우."@ko ;
+    skos:inScheme etype: ;
+    skos:notation "G2G-Other" ;
+    skos:prefLabel "Other government-to-government activity"@en ;
+    skos:scopeNote "Condition of use: G2G channel is clear but G2G-1..G2G-5 do not match after resolver."@en,
+        "Definition carried over from codebook v1.0 (registry/codebook_v1.0.csv)."@en,
+        "Derived from the structure of the source dataset's coding manual (not distributed) — condition of use: G2G channel is clear but G2G-1..G2G-5 do not match after resolver."@en,
+        "매뉴얼 구조에서 도출 — 사용 조건: G2G channel is clear but G2G-1..G2G-5 do not match after resolver."@ko,
+        "사용 조건: G2G channel is clear but G2G-1..G2G-5 do not match after resolver."@ko,
+        "정의문은 codebook v1.0 의 것을 그대로 옮겼다 (registry/codebook_v1.0.csv)."@ko ;
+    skos:topConceptOf etype: ;
+    nuproc:justifyingCompetencyQuestion "CQ10;CQ11" ;
+    nuproc:status "codebook v1.0 v2.6.5c; observed_n=0; status=allowed_unused" .
+
+etype:Unknown a skos:Concept ;
+    rdfs:label "event type not determined"@en ;
+    dcterms:source "registry/codebook_v1.0.csv (primary_code, observed_n=0, status=allowed_unused)"@en ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0005>,
+        <https://w3id.org/nuproc/adr/ADR-0006> ;
+    skos:definition "Residual value used where the source article gives no basis for determining a detailed code."@en,
+        "세부 코드를 판정할 근거가 기사에 없어 부여하는 잔여 값."@ko ;
+    skos:editorialNote "Permitted by the codebook but observed zero times in the dataset. It is kept so that codebook coverage stays complete."@en ;
+    skos:example "A case coded with the residual value because the article contains no basis for determining a detailed code."@en,
+        "세부 코드를 판정할 근거가 기사에 없어 잔여 값으로 코딩한 경우."@ko ;
+    skos:inScheme etype: ;
+    skos:notation "Unknown" ;
+    skos:prefLabel "event type not determined"@en ;
+    skos:scopeNote "Definition carried over from codebook v1.0 (registry/codebook_v1.0.csv)."@en,
+        "정의문은 codebook v1.0 의 것을 그대로 옮겼다 (registry/codebook_v1.0.csv)."@ko ;
+    skos:topConceptOf etype: ;
+    nuproc:justifyingCompetencyQuestion "CQ10;CQ11" ;
+    nuproc:status "codebook v1.0 v2.6.5c; observed_n=0; status=allowed_unused" .
+
+ostat:denied a skos:Concept ;
+    rdfs:label "denied"@en ;
+    dcterms:source "registry/codebook_occurrence_v1.csv; evaluation/coding/occurrence_v1/CODING_PROTOCOL.md §2"@en ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0041> ;
+    skos:definition "The records of the cluster report that the engagement did not take place."@en,
+        "그 군집의 기록들이 그 관여가 일어나지 않았다고 보도한다."@ko ;
+    skos:example "A report that a planned visit was cancelled."@en,
+        "예정된 방문이 취소됐다는 보도."@ko ;
+    skos:inScheme ostat: ;
+    skos:notation "denied" ;
+    skos:prefLabel "denied"@en ;
+    skos:scopeNote "A cluster with this value, and its records, report no engagement. The cluster's role claims stay claims and ground no role, and its participation yields no side role. This is a rule for asserting roles, not a condition of their existence: a role can exist before any engagement takes place, but the report of an engagement not stated to have taken place is not taken as evidence for it."@en,
+        "If it conflicts with a report that the engagement took place, the value is unclear."@en,
+        "Reports a cancellation, a collapse, a postponement so that it did not take place, or a denial by a party, and no report that it took place."@en,
+        "이 값의 군집과 그 기록은 관여를 보도하지 않는다. 그 군집의 역할 주장은 주장으로 남고 역할의 근거가 되지 않으며, 그 참여는 측 역할을 낳지 않는다. 역할을 단언하는 규칙이지 역할이 있기 위한 조건이 아니다: 역할은 관여가 일어나기 전에도 있을 수 있지만, 일어났다고 보도되지 않은 관여의 보도를 그 근거로 삼지 않는다 (ADR-0041 덧붙임 4 · 5)"@ko,
+        "일어났다는 보도와 엇갈리면 unclear 다."@ko,
+        "취소 · 무산 · 연기로 열리지 않음 · 당사자의 부인을 보도하고, 일어났다는 보도가 없다."@ko ;
+    skos:topConceptOf ostat: ;
+    nuproc:justifyingCompetencyQuestion "CQ18;CQ20" ;
+    nuproc:status "codebook occurrence_v1; frozen before coding on 2026-10-15" .
+
+ostat:occurred a skos:Concept ;
+    rdfs:label "occurred"@en ;
+    dcterms:source "registry/codebook_occurrence_v1.csv; evaluation/coding/occurrence_v1/CODING_PROTOCOL.md §2"@en ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0041> ;
+    skos:definition "The engagement reported by the records of the cluster had taken place, or was under way, when it was reported."@en,
+        "그 군집의 기록들이 보도하는 관여가, 보도된 시점에, 일어났거나 진행 중이다."@ko ;
+    skos:example "A report that the representatives of the two countries met and issued a joint statement."@en,
+        "양국 대표가 회담하고 공동성명을 냈다는 보도."@ko ;
+    skos:inScheme ostat: ;
+    skos:notation "occurred" ;
+    skos:prefLabel "occurred"@en ;
+    skos:scopeNote "An engagement is asserted in the real-world layer only for a cluster whose final value is this one and that is not merged"@en,
+        "At least one excerpt reports as fact that the engagement took place or is under way (a meeting was held, an agreement was signed, a visit was made, a bid was submitted, negotiations are under way, an announcement was made)."@en,
+        "If another excerpt of the same cluster states that the engagement did not take place (a denial or a cancellation), the value is unclear."@en,
+        "같은 군집의 다른 발췌가 그 관여가 일어나지 않았다고 명시하면 (부인 · 취소) unclear 로 한다."@ko,
+        "실세계 층의 관여는 최종 값이 이것이고 병합되지 않은 군집에만 단언한다 (ADR-0041 §2)"@ko,
+        "적어도 한 발췌가 그 관여가 일어났다 또는 진행 중이라고 사실로 보도한다 (회의가 열렸다 · 서명했다 · 방문했다 · 제출했다 · 협상이 진행 중이다 · 발표했다)."@ko ;
+    skos:topConceptOf ostat: ;
+    nuproc:justifyingCompetencyQuestion "CQ18;CQ20" ;
+    nuproc:status "codebook occurrence_v1; frozen before coding on 2026-10-15" .
+
+ostat:planned a skos:Concept ;
+    rdfs:label "planned"@en ;
+    dcterms:source "registry/codebook_occurrence_v1.csv; evaluation/coding/occurrence_v1/CODING_PROTOCOL.md §2"@en ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0041> ;
+    skos:definition "The records of the cluster report the engagement only as something still to come."@en,
+        "그 군집의 기록들이 그 관여를 앞으로의 일로만 보도한다."@ko ;
+    skos:example "A report that a signing is scheduled for next month."@en,
+        "다음 달 서명할 예정이라는 보도."@ko ;
+    skos:inScheme ostat: ;
+    skos:notation "planned" ;
+    skos:prefLabel "planned"@en ;
+    skos:scopeNote "A cluster with this value, and its records, report no engagement. The cluster's role claims stay claims and ground no role, and its participation yields no side role. This is a rule for asserting roles, not a condition of their existence: a role can exist before any engagement takes place, but the report of an engagement not stated to have taken place is not taken as evidence for it."@en,
+        "If there is even one factual report that it took place, the value is occurred."@en,
+        "The excerpts report it only as scheduled, agreed, invited, planned, intended or timetabled, with no report that it took place and no cancellation or denial."@en,
+        "발췌가 예정 · 합의 · 초청 · 계획 · 의향 · 일정으로만 보도하고, 일어났다는 보도도 취소 · 부인도 없다."@ko,
+        "이 값의 군집과 그 기록은 관여를 보도하지 않는다. 그 군집의 역할 주장은 주장으로 남고 역할의 근거가 되지 않으며, 그 참여는 측 역할을 낳지 않는다. 역할을 단언하는 규칙이지 역할이 있기 위한 조건이 아니다: 역할은 관여가 일어나기 전에도 있을 수 있지만, 일어났다고 보도되지 않은 관여의 보도를 그 근거로 삼지 않는다 (ADR-0041 덧붙임 4 · 5)"@ko,
+        "일어났다는 사실 보도가 하나라도 있으면 occurred 다."@ko ;
+    skos:topConceptOf ostat: ;
+    nuproc:justifyingCompetencyQuestion "CQ18;CQ20" ;
+    nuproc:status "codebook occurrence_v1; frozen before coding on 2026-10-15" .
+
+ostat:unclear a skos:Concept ;
+    rdfs:label "unclear"@en ;
+    dcterms:source "registry/codebook_occurrence_v1.csv; evaluation/coding/occurrence_v1/CODING_PROTOCOL.md §2"@en ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0041> ;
+    skos:definition "The excerpts do not allow one to tell whether the engagement took place, is planned or was denied."@en,
+        "발췌로는 그 관여가 일어났는지 · 예정인지 · 부인됐는지 가를 수 없다."@ko ;
+    skos:example "A report that only says, quoting officials, that a meeting may have taken place."@en,
+        "관계자를 인용해 회담이 있었을 수 있다고만 전하는 보도."@ko ;
+    skos:inScheme ostat: ;
+    skos:notation "unclear" ;
+    skos:prefLabel "unclear"@en ;
+    skos:scopeNote "A cluster with this value, and its records, report no engagement. The cluster's role claims stay claims and ground no role, and its participation yields no side role. This is a rule for asserting roles, not a condition of their existence: a role can exist before any engagement takes place, but the report of an engagement not stated to have taken place is not taken as evidence for it."@en,
+        "Do not force a case into occurred because no judgement can be reached."@en,
+        "Rumour, speculation, a conditional statement, an unsourced claim, or excerpts that conflict (took place / denied)."@en,
+        "소문 · 추측 · 조건부 진술 · 출처를 밝히지 않은 주장, 또는 발췌끼리 엇갈린다 (일어났다 / 부인)."@ko,
+        "이 값의 군집과 그 기록은 관여를 보도하지 않는다. 그 군집의 역할 주장은 주장으로 남고 역할의 근거가 되지 않으며, 그 참여는 측 역할을 낳지 않는다. 역할을 단언하는 규칙이지 역할이 있기 위한 조건이 아니다: 역할은 관여가 일어나기 전에도 있을 수 있지만, 일어났다고 보도되지 않은 관여의 보도를 그 근거로 삼지 않는다 (ADR-0041 덧붙임 4 · 5)"@ko,
+        "판단이 서지 않는다는 이유로 occurred 로 몰지 않는다."@ko ;
+    skos:topConceptOf ostat: ;
+    nuproc:justifyingCompetencyQuestion "CQ18;CQ20" ;
+    nuproc:status "codebook occurrence_v1; frozen before coding on 2026-10-15" .
+
+otype:Government a skos:Concept ;
+    rdfs:label "Government"@en ;
+    dcterms:source "registry/organization_type_v0.1.csv (status=in_use)" ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0014>,
+        <https://w3id.org/nuproc/adr/ADR-0021> ;
+    skos:definition "An organisation that directly exercises public authority, including states, government bodies and their ministries and diplomatic missions."@en,
+        "국가·정부기관 및 그 하위 부처·대사관 등 공적 권한을 직접 행사하는 조직."@ko ;
+    skos:inScheme otype: ;
+    skos:notation "Government" ;
+    skos:prefLabel "Government"@en ;
+    skos:scopeNote "As confirmed in the actor registry. Not a value promoted from the coded player_role (in the source dataset's actor labels, the five that carry two or more player_role values covered 71.4% of the design events)"@en,
+        "행위자 레지스트리 확정분. 코딩된 player_role 을 승격한 값이 아니다 (ADR-0014 — 원자료의 행위자 표기 가운데 player_role 값이 둘 이상인 다섯이 설계 세트 사건의 71.4% 를 차지했다)"@ko ;
+    skos:topConceptOf otype: ;
+    nuproc:justifyingCompetencyQuestion "CQ02" .
+
+otype:PrivateFirm a skos:Concept ;
+    rdfs:label "PrivateFirm"@en ;
+    dcterms:source "registry/organization_type_v0.1.csv (status=in_use)" ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0014>,
+        <https://w3id.org/nuproc/adr/ADR-0021> ;
+    skos:definition "A commercial enterprise operating without a controlling state interest."@en,
+        "국가 지배지분 없이 운영되는 민간 사업체."@ko ;
+    skos:inScheme otype: ;
+    skos:notation "PrivateFirm" ;
+    skos:prefLabel "PrivateFirm"@en ;
+    skos:scopeNote "As confirmed in the actor registry. Not a value promoted from the coded player_role (in the source dataset's actor labels, the five that carry two or more player_role values covered 71.4% of the design events)"@en,
+        "행위자 레지스트리 확정분. 코딩된 player_role 을 승격한 값이 아니다 (ADR-0014 — 원자료의 행위자 표기 가운데 player_role 값이 둘 이상인 다섯이 설계 세트 사건의 71.4% 를 차지했다)"@ko ;
+    skos:topConceptOf otype: ;
+    nuproc:justifyingCompetencyQuestion "CQ02" .
+
+otype:Public a skos:Concept ;
+    rdfs:label "Public"@en ;
+    dcterms:source "registry/organization_type_v0.1.csv (status=in_use)" ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0014>,
+        <https://w3id.org/nuproc/adr/ADR-0021> ;
+    skos:definition "A non-profit organisation in the public or civil-society sphere."@en,
+        "공공·시민사회 영역의 비영리 조직."@ko ;
+    skos:inScheme otype: ;
+    skos:notation "Public" ;
+    skos:prefLabel "Public"@en ;
+    skos:scopeNote "As confirmed in the actor registry. Not a value promoted from the coded player_role (in the source dataset's actor labels, the five that carry two or more player_role values covered 71.4% of the design events)"@en,
+        "행위자 레지스트리 확정분. 코딩된 player_role 을 승격한 값이 아니다 (ADR-0014 — 원자료의 행위자 표기 가운데 player_role 값이 둘 이상인 다섯이 설계 세트 사건의 71.4% 를 차지했다)"@ko ;
+    skos:topConceptOf otype: ;
+    nuproc:justifyingCompetencyQuestion "CQ02" .
+
+otype:SOE a skos:Concept ;
+    rdfs:label "SOE"@en ;
+    dcterms:source "registry/organization_type_v0.1.csv (status=in_use)" ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0014>,
+        <https://w3id.org/nuproc/adr/ADR-0021> ;
+    skos:definition "A commercial enterprise owned by the state or in which the state holds a controlling interest."@en,
+        "국가가 소유하거나 지배지분을 보유한 상업적 사업체."@ko ;
+    skos:inScheme otype: ;
+    skos:notation "SOE" ;
+    skos:prefLabel "SOE"@en ;
+    skos:scopeNote "As confirmed in the actor registry. Not a value promoted from the coded player_role (in the source dataset's actor labels, the five that carry two or more player_role values covered 71.4% of the design events)"@en,
+        "행위자 레지스트리 확정분. 코딩된 player_role 을 승격한 값이 아니다 (ADR-0014 — 원자료의 행위자 표기 가운데 player_role 값이 둘 이상인 다섯이 설계 세트 사건의 71.4% 를 차지했다)"@ko ;
+    skos:topConceptOf otype: ;
+    nuproc:justifyingCompetencyQuestion "CQ02" .
+
+prole:government a skos:Concept ;
+    rdfs:label "government"@en ;
+    dcterms:source "registry/codebook_v1.0.csv (player_role, observed_n=255, status=in_use)"@en ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0005>,
+        <https://w3id.org/nuproc/adr/ADR-0006> ;
+    skos:definition "The case in which the export-side actor is a government body or an intergovernmental organization."@en,
+        "수출측 행위자가 정부 기관 또는 정부 간 기구인 경우."@ko ;
+    skos:example "Government bodies of the exporting country and intergovernmental organizations. The source dataset's coding manual (not distributed) lists IAEA, IEA, ADB, EU, USTDA, US EXIM, DFC, KOICA, DOE and ÚOHS as entities to be treated as the government type; that list is not limited to the export side — bodies of the host country (e.g. ÚOHS) are on the counterparty side. This reading of the list is not yet confirmed."@en,
+        "수출국 정부기관 및 정부간 기구. 매뉴얼 `entity_overrides.government` 목록은 IAEA, IEA, ADB, EU, USTDA, US EXIM, DFC, KOICA, DOE, ÚOHS 이나, 이는 '정부 유형으로 취급할 개체' 목록이며 수출측 전용이 아니다 — 도입국 기관(예: ÚOHS)은 counterparty 측이다. 연구자 확인 필요."@ko ;
+    skos:inScheme prole: ;
+    skos:notation "government" ;
+    skos:prefLabel "government"@en ;
+    skos:scopeNote "Definition carried over from codebook v1.0 (registry/codebook_v1.0.csv)."@en,
+        "If a state-owned vendor acts as a commercial entity, soe_vendor."@en,
+        "When the acting party is of a type that the source dataset's coding manual (not distributed) treats as government (ministries, export credit agencies, international organizations, etc.)."@en,
+        "manual `entity_overrides.government` 에 열거된 유형 (부처, 수출신용기관, 국제기구 등)이 행위 주체일 때."@ko,
+        "국유 벤더가 상업적 주체로 행위하면 soe_vendor (manual `soe_rule.default_role: B`)."@ko,
+        "정의문은 codebook v1.0 의 것을 그대로 옮겼다 (registry/codebook_v1.0.csv)."@ko ;
+    skos:topConceptOf prole: ;
+    nuproc:justifyingCompetencyQuestion "CQ02" ;
+    nuproc:status "codebook v1.0 v1.0-draft; observed_n=255; status=in_use" .
+
+prole:private_firm a skos:Concept ;
+    rdfs:label "private firm"@en ;
+    dcterms:source "registry/codebook_v1.0.csv (player_role, observed_n=206, status=in_use)"@en ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0005>,
+        <https://w3id.org/nuproc/adr/ADR-0006> ;
+    skos:definition "A private firm not subject to state equity control."@en,
+        "국가 지분 지배를 받지 않는 민간 기업."@ko ;
+    skos:example "A private firm. Manual examples: Westinghouse, Hyundai E&C"@en,
+        "민간 기업. 매뉴얼 예: Westinghouse, Hyundai E&C"@ko ;
+    skos:inScheme prole: ;
+    skos:notation "private_firm" ;
+    skos:prefLabel "private firm"@en ;
+    skos:scopeNote "Definition carried over from codebook v1.0 (registry/codebook_v1.0.csv)."@en,
+        "State-owned or state-controlled vendors are soe_vendor."@en,
+        "When the acting party is of a type that the source dataset's coding manual (not distributed) treats as a private firm."@en,
+        "manual `entity_overrides.private_firm` 유형이 행위 주체일 때."@ko,
+        "국유·국가지배 벤더는 soe_vendor."@ko,
+        "정의문은 codebook v1.0 의 것을 그대로 옮겼다 (registry/codebook_v1.0.csv)."@ko ;
+    skos:topConceptOf prole: ;
+    nuproc:justifyingCompetencyQuestion "CQ02" ;
+    nuproc:status "codebook v1.0 v1.0-draft; observed_n=206; status=in_use" .
+
+prole:soe_vendor a skos:Concept ;
+    rdfs:label "SOE vendor"@en ;
+    dcterms:source "registry/codebook_v1.0.csv (player_role, observed_n=568, status=in_use)"@en ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0005>,
+        <https://w3id.org/nuproc/adr/ADR-0006> ;
+    skos:definition "A reactor supplier or vendor that is state-owned or under state control."@en,
+        "국유이거나 국가 지배력 아래 있는 원자로 공급자·벤더."@ko ;
+    skos:example "A state-owned or state-controlled vendor. Manual examples: KHNP, KEPCO, CNNC, CGN, Rosatom, EDF"@en,
+        "국유 또는 국가지배 벤더. 매뉴얼 예: KHNP, KEPCO, CNNC, CGN, Rosatom, EDF"@ko ;
+    skos:inScheme prole: ;
+    skos:notation "soe_vendor" ;
+    skos:prefLabel "SOE vendor"@en ;
+    skos:scopeNote "Definition carried over from codebook v1.0 (registry/codebook_v1.0.csv)."@en,
+        "Promoted to government if two or more of government instruction, joint naming with a ministry and sovereign commitment are met."@en,
+        "When the acting party is of a type that the source dataset's coding manual (not distributed) lists as a state-owned enterprise or vendor."@en,
+        "manual `entity_overrides.soe_or_vendor` 에 열거된 유형이 행위 주체일 때."@ko,
+        "정부 지시·부처 공동명의·주권적 확약 중 둘 이상이 충족되면 government 로 승격 (manual `soe_rule.promote_to_G_if_at_least_two`)."@ko,
+        "정의문은 codebook v1.0 의 것을 그대로 옮겼다 (registry/codebook_v1.0.csv)."@ko ;
+    skos:topConceptOf prole: ;
+    nuproc:justifyingCompetencyQuestion "CQ02" ;
+    nuproc:status "codebook v1.0 v1.0-draft; observed_n=568; status=in_use" .
+
+rstat:resolved a skos:Concept ;
+    rdfs:label "resolved"@en ;
+    dcterms:source "docs/adr/ADR-0010-khnp-kepco-merge.md" ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0010> ;
+    skos:definition "A reference that has been resolved to an individual organization."@en,
+        "개별 조직으로 해소된 참조."@ko ;
+    skos:inScheme rstat: ;
+    skos:notation "resolved" ;
+    skos:prefLabel "resolved"@en ;
+    skos:topConceptOf rstat: ;
+    nuproc:justifyingCompetencyQuestion "CQ17" .
+
+rstat:unresolvable_candidate_set a skos:Concept ;
+    rdfs:label "unresolvable — candidate set"@en ;
+    dcterms:source "docs/adr/ADR-0010-khnp-kepco-merge.md" ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0010> ;
+    skos:definition "A reference whose candidate organizations are known but whose event's source does not determine which one is meant (for example, KHNP/KEPCO in some events)."@en,
+        "후보 조직을 알지만 그 사건의 원천이 그중 어느 쪽인지 정하지 않은 참조 (예: 어느 사건의 KHNP/KEPCO)."@ko ;
+    skos:inScheme rstat: ;
+    skos:notation "unresolvable_candidate_set" ;
+    skos:prefLabel "unresolvable — candidate set"@en ;
+    skos:topConceptOf rstat: ;
+    nuproc:justifyingCompetencyQuestion "CQ17" .
+
+rstat:unresolvable_collective a skos:Concept ;
+    rdfs:label "unresolvable — collective reference"@en ;
+    dcterms:source "docs/adr/ADR-0008-unnamed-actor-reference.md" ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0008> ;
+    skos:definition "A reference that cannot be resolved to an individual organization because it is a collective, anonymous or national-side expression."@en,
+        "집합·익명·국가측 지칭이라 개별 조직으로 해소할 수 없는 참조."@ko ;
+    skos:inScheme rstat: ;
+    skos:notation "unresolvable_collective" ;
+    skos:prefLabel "unresolvable — collective reference"@en ;
+    skos:topConceptOf rstat: ;
+    nuproc:justifyingCompetencyQuestion "CQ17" .
+
+rstat:unresolved a skos:Concept ;
+    rdfs:label "unresolved"@en ;
+    dcterms:source "docs/adr/ADR-0008-unnamed-actor-reference.md; docs/adr/ADR-0010-khnp-kepco-merge.md" ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0010> ;
+    skos:definition "A reference that could be resolved but has not been resolved yet. It is kept distinct from references that cannot be resolved."@en,
+        "해소 가능하나 아직 해소하지 못한 참조. 해소 불가와 구분한다."@ko ;
+    skos:inScheme rstat: ;
+    skos:notation "unresolved" ;
+    skos:prefLabel "unresolved"@en ;
+    skos:topConceptOf rstat: ;
+    nuproc:justifyingCompetencyQuestion "CQ17" .
+
+srole:export_side a skos:Concept ;
+    rdfs:label "export side"@en ;
+    dcterms:source "docs/adr/ADR-0040-v080-real-world-layer-roles.md §4" ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0036>,
+        <https://w3id.org/nuproc/adr/ADR-0040> ;
+    skos:definition "The participation of the side that sells a nuclear new build or its supply, financing or sponsorship in the engagement."@en,
+        "관여에서 원전 또는 그 공급 · 금융 · 후원을 파는 쪽의 참여."@ko ;
+    skos:inScheme srole: ;
+    skos:notation "export_side" ;
+    skos:prefLabel "export side"@en ;
+    skos:scopeNote "In NuProc data this is the player family of the source. It corresponds to ExportSideRole in the real-world layer (nuproc:roleClass)"@en,
+        "NuProc 자료에서는 원자료의 player 계열에 해당한다. 실세계 층의 ExportSideRole 에 대응한다 (nuproc:roleClass)"@ko ;
+    skos:topConceptOf srole: ;
+    nuproc:justifyingCompetencyQuestion "CQ02" ;
+    nuproc:roleClass nuproc:ExportSideRole .
+
+srole:host_side a skos:Concept ;
+    rdfs:label "host side"@en ;
+    dcterms:source "docs/adr/ADR-0040-v080-real-world-layer-roles.md §4" ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0013>,
+        <https://w3id.org/nuproc/adr/ADR-0040> ;
+    skos:definition "The participation of the side procuring the new build in the engagement: the host country, the project owner or the authorities."@en,
+        "관여에서 원전을 사는 나라 · 사업주 · 당국 쪽의 참여."@ko ;
+    skos:inScheme srole: ;
+    skos:notation "host_side" ;
+    skos:prefLabel "host side"@en ;
+    skos:scopeNote "In NuProc data this is the counterparty family of the source. The source data have no counterparty organization column, so the host-side participant slot is always empty, but the model allows one slot. It corresponds to HostSideRole in the real-world layer (nuproc:roleClass)"@en,
+        "NuProc 자료에서는 원자료의 counterparty 계열에 해당한다. 이 자료에는 상대 조직 열이 없어 발주 측 참여자 슬롯이 늘 비지만, 모델은 슬롯 하나를 허용한다 (ADR-0013 개정 2026-09-16). 실세계 층의 HostSideRole 에 대응한다 (nuproc:roleClass)"@ko ;
+    skos:topConceptOf srole: ;
+    nuproc:justifyingCompetencyQuestion "CQ03" ;
+    nuproc:roleClass nuproc:HostSideRole .
+
+tcstat:confirmed a skos:Concept ;
+    rdfs:label "confirmed"@en ;
+    dcterms:source "docs/adr/ADR-0025-organization-type-axes.md" ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0025> ;
+    skos:definition "The researcher confirmed the evidence and assigned a type."@en,
+        "연구자가 근거를 확인하고 유형을 부여했다."@ko ;
+    skos:inScheme tcstat: ;
+    skos:notation "confirmed" ;
+    skos:prefLabel "confirmed"@en ;
+    skos:topConceptOf tcstat: .
+
+tcstat:disputed a skos:Concept ;
+    rdfs:label "disputed"@en ;
+    dcterms:source "docs/adr/ADR-0025-organization-type-axes.md" ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0025> ;
+    skos:definition "The evidence conflicts; no type is assigned and the fact is recorded."@en,
+        "근거가 갈린다. 유형을 부여하지 않고 사실을 적는다."@ko ;
+    skos:inScheme tcstat: ;
+    skos:notation "disputed" ;
+    skos:prefLabel "disputed"@en ;
+    skos:topConceptOf tcstat: .
+
+tcstat:undetermined a skos:Concept ;
+    rdfs:label "undetermined"@en ;
+    dcterms:source "docs/adr/ADR-0025-organization-type-axes.md" ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0025> ;
+    skos:definition "No evidence was available to determine the type; the organization carries no type."@en,
+        "유형을 판정할 근거가 확보되지 않았다. 이 조직은 유형을 갖지 않는다."@ko ;
+    skos:inScheme tcstat: ;
+    skos:notation "undetermined" ;
+    skos:prefLabel "undetermined"@en ;
+    skos:topConceptOf tcstat: .
+
+crole:epc_contractor a skos:Concept ;
+    rdfs:label "EPC contractor (counterparty)"@en ;
+    dcterms:source "registry/codebook_v1.0.csv (counterparty_role, observed_n=1, status=in_use)"@en ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0005>,
+        <https://w3id.org/nuproc/adr/ADR-0006> ;
+    skos:closeMatch prole:epc_contractor ;
+    skos:definition "An EPC contractor on the counterparty side."@en,
+        "상대측 EPC 계약자."@ko ;
+    skos:example "An EPC or construction entity on the counterparty side."@en,
+        "상대측 EPC·시공 주체."@ko ;
+    skos:inScheme crole: ;
+    skos:notation "epc_contractor" ;
+    skos:prefLabel "EPC contractor (counterparty)"@en ;
+    skos:scopeNote "An export-side EPC entity is epc_contractor in player_role."@en,
+        "Definition carried over from codebook v1.0 (registry/codebook_v1.0.csv)."@en,
+        "The coded player category scheme and the counterparty role scheme share this word but not its position in the event: the first was coded for the export side, the second for the host side. The concepts are linked with skos:closeMatch and deliberately not with skos:exactMatch."@en,
+        "When the counterparty is a construction or EPC entity."@en,
+        "상대가 시공·EPC 주체일 때."@ko,
+        "수출측 EPC 주체는 player_role 의 epc_contractor."@ko,
+        "정의문은 codebook v1.0 의 것을 그대로 옮겼다 (registry/codebook_v1.0.csv)."@ko ;
+    skos:topConceptOf crole: ;
+    nuproc:justifyingCompetencyQuestion "CQ03;CQ11" ;
+    nuproc:status "codebook v1.0 v1.0-draft; observed_n=1; status=in_use" .
+
+crole:investor a skos:Concept ;
+    rdfs:label "investor (counterparty)"@en ;
+    dcterms:source "registry/codebook_v1.0.csv (counterparty_role, observed_n=17, status=in_use)"@en ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0005>,
+        <https://w3id.org/nuproc/adr/ADR-0006> ;
+    skos:closeMatch prole:investor ;
+    skos:definition "A financing or investment counterparty."@en,
+        "금융·투자 상대."@ko ;
+    skos:example "A counterparty that provides capital or financing terms."@en,
+        "자본·금융 조건을 제공하는 상대."@ko ;
+    skos:inScheme crole: ;
+    skos:notation "investor" ;
+    skos:prefLabel "investor (counterparty)"@en ;
+    skos:scopeNote "A government public-finance counterparty is host_government."@en,
+        "Definition carried over from codebook v1.0 (registry/codebook_v1.0.csv)."@en,
+        "The coded player category scheme and the counterparty role scheme share this word but not its position in the event: the first was coded for the export side, the second for the host side. The concepts are linked with skos:closeMatch and deliberately not with skos:exactMatch."@en,
+        "When the counterparty's contribution is capital or financing terms."@en,
+        "상대의 기여가 자본·금융 조건일 때."@ko,
+        "정부의 공적금융 상대는 host_government."@ko,
+        "정의문은 codebook v1.0 의 것을 그대로 옮겼다 (registry/codebook_v1.0.csv)."@ko ;
+    skos:topConceptOf crole: ;
+    nuproc:justifyingCompetencyQuestion "CQ03;CQ11" ;
+    nuproc:status "codebook v1.0 v1.0-draft; observed_n=17; status=in_use" .
+
+crole:other a skos:Concept ;
+    rdfs:label "other counterparty"@en ;
+    dcterms:source "registry/codebook_v1.0.csv (counterparty_role, observed_n=23, status=in_use)"@en ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0005>,
+        <https://w3id.org/nuproc/adr/ADR-0006> ;
+    skos:closeMatch prole:other ;
+    skos:definition "A counterparty that falls under none of the types above."@en,
+        "위 유형에 해당하지 않는 상대."@ko ;
+    skos:example "A counterparty that does not fall under the types above."@en,
+        "위 유형에 해당하지 않는 상대."@ko ;
+    skos:inScheme crole: ;
+    skos:notation "other" ;
+    skos:prefLabel "other counterparty"@en ;
+    skos:scopeNote "Definition carried over from codebook v1.0 (registry/codebook_v1.0.csv)."@en,
+        "If it is used frequently, an extension of the vocabulary should be considered."@en,
+        "Residual category."@en,
+        "The coded player category scheme and the counterparty role scheme share this word but not its position in the event: the first was coded for the export side, the second for the host side. The concepts are linked with skos:closeMatch and deliberately not with skos:exactMatch."@en,
+        "빈번히 사용되면 어휘 확장을 검토해야 한다."@ko,
+        "잔여 범주."@ko,
+        "정의문은 codebook v1.0 의 것을 그대로 옮겼다 (registry/codebook_v1.0.csv)."@ko ;
+    skos:topConceptOf crole: ;
+    nuproc:justifyingCompetencyQuestion "CQ03;CQ11" ;
+    nuproc:status "codebook v1.0 v1.0-draft; observed_n=23; status=in_use" .
+
+prole:epc_contractor a skos:Concept ;
+    rdfs:label "EPC contractor"@en ;
+    dcterms:source "registry/codebook_v1.0.csv (player_role, observed_n=144, status=in_use)"@en ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0005>,
+        <https://w3id.org/nuproc/adr/ADR-0006> ;
+    skos:closeMatch crole:epc_contractor ;
+    skos:definition "A construction party that performs, or seeks to win, engineering, procurement and construction (EPC) work."@en,
+        "설계·조달·시공(EPC)을 수행하거나 수주를 추구하는 건설 주체."@ko ;
+    skos:example "A construction entity that performs an EPC contract or seeks to win one. Member companies of a construction consortium, and the like."@en,
+        "EPC 계약을 수행하거나 수주를 추구하는 건설 주체. 시공 컨소시엄 참여사 등."@ko ;
+    skos:inScheme prole: ;
+    skos:notation "epc_contractor" ;
+    skos:prefLabel "EPC contractor"@en ;
+    skos:scopeNote "An entity that supplies the reactor type itself is soe_vendor or private_firm."@en,
+        "Definition carried over from codebook v1.0 (registry/codebook_v1.0.csv)."@en,
+        "The coded player category scheme and the counterparty role scheme share this word but not its position in the event: the first was coded for the export side, the second for the host side. The concepts are linked with skos:closeMatch and deliberately not with skos:exactMatch."@en,
+        "When the action concerns EPC contracts, construction capability or the construction supply chain."@en,
+        "원자로 노형 자체를 공급하는 주체는 soe_vendor 또는 private_firm."@ko,
+        "정의문은 codebook v1.0 의 것을 그대로 옮겼다 (registry/codebook_v1.0.csv)."@ko,
+        "행위가 EPC 계약·시공 역량·건설 공급망과 관련될 때."@ko ;
+    skos:topConceptOf prole: ;
+    nuproc:justifyingCompetencyQuestion "CQ02" ;
+    nuproc:status "codebook v1.0 v1.0-draft; observed_n=144; status=in_use" .
+
+prole:investor a skos:Concept ;
+    rdfs:label "investor"@en ;
+    dcterms:source "registry/codebook_v1.0.csv (player_role, observed_n=23, status=in_use)"@en ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0005>,
+        <https://w3id.org/nuproc/adr/ADR-0006> ;
+    skos:closeMatch crole:investor ;
+    skos:definition "An actor whose principal contribution is equity investment or the provision of finance."@en,
+        "지분 투자·금융 제공을 주된 기여로 하는 행위자."@ko ;
+    skos:example "An actor whose principal contribution is equity investment or the provision of finance."@en,
+        "지분 투자나 금융 제공을 주된 기여로 하는 행위자."@ko ;
+    skos:inScheme prole: ;
+    skos:notation "investor" ;
+    skos:prefLabel "investor"@en ;
+    skos:scopeNote "Definition carried over from codebook v1.0 (registry/codebook_v1.0.csv)."@en,
+        "Public financing by a government is government (G2G-3)."@en,
+        "The coded player category scheme and the counterparty role scheme share this word but not its position in the event: the first was coded for the export side, the second for the host side. The concepts are linked with skos:closeMatch and deliberately not with skos:exactMatch."@en,
+        "When the action concerns equity structure, financing terms or risk sharing."@en,
+        "정부의 공적금융은 government (G2G-3)."@ko,
+        "정의문은 codebook v1.0 의 것을 그대로 옮겼다 (registry/codebook_v1.0.csv)."@ko,
+        "행위가 지분 구조, 금융 조건, 리스크 분담과 관련될 때."@ko ;
+    skos:topConceptOf prole: ;
+    nuproc:justifyingCompetencyQuestion "CQ02" ;
+    nuproc:status "codebook v1.0 v1.0-draft; observed_n=23; status=in_use" .
+
+prole:other a skos:Concept ;
+    rdfs:label "other export-side actor"@en ;
+    dcterms:source "registry/codebook_v1.0.csv (player_role, observed_n=14, status=in_use)"@en ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0005>,
+        <https://w3id.org/nuproc/adr/ADR-0006> ;
+    skos:closeMatch crole:other ;
+    skos:definition "An export-side actor that falls under none of the types above."@en,
+        "위 유형에 해당하지 않는 수출측 행위자."@ko ;
+    skos:example "An export-side actor that falls under none of the types above."@en,
+        "위 유형에 해당하지 않는 수출측 행위자."@ko ;
+    skos:inScheme prole: ;
+    skos:notation "other" ;
+    skos:prefLabel "other export-side actor"@en ;
+    skos:scopeNote "Definition carried over from codebook v1.0 (registry/codebook_v1.0.csv)."@en,
+        "If it is used frequently, an extension of the vocabulary should be considered."@en,
+        "Residual category."@en,
+        "The coded player category scheme and the counterparty role scheme share this word but not its position in the event: the first was coded for the export side, the second for the host side. The concepts are linked with skos:closeMatch and deliberately not with skos:exactMatch."@en,
+        "빈번히 사용되면 어휘 확장을 검토해야 한다."@ko,
+        "잔여 범주."@ko,
+        "정의문은 codebook v1.0 의 것을 그대로 옮겼다 (registry/codebook_v1.0.csv)."@ko ;
+    skos:topConceptOf prole: ;
+    nuproc:justifyingCompetencyQuestion "CQ02" ;
+    nuproc:status "codebook v1.0 v1.0-draft; observed_n=14; status=in_use" .
+
+srole: a skos:ConceptScheme ;
+    rdfs:label "Side Role"@en ;
+    dcterms:source "ADR-0040 §4" ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0001>,
+        <https://w3id.org/nuproc/adr/ADR-0036>,
+        <https://w3id.org/nuproc/adr/ADR-0040> ;
+    skos:definition "The vocabulary naming which side of a two-sided engagement a participation is on: the export side or the host side. It does not say who initiated the engagement."@en,
+        "두 쪽으로 이루어진 관여에서 참여가 어느 쪽인지 가리키는 어휘 — 수출 측 · 발주 (현지) 측. 누가 주도했는지가 아니다."@ko ;
+    skos:hasTopConcept srole:export_side,
+        srole:host_side ;
+    skos:prefLabel "Side Role"@en ;
+    skos:scopeNote "The NuProc source data already separate the export side (player) from the host side (counterparty), so every NuProc participation carries a side value. In sources that have no export and host side (such as the EC meeting register or UCDP) the side role does not apply and the side key names the side"@en,
+        "NuProc 원자료는 수출 측 (player) 과 발주 측 (counterparty) 을 이미 분리해 담고 있다 — NuProc 자료에서는 모든 참여가 측 값을 갖는다. 수출 · 발주 측이 없는 원천 (EC 면담 등록부 · UCDP 등) 에서는 측 역할이 해당 없고 sideKey 가 쪽을 이름 짓는다 (ADR-0036 · ADR-0040 §4)."@ko ;
+    nuproc:justifyingCompetencyQuestion "CQ02;CQ03" ;
+    nuproc:ontocleanRigidity "~R anti-rigid with respect to the organization (the same organization stands on different sides in different engagements). For a participation it is a property of the side, not part of the side's identity"@en,
+        "~R 반강성 — 조직에 대해 (같은 조직이 관여에 따라 다른 쪽에 선다). 참여에게는 쪽의 속성이지 쪽의 동일성의 일부가 아니다 (ADR-0036)"@ko .
+
+eident: a skos:ConceptScheme ;
+    rdfs:label "Engagement Identification Status"@en ;
+    dcterms:source "evaluation/coding/v3.0/VALIDATION_PROTOCOL.md §2.5" ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0027>,
+        <https://w3id.org/nuproc/adr/ADR-0040> ;
+    skos:definition "The vocabulary that says what the identification of a reported engagement-event cluster with one real engagement rests on: the key of the clustering rule alone, a person's check, or a person's judgement that the cluster brings together two or more engagements. It is the state of the identification linking a cluster to an engagement, not a property of the cluster."@en,
+        "보도 사건 군집이 실제 관여 하나를 보도한다는 식별이 무엇에 기대는지 가리키는 어휘 — 군집 규칙의 키뿐인가, 사람이 확인했는가, 사람이 둘 이상의 관여가 묶였다고 판단했는가. 군집의 성질이 아니라 군집과 관여를 잇는 식별의 상태다."@ko ;
+    skos:hasTopConcept eident:key_based,
+        eident:merged,
+        eident:verified ;
+    skos:prefLabel "Engagement Identification Status"@en ;
+    skos:scopeNote "The clustering rule can put different meetings of one month under the same key into one cluster (under-separation) and split one engagement spanning two months into two clusters (over-separation). This state addresses the former. Over-separation can be represented by letting two clusters point to the same engagement individual (reportsEngagement is not inverse-functional), but it was not checked in this version. In NuProc data, verified and merged follow a person's check: in the validation sample, verified when both coders answer 'one engagement' and merged when both answer 'two or more'; in the re-check of the provisional multi-role clusters, the first author's answer; key-based otherwise"@en,
+        "군집 규칙은 같은 달 같은 키의 서로 다른 회의를 한 군집으로 묶을 수 있고 (과소 분리), 두 달에 걸친 한 관여를 두 군집으로 가를 수 있다 (과다 분리). 이 상태는 앞의 것을 다룬다. 과다 분리는 두 군집이 같은 관여 개체를 가리키게 하여 나타낼 수 있으나 (reportsEngagement 는 역함수적이지 않다) 이 판에서는 확인하지 않았다. NuProc 자료에서 verified · merged 는 사람의 확인을 따른다 — 검증 표본에서는 두 코더가 모두 '하나' 면 verified, 모두 '둘 이상' 이면 merged; 잠정 다역할 군집의 재확인에서는 제1저자의 답; 그 밖은 key_based"@ko ;
+    nuproc:justifyingCompetencyQuestion "CQ18" ;
+    nuproc:ontocleanRigidity "~R anti-rigid — for the cluster: it changes with a person's check, and the cluster remains the same cluster. It is not a property of the engagement"@en,
+        "~R 반강성 — 군집에 대해: 사람의 확인에 따라 바뀌고, 바뀌어도 같은 군집이다. 관여의 속성이 아니다"@ko .
+
+tcstat: a skos:ConceptScheme ;
+    rdfs:label "Type Classification Status"@en ;
+    dcterms:source "docs/adr/ADR-0025-organization-type-axes.md" ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0025> ;
+    skos:definition "The vocabulary of classification states for assigning an organization type. It records the researcher's evidential state, not a property of the organization."@en,
+        "조직 유형 부여의 분류 상태 어휘. 유형을 판정할 근거가 있는지에 대한 연구자의 상태이지 조직의 성질이 아니다."@ko ;
+    skos:hasTopConcept tcstat:confirmed,
+        tcstat:disputed,
+        tcstat:undetermined ;
+    skos:prefLabel "Type Classification Status"@en ;
+    nuproc:justifyingCompetencyQuestion "CQ02" ;
+    nuproc:ontocleanRigidity "~R anti-rigid — with respect to the researcher's assignment: it changes once evidence is secured. Not a property of the organization"@en,
+        "~R 반강성 — 연구자의 부여에 대해: 근거가 확보되면 바뀐다. 조직의 속성이 아니다"@ko .
+
+channel: a skos:ConceptScheme ;
+    rdfs:label "Engagement Channel"@en ;
+    dcterms:source "codebook activity_type"@en ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0005>,
+        <https://w3id.org/nuproc/adr/ADR-0018> ;
+    skos:definition "The channel vocabulary that distinguishes engagement activities by the kinds of party on the export side and the host side (G2G / B2G / B2B)."@en,
+        "관여 활동을 주체와 상대의 조합으로 구분하는 채널 어휘 (G2G / B2G / B2B)."@ko ;
+    skos:hasTopConcept channel:B2B,
+        channel:B2G,
+        channel:G2G,
+        channel:Unknown ;
+    skos:prefLabel "Engagement Channel"@en ;
+    nuproc:justifyingCompetencyQuestion "CQ01;CQ09;CQ10" ;
+    nuproc:ontocleanRigidity "It is not a property of an organization. For EngagementCluster this value is one element of the identity key — it is essential to the cluster (ADR-0032 §3)"@en,
+        "조직의 속성이 아니다. EngagementCluster 에게 이 값은 동일성 키의 한 요소다 — 군집에 본질적이다 (ADR-0032 §3)"@ko .
+
+ostat: a skos:ConceptScheme ;
+    rdfs:label "Occurrence Status"@en ;
+    dcterms:source "registry/codebook_occurrence_v1.csv; evaluation/coding/occurrence_v1/CODING_PROTOCOL.md §2"@en ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0041> ;
+    skos:definition "The vocabulary that says whether the engagement reported by the records of an engagement-event cluster had taken place, or was under way, when it was reported: occurred, planned, denied or unclear. It is a value coded about the reported engagement, not a property of the engagement, and not an occurrence confirmed from sources other than the articles."@en,
+        "보도 사건 군집의 기록들이 보도하는 관여가, 보도된 시점에, 일어났거나 진행 중이었는지 가리키는 어휘 — 일어남 · 예정 · 부인 · 불명. 관여의 성질이 아니라 보도된 관여에 대해 코딩된 값이다 — 기사 밖의 자료로 확인한 발생이 아니다."@ko ;
+    skos:hasTopConcept ostat:denied,
+        ostat:occurred,
+        ostat:planned,
+        ostat:unclear ;
+    skos:prefLabel "Occurrence Status"@en ;
+    skos:scopeNote "The definitions and the inclusion and exclusion rules of the four values are those of the codebook codebook_occurrence_v1, frozen before coding, and of its coding protocol. The status is separate from the identification status: verified is a person's confirmation that the records report one engagement, not that the engagement took place. An engagement is asserted in the real-world layer only for a cluster whose final occurrence status is occurred and that is not merged"@en,
+        "네 값의 정의 · 포함 · 제외 규칙은 코딩 전에 동결한 코드북 codebook_occurrence_v1 과 그 코딩 규약 §2 다. 식별 상태와 따로다 — verified 는 기록들이 관여 하나를 보도한다는 사람의 확인이지 그 관여가 일어났다는 확인이 아니다. 실세계 층의 관여는 최종 발생 상태가 occurred 이고 병합되지 않은 군집에만 단언한다 (ADR-0041 §2)"@ko ;
+    nuproc:justifyingCompetencyQuestion "CQ18;CQ20" ;
+    nuproc:ontocleanRigidity "~R anti-rigid for a cluster: it changes with coding and the human check, and the cluster stays the same cluster when it changes. It is not a property of the engagement"@en,
+        "~R 반강성 — 군집에 대해: 코딩 · 사람 점검에 따라 바뀌고, 바뀌어도 같은 군집이다. 관여의 속성이 아니다"@ko .
+
+otype: a skos:ConceptScheme ;
+    rdfs:label "Organization Type"@en ;
+    dcterms:source "docs/adr/ADR-0014-two-role-axes.md (decision A); actor_type in the source dataset's coding manual (not distributed)"@en,
+        "ADR-0014 결정 A; 매뉴얼 actor_type"@ko ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0014>,
+        <https://w3id.org/nuproc/adr/ADR-0021>,
+        <https://w3id.org/nuproc/adr/ADR-0025> ;
+    skos:definition "The vocabulary of fixed organization types, such as government body, state-owned enterprise or private firm. It is not a coding output but a value the researcher fixes; the value list and the assignment were fixed in the actor registry and filled in v0.2."@en,
+        "조직의 고정 유형 어휘 (예: 정부기관 / 국유기업 / 민간기업). 코딩 산출물이 아니라 연구자가 확정하는 값이다 — 값 목록과 부여를 행위자 레지스트리에서 확정해 v0.2 에 채웠다."@ko ;
+    skos:editorialNote "This scheme was deliberately left empty in v0.1 and filled in v0.2 from the actor registry, where the researcher fixed both the value list and the assignment. Coded player_role values are never promoted into it: in the source dataset's actor labels, five carry two or more player_role values and cover 71.4% (733/1,026) of the design events, so the coded value is an event-level role, not a fixed organization type. The entity_overrides table of the source dataset's coding manual (not distributed) is not the source either: its keys name the same axis as player_role, so reading a type off it would be that same promotion."@en ;
+    skos:hasTopConcept otype:Government,
+        otype:PrivateFirm,
+        otype:Public,
+        otype:SOE ;
+    skos:prefLabel "Organization Type"@en ;
+    skos:scopeNote "Left deliberately empty in v0.1 and filled from the actor registry in v0.2."@en,
+        "v0.1 에서는 의도적으로 비워 두었고 v0.2 에서 행위자 레지스트리로 채웠다 (ADR-0021)."@ko ;
+    nuproc:justifyingCompetencyQuestion "CQ02" ;
+    nuproc:ontocleanRigidity "-R non-rigid — essential to a government body but not to a state-owned enterprise or private firm (privatisation). That 0 organizations changed type in the observation period is an empirical fact, not a rigidity value (ADR-0025 revision · ADR-0032 §3)"@en,
+        "-R 비강성 — 정부 기관에게는 본질적이지만 공기업·민간기업에게는 아니다(민영화). 관측 구간에서 유형이 바뀐 조직 0건은 강성 값이 아니라 경험적 사실이다 (ADR-0025 개정 · ADR-0032 §3)"@ko .
+
+rstat: a skos:ConceptScheme ;
+    rdfs:label "Resolution Status"@en ;
+    dcterms:source "docs/adr/ADR-0008-unnamed-actor-reference.md; docs/adr/ADR-0010-khnp-kepco-merge.md (4-way classification)"@en,
+        "ADR-0008;ADR-0010 4분류"@ko ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0010> ;
+    skos:definition "The vocabulary of resolution states for participant references. It structurally separates a failure to resolve from an impossibility of resolving."@en,
+        "참여자 지칭의 해소 상태 어휘. 해소 실패와 해소 불가를 구조적으로 분리한다."@ko ;
+    skos:hasTopConcept rstat:resolved,
+        rstat:unresolvable_candidate_set,
+        rstat:unresolvable_collective,
+        rstat:unresolved ;
+    skos:prefLabel "Resolution Status"@en ;
+    nuproc:justifyingCompetencyQuestion "CQ17" ;
+    nuproc:ontocleanRigidity "Anti-rigid (~R) for the unresolved and resolved values of a definite reference: they change according to decisions, and the reference is the same reference after it changes (ADR-0031 §3). The two unresolvable values are fixed by the kind of the reference (ReferenceKindStatusShape), so they do not change for that reference. Not a property of the organization"@en,
+        "확정 지칭의 unresolved · resolved 는 ~R 반강성 — 결정에 따라 바뀌고, 바뀌어도 같은 지칭이다 (ADR-0031 §3). unresolvable_candidate_set · unresolvable_collective 는 지칭의 종류가 정하는 값이라 그 지칭에 고정된다 (ReferenceKindStatusShape). 조직의 속성이 아니다"@ko .
+
+erole: a skos:ConceptScheme ;
+    rdfs:label "Engagement Role Type"@en ;
+    dcterms:source "codebook v3.0 engagement_role" ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0024>,
+        <https://w3id.org/nuproc/adr/ADR-0040> ;
+    skos:definition "The vocabulary of engagement role types that the export-side participant of an event has in the engagement the event reports, whether or not that engagement took place. The role types are facets: several may be coded for one participation. It carries no ownership or control character; that is carried by OrganizationType. Each value has a role class in the real-world layer (nuproc:roleClass)."@en,
+        "사건의 수출 측 참여자가 그 사건이 보도한 관여에서 지니는 관여 역할 유형 어휘 (그 관여가 일어났는지와 무관하다). 다면 (facet) 이다 — 한 참여에 여럿이 함께 코딩될 수 있다. 소유 · 지배 성격을 담지 않는다 — 그것은 OrganizationType 이 진다. 값마다 실세계 층의 역할 클래스가 있다 (nuproc:roleClass)."@ko ;
+    skos:hasTopConcept erole:commercial_supply,
+        erole:construction_contract,
+        erole:financing,
+        erole:other,
+        erole:state_sponsorship,
+        erole:technology_supply ;
+    skos:prefLabel "Engagement Role Type"@en ;
+    nuproc:justifyingCompetencyQuestion "CQ02;CQ18" ;
+    nuproc:ontocleanRigidity "~R anti-rigid with respect to the organization that takes the role (the same organization takes different roles in different engagements). For a participation it is a fixed coded value"@en,
+        "~R 반강성 — 그 역할을 맡는 조직에 대해 (같은 조직이 관여에 따라 다른 역할을 맡는다). 참여에게는 고정된 코딩 값이다"@ko .
+
+prole: a skos:ConceptScheme ;
+    rdfs:label "Coded Player Category"@en ;
+    dcterms:source "registry/codebook_v1.0.csv (player_role); in the source dataset's actor labels, 5 carry 2 or more categories and cover 71.4% of the design events"@en,
+        "codebook player_role; ADR-0014 (원자료 행위자 표기 다섯이 2종 이상, 설계 사건의 71.4%)"@ko ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0014>,
+        <https://w3id.org/nuproc/adr/ADR-0024> ;
+    skos:definition "The vocabulary of categories coded for the export-side participation. It is not a pure role vocabulary: three of its six values were assigned by an organization lookup. The engagement roles coded for the participant are carried by EngagementRoleType."@en,
+        "수출 측 참여에 코딩된 범주 어휘. 순수 역할 어휘가 아니다 — 여섯 값 중 셋은 조직 조회로 부여됐다. 참여자에게 코딩된 관여 역할은 EngagementRoleType 이 담는다."@ko ;
+    skos:hasTopConcept prole:epc_contractor,
+        prole:government,
+        prole:investor,
+        prole:other,
+        prole:private_firm,
+        prole:soe_vendor ;
+    skos:prefLabel "Coded Player Category"@en ;
+    nuproc:justifyingCompetencyQuestion "CQ02;CQ09" ;
+    nuproc:ontocleanRigidity "~R anti-rigid — with respect to the organization that has the value (Westinghouse is still Westinghouse when it ceases to be epc_contractor). For a participation it is a fixed coded value"@en,
+        "~R 반강성 — 그 값을 갖는 조직에 대해 (Westinghouse 는 epc_contractor 이기를 그쳐도 Westinghouse 다). 참여에게는 고정된 코딩 값이다"@ko .
+
+crole: a skos:ConceptScheme ;
+    rdfs:label "Counterparty Role"@en ;
+    dcterms:source "registry/codebook_v1.0.csv (counterparty_role)" ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0006>,
+        <https://w3id.org/nuproc/adr/ADR-0014> ;
+    skos:definition "The vocabulary of functional roles coded for the counterparty side of an event: what the counterparty did there. Authority is determined by function, not by ownership."@en,
+        "사건의 상대측에 코딩된 기능 역할 어휘 — 상대측이 거기서 한 일. 권한은 소유가 아니라 기능으로 판정한다."@ko ;
+    skos:hasTopConcept crole:epc_contractor,
+        crole:host_firm,
+        crole:host_government,
+        crole:host_utility,
+        crole:investor,
+        crole:other,
+        crole:project_owner_soe,
+        crole:public_community,
+        crole:regulator ;
+    skos:prefLabel "Counterparty Role"@en ;
+    nuproc:justifyingCompetencyQuestion "CQ03;CQ09;CQ11" ;
+    nuproc:ontocleanRigidity "~R anti-rigid — with respect to the body that takes on the role (the same body is a gateway or a transaction counterparty depending on the event). For a participation it is a fixed coded value"@en,
+        "~R 반강성 — 그 역할을 맡는 기관에 대해 (같은 기관이 사건에 따라 관문이거나 거래 상대다). 참여에게는 고정된 코딩 값이다"@ko .
+
+etype: a skos:ConceptScheme ;
+    rdfs:label "Event Type"@en ;
+    dcterms:source "codebook primary_code"@en ;
+    rdfs:isDefinedBy <https://w3id.org/nuproc/codebook>,
+        <https://w3id.org/nuproc/core> ;
+    rdfs:seeAlso <https://w3id.org/nuproc/adr/ADR-0005>,
+        <https://w3id.org/nuproc/adr/ADR-0006> ;
+    skos:definition "The vocabulary of engagement activity types (primary_code). Each notation except the residual Unknown carries the channel prefix."@en,
+        "관여 활동의 유형 어휘 (primary_code). 잔여 값 Unknown 을 뺀 각 표기는 채널 접두사를 포함한다."@ko ;
+    skos:hasTopConcept etype:B2B-1,
+        etype:B2B-2,
+        etype:B2B-3,
+        etype:B2B-4,
+        etype:B2B-Other,
+        etype:B2G-1,
+        etype:B2G-2,
+        etype:B2G-3,
+        etype:B2G-4,
+        etype:B2G-Other,
+        etype:G2G-1,
+        etype:G2G-2,
+        etype:G2G-3,
+        etype:G2G-4,
+        etype:G2G-5,
+        etype:G2G-Other,
+        etype:Unknown ;
+    skos:prefLabel "Event Type"@en ;
+    nuproc:justifyingCompetencyQuestion "CQ10;CQ11" ;
+    nuproc:ontocleanRigidity "It is not a property of an organization. For EngagementCluster this value is one element of the identity key — it is essential to the cluster (ADR-0032 §3)"@en,
+        "조직의 속성이 아니다. EngagementCluster 에게 이 값은 동일성 키의 한 요소다 — 군집에 본질적이다 (ADR-0032 §3)"@ko .
+
+<https://w3id.org/nuproc/codebook> a owl:Ontology ;
+    dcterms:creator "Wonbae Park" ;
+    dcterms:description "The eleven SKOS concept schemes of NuProc: engagement channel, event type, coded player category, engagement role type, counterparty role, side role, organization type, type classification status, resolution status, engagement identification status and occurrence status. The values of the engagement role type and side role schemes are linked to the classes of the real-world roles they stand for (nuproc:roleClass)."@en ;
+    dcterms:issued "2026-08-17"^^xsd:date ;
+    dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
+    dcterms:modified "2026-10-29"^^xsd:date ;
+    dcterms:title "NuProc Ontology — codebook vocabularies"@en ;
+    vann:preferredNamespacePrefix "nuproc" ;
+    vann:preferredNamespaceUri "https://w3id.org/nuproc/ns#" ;
+    rdfs:seeAlso <https://github.com/bonjwanim/nuprockg> ;
+    owl:imports <https://w3id.org/nuproc/core> ;
+    owl:priorVersion <https://w3id.org/nuproc/codebook/0.8.0> ;
+    owl:versionIRI <https://w3id.org/nuproc/codebook/0.9.0> ;
+    owl:versionInfo "0.9.0" ;
+    nuproc:status "v0.9.0 release. The licence is CC BY 4.0. This version is a logical revision of v0.8.0. It separates the identification of a reported cluster with one engagement from the occurrence of that engagement: a cluster carries a coded occurrence status (OccurrenceStatus: occurred, planned, denied or unclear) with one claim per coded value (OccurrenceClaim), and only a cluster whose occurrence status is occurred, and that a person has not judged to merge engagements, reports an engagement, as do its records. The axiom that every event record reports an engagement was removed, so that the report of a planned or denied engagement does not imply that the engagement exists. A group of organizations acting together as one party, such as a consortium, is one organization whose members are given with W3C ORG (org:hasMember), and the pattern layer again allows at most one participant organization per participation. Each judgement of how an actor reference is resolved is a claim (ResolutionClaim) with the status it gives and, for a resolved reference, the organization; the status and resolvedTo asserted on a reference are those of its final claim, and the claims that were not adopted remain. Each judgement of what a cluster's identification with one engagement rests on (the clustering key alone, a person's check, or a person's finding that it merges engagements) is likewise a claim (IdentificationClaim). A procurement case is aligned, like an engagement, to the BFO process. The information-layer property that names the organization a coded participation denotes is now namesParticipant (hasParticipant in v0.8.0), apart from RO's has participant. The SHACL pattern layer now also requires that a record whose cluster reports no engagement reports none, that an activity which made a final claim names its agent and plan on a qualified association, and that an engagement in the data is reported by a cluster, and it lets only a cluster whose occurrence status is occurred ground a role or a side role (a rule for asserting roles, not a condition of their existence). The disjointness axioms now also cover the occurrence, resolution and identification claims, codebook versions, prompt specifications, quality measurements and the clustering rule, and organizations, roles and cases, like engagements, are disjoint with the coding and validation activities. v0.8.0 added a real-world layer whose classes are aligned by IRI to BFO and whose relations are reused from RO and BFO: an engagement (Engagement) is a process in which parties engage with one another over a procurement case, organizations participate in it, and the engagement roles of an organization (EngagementRole, with two side roles and six role facets) are its roles in a procurement case and are realized in the engagements of that case in which it acts in them; clusters and records report engagements (reportsEngagement, a subproperty of IAO is about). It replaced the single coded engagement function with engagement role types that may be combined, with one claim per coded value (RoleClaim), and the direction role with a side role, and added class restrictions, a functional property, disjointness axioms and the pattern-layer constraints on role claims, qualified associations and the real-world layer. No aliases are kept for renamed terms, because no earlier version was released. v0.7.0 renamed the information entities (EngagementCluster, CodedParticipation, concernsCase), added the function claims and the IAO alignment, and corrected two pattern-layer constraints on actor references. v0.6.1 revised annotations only. v0.6.0 made the direction role optional in the SHACL pattern layer and added the side key; that revision was designed after the v0.5.0 cross-dataset reuse results had been seen. The earlier logical revisions were v0.5.0 (reference resolution completed, coding plans, and SHACL shapes split into a domain-neutral pattern layer and a NuProc profile layer), v0.4.0 (a counterparty participation may carry one participant) and v0.3.0 (the player axis split into a coded category and an engagement function, organization-type axes, typed actor references, and the event as an analytical cluster). No earlier version was released. The cross-dataset reuse results and the reserved-case results reported with this version were obtained on it. No ORCID identifier is recorded for the creator."@en .
+

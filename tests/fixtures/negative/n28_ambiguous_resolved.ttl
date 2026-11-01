@@ -1,0 +1,236 @@
+# NuProc 0.9.0 SHACL test graph negative/n28_ambiguous_resolved.ttl
+# Synthetic: no real organization, article or event.
+# Validate it merged with ontology/nuproc-core.ttl, nuproc-codebook.ttl and nuproc-alignments.ttl against
+# ontology/nuproc-shapes.ttl; tests/run_fixtures.py does this for every test graph (tests/README.md).
+# Expected with all shapes: reported by ReferenceKindStatusShape (Violation).
+# Expected with the pattern-layer shapes only: reported by ReferenceKindStatusShape only.
+
+@prefix nuproc:  <https://w3id.org/nuproc/ns#> .
+@prefix channel: <https://w3id.org/nuproc/channel/> .
+@prefix etype:   <https://w3id.org/nuproc/eventtype/> .
+@prefix prole:   <https://w3id.org/nuproc/playerrole/> .
+@prefix crole:   <https://w3id.org/nuproc/counterpartyrole/> .
+@prefix srole:   <https://w3id.org/nuproc/siderole/> .
+@prefix rstat:   <https://w3id.org/nuproc/resolutionstatus/> .
+@prefix otype:   <https://w3id.org/nuproc/organizationtype/> .
+@prefix erole:   <https://w3id.org/nuproc/engagementrole/> .
+@prefix eident:  <https://w3id.org/nuproc/engagementidentification/> .
+@prefix ostat:   <https://w3id.org/nuproc/occurrencestatus/> .
+@prefix obo:     <http://purl.obolibrary.org/obo/> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+@prefix prov:    <http://www.w3.org/ns/prov#> .
+@prefix dqv:     <http://www.w3.org/ns/dqv#> .
+@prefix time:    <http://www.w3.org/2006/time#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ex:      <https://w3id.org/nuproc/fixture/> .
+
+ex:case1 a nuproc:ProcurementCase ; rdfs:label "Synthetic case A"@en .
+
+ex:evt1 a nuproc:EngagementCluster ;
+    nuproc:concernsCase          ex:case1 ;
+    nuproc:hasEngagementChannel  channel:G2G ;
+    nuproc:hasEventType          etype:G2G-1 ;
+    nuproc:hasParticipation      ex:part1a , ex:part1b ;
+    nuproc:hasSelectedPlayerRole prole:government ;
+    nuproc:uniqueSourceArticleCount "2"^^xsd:nonNegativeInteger ;
+    nuproc:monthRelativeToT0     "6"^^xsd:integer ;
+    time:hasTime                 ex:t_evt1 .
+
+ex:t_evt1 a time:Instant ; time:inXSDgYearMonth "2022-08"^^xsd:gYearMonth .
+
+ex:part1a a nuproc:CodedParticipation ;
+    nuproc:hasSide srole:export_side ;
+    nuproc:namesParticipant   ex:org1 ;
+    nuproc:hasEngagementRole erole:state_sponsorship ;
+    nuproc:hasFinalRoleClaim ex:claim1adj ;
+    nuproc:hasCodedPlayerCategory    prole:government .
+
+ex:part1b a nuproc:CodedParticipation ;
+    nuproc:hasSide    srole:host_side ;
+    nuproc:hasCounterpartyRole crole:host_government .
+
+ex:org1 a nuproc:Organization ;
+    rdfs:label "Synthetic Export Ministry"@en ;
+    nuproc:hasOrganizationType otype:Government .
+
+ex:rec1 a nuproc:EventRecord ;
+    prov:wasDerivedFrom       ex:art1 ;
+    nuproc:describesEvent     ex:evt1 ;
+    prov:wasGeneratedBy       ex:coding1 ;
+    nuproc:hasObservedPlayerRole prole:government .
+
+ex:art1 a nuproc:SourceArticle ;
+    time:hasTime ex:t_art1 .
+ex:t_art1 a time:Instant ; time:inXSDDate "2022-08-25"^^xsd:date .
+
+ex:art2 a nuproc:SourceArticle ;
+    time:hasTime ex:t_art2 .
+ex:t_art2 a time:Instant ; time:inXSDDate "2022-09-01"^^xsd:date .
+
+ex:coding1 a nuproc:EventExtractionActivity , nuproc:CodingActivity ;
+    nuproc:usedCodebookVersion     ex:cb1 ;
+    nuproc:usedPromptSpecification ex:prompt1 ;
+    prov:wasAssociatedWith         ex:model1 ;
+    prov:qualifiedAssociation      ex:coding1_cb , ex:coding1_pr .
+ex:coding1_cb a prov:Association ; prov:agent ex:model1 ; prov:hadPlan ex:cb1 .
+ex:coding1_pr a prov:Association ; prov:agent ex:model1 ; prov:hadPlan ex:prompt1 .
+ex:screen1  a nuproc:ScreeningActivity ;
+    prov:wasAssociatedWith    ex:model1 ;
+    prov:qualifiedAssociation ex:screen1_pr .
+ex:screen1_pr a prov:Association ; prov:agent ex:model1 ; prov:hadPlan ex:prompt0 .
+ex:channel1 a nuproc:ChannelPresenceCodingActivity ;
+    prov:wasAssociatedWith    ex:model1 ;
+    prov:qualifiedAssociation ex:channel1_pr .
+ex:channel1_pr a prov:Association ; prov:agent ex:model1 ; prov:hadPlan ex:prompt2 .
+ex:model1   a prov:SoftwareAgent .
+ex:cb1      a nuproc:CodebookVersion ; rdfs:label "codebook v1.0"@en .
+ex:prompt0  a nuproc:PromptSpecification .
+ex:prompt1  a nuproc:PromptSpecification .
+ex:prompt2  a nuproc:PromptSpecification .
+ex:prompt3  a nuproc:PromptSpecification ; rdfs:label "role coding protocol"@en .
+
+ex:claim1first a nuproc:RoleClaim ;
+    prov:wasGeneratedBy    ex:fcoding1 ;
+    nuproc:claimAbout      ex:part1a ;
+    nuproc:claimedRole erole:financing .
+ex:claim1adj a nuproc:RoleClaim ;
+    nuproc:claimAbout      ex:part1a ;
+    nuproc:claimedRole erole:state_sponsorship ;
+    prov:wasRevisionOf     ex:claim1first ;
+    prov:wasGeneratedBy    ex:adjudication1 .
+ex:fcoding1 a nuproc:EngagementRoleCodingActivity ;
+    nuproc:usedCodebookVersion     ex:cb1 ;
+    nuproc:usedPromptSpecification ex:prompt3 ;
+    prov:wasAssociatedWith         ex:model1 ;
+    prov:qualifiedAssociation      ex:fcoding1_cb , ex:fcoding1_pr .
+ex:fcoding1_cb a prov:Association ; prov:agent ex:model1 ; prov:hadPlan ex:cb1 .
+ex:fcoding1_pr a prov:Association ; prov:agent ex:model1 ; prov:hadPlan ex:prompt3 .
+ex:adjudication1 a prov:Activity ;
+    prov:wasInformedBy        ex:fcoding1 ;
+    prov:qualifiedAssociation ex:adjudication1_as .
+ex:adjudication1_as a prov:Association ; prov:agent ex:adjudicator1 ; prov:hadPlan ex:adjplan1 .
+ex:adjudicator1 a prov:Person .
+ex:adjplan1 a prov:Plan ; rdfs:label "adjudication rule"@en .
+
+ex:val1 a nuproc:ValidationActivity ;
+    nuproc:generatedQualityMeasurement ex:dqm1 ;
+    prov:wasAssociatedWith             ex:coder1 .
+ex:coder1 a prov:Person .
+
+ex:dqm1 a nuproc:DataQualityMeasurement ;
+    nuproc:hasSampleSize    "96"^^xsd:positiveInteger ;
+    nuproc:measuresProperty nuproc:hasEventType ;
+    nuproc:appliesToLayer   nuproc:EventRecord ;
+    nuproc:comparisonType   "model vs two-coder consensus" ;
+    dqv:computedOn          ex:codes1 .
+ex:codes1 a prov:Entity ;
+    prov:wasGeneratedBy ex:coding1 .
+
+ex:evt2 a nuproc:EngagementCluster ;
+    nuproc:concernsCase         ex:case1 ;
+    nuproc:hasEngagementChannel channel:B2G ;
+    nuproc:hasEventType         etype:B2G-2 ;
+    nuproc:hasParticipation     ex:part2a , ex:part2b ;
+    time:hasTime                ex:t_evt2 .
+ex:t_evt2 a time:Instant ; time:inXSDgYearMonth "2023-01"^^xsd:gYearMonth .
+
+ex:part2a a nuproc:CodedParticipation ;
+    nuproc:hasSide        srole:export_side ;
+    nuproc:hasParticipantReference ex:ref1 ;
+    nuproc:hasCodedPlayerCategory           prole:private_firm .
+ex:part2b a nuproc:CodedParticipation ;
+    nuproc:hasSide    srole:host_side ;
+    nuproc:hasCounterpartyRole crole:regulator .
+
+ex:ref1 a nuproc:CollectiveActorReference ;
+    nuproc:hasSourceMention          "several bidders" ;
+    nuproc:assertedParticipantCount  "3"^^xsd:positiveInteger ;
+    nuproc:hasResolutionStatus       rstat:unresolvable_collective .
+ex:ref2 a nuproc:AnonymousSingularReference ;
+    nuproc:hasSourceMention    "one of the applicants" ;
+    nuproc:hasResolutionStatus rstat:unresolvable_collective .
+ex:ref3 a nuproc:NationalSideReference ;
+    nuproc:hasSourceMention    "the exporting side" ;
+    nuproc:hasResolutionStatus rstat:unresolvable_collective .
+
+ex:evt1 nuproc:reportsEngagement ex:eng1 .
+ex:rec1 nuproc:reportsEngagement ex:eng1 .
+ex:evt1 nuproc:hasEngagementIdentification eident:key_based .
+ex:eng1 a nuproc:Engagement ;
+    nuproc:concernsCase ex:case1 ;
+    obo:RO_0000057      ex:org1 .
+ex:role1x a nuproc:ExportSideRole ;
+    obo:RO_0000081      ex:org1 ;
+    nuproc:concernsCase ex:case1 ;
+    obo:BFO_0000054     ex:eng1 .
+ex:evt2 nuproc:reportsEngagement ex:eng2 .
+ex:evt2 nuproc:hasEngagementIdentification eident:verified .
+ex:eng2 a nuproc:Engagement ; nuproc:concernsCase ex:case1 .
+
+ex:part1a nuproc:hasActorReference ex:r1 .
+ex:r1 a nuproc:AmbiguousOrganizationReference ;
+    nuproc:hasCandidateLabel   "A" , "B" ;
+    nuproc:hasResolutionStatus rstat:resolved ;
+    nuproc:resolvedTo          ex:org1 .
+
+<https://w3id.org/nuproc/fixture/evt1> nuproc:hasOccurrenceStatus ostat:occurred ;
+    nuproc:hasFinalOccurrenceClaim <https://w3id.org/nuproc/fixture/evt1_occ> .
+<https://w3id.org/nuproc/fixture/evt1_occ> a nuproc:OccurrenceClaim ;
+    nuproc:occurrenceClaimAbout <https://w3id.org/nuproc/fixture/evt1> ;
+    nuproc:claimedOccurrence ostat:occurred ;
+    prov:wasGeneratedBy ex:fxOccCoding .
+<https://w3id.org/nuproc/fixture/evt2> nuproc:hasOccurrenceStatus ostat:occurred ;
+    nuproc:hasFinalOccurrenceClaim <https://w3id.org/nuproc/fixture/evt2_occ> .
+<https://w3id.org/nuproc/fixture/evt2_occ> a nuproc:OccurrenceClaim ;
+    nuproc:occurrenceClaimAbout <https://w3id.org/nuproc/fixture/evt2> ;
+    nuproc:claimedOccurrence ostat:occurred ;
+    prov:wasGeneratedBy ex:fxOccCoding .
+ex:fxOccCoding a prov:Activity ;
+    prov:qualifiedAssociation ex:fxOccCoding_as .
+ex:fxOccCoding_as a prov:Association ; prov:agent ex:fxOccCoder ; prov:hadPlan ex:fxOccProtocol .
+ex:fxOccCoder a prov:Person .
+ex:fxOccProtocol a prov:Plan ; rdfs:label "occurrence coding protocol (synthetic)"@en .
+
+<https://w3id.org/nuproc/fixture/r1> nuproc:hasFinalResolutionClaim <https://w3id.org/nuproc/fixture/r1_res> .
+<https://w3id.org/nuproc/fixture/r1_res> a nuproc:ResolutionClaim ;
+    nuproc:resolutionClaimAbout <https://w3id.org/nuproc/fixture/r1> ;
+    nuproc:claimedResolutionStatus <https://w3id.org/nuproc/resolutionstatus/resolved> ;
+    nuproc:claimedResolvedTo <https://w3id.org/nuproc/fixture/org1> ;
+    prov:wasGeneratedBy ex:fxResJudging .
+<https://w3id.org/nuproc/fixture/ref1> nuproc:hasFinalResolutionClaim <https://w3id.org/nuproc/fixture/ref1_res> .
+<https://w3id.org/nuproc/fixture/ref1_res> a nuproc:ResolutionClaim ;
+    nuproc:resolutionClaimAbout <https://w3id.org/nuproc/fixture/ref1> ;
+    nuproc:claimedResolutionStatus <https://w3id.org/nuproc/resolutionstatus/unresolvable_collective> ;
+    prov:wasGeneratedBy ex:fxResJudging .
+<https://w3id.org/nuproc/fixture/ref2> nuproc:hasFinalResolutionClaim <https://w3id.org/nuproc/fixture/ref2_res> .
+<https://w3id.org/nuproc/fixture/ref2_res> a nuproc:ResolutionClaim ;
+    nuproc:resolutionClaimAbout <https://w3id.org/nuproc/fixture/ref2> ;
+    nuproc:claimedResolutionStatus <https://w3id.org/nuproc/resolutionstatus/unresolvable_collective> ;
+    prov:wasGeneratedBy ex:fxResJudging .
+<https://w3id.org/nuproc/fixture/ref3> nuproc:hasFinalResolutionClaim <https://w3id.org/nuproc/fixture/ref3_res> .
+<https://w3id.org/nuproc/fixture/ref3_res> a nuproc:ResolutionClaim ;
+    nuproc:resolutionClaimAbout <https://w3id.org/nuproc/fixture/ref3> ;
+    nuproc:claimedResolutionStatus <https://w3id.org/nuproc/resolutionstatus/unresolvable_collective> ;
+    prov:wasGeneratedBy ex:fxResJudging .
+ex:fxResJudging a prov:Activity ;
+    prov:qualifiedAssociation ex:fxResJudging_as .
+ex:fxResJudging_as a prov:Association ; prov:agent ex:fxResJudge ; prov:hadPlan ex:fxResRules .
+ex:fxResJudge a prov:Person .
+ex:fxResRules a prov:Plan ; rdfs:label "reference resolution rules (synthetic)"@en .
+
+<https://w3id.org/nuproc/fixture/evt1> nuproc:hasFinalIdentificationClaim <https://w3id.org/nuproc/fixture/evt1_ident> .
+<https://w3id.org/nuproc/fixture/evt1_ident> a nuproc:IdentificationClaim ;
+    nuproc:identificationClaimAbout <https://w3id.org/nuproc/fixture/evt1> ;
+    nuproc:claimedIdentification <https://w3id.org/nuproc/engagementidentification/key_based> ;
+    prov:wasGeneratedBy ex:fxClustering .
+<https://w3id.org/nuproc/fixture/evt2> nuproc:hasFinalIdentificationClaim <https://w3id.org/nuproc/fixture/evt2_ident> .
+<https://w3id.org/nuproc/fixture/evt2_ident> a nuproc:IdentificationClaim ;
+    nuproc:identificationClaimAbout <https://w3id.org/nuproc/fixture/evt2> ;
+    nuproc:claimedIdentification <https://w3id.org/nuproc/engagementidentification/verified> ;
+    prov:wasGeneratedBy ex:fxClustering .
+ex:fxClustering a prov:Activity ;
+    prov:qualifiedAssociation ex:fxClustering_as .
+ex:fxClustering_as a prov:Association ; prov:agent ex:fxPipeline ; prov:hadPlan ex:fxClusteringRule .
+ex:fxPipeline a prov:SoftwareAgent .
+ex:fxClusteringRule a prov:Plan ; rdfs:label "clustering rule (synthetic)"@en .

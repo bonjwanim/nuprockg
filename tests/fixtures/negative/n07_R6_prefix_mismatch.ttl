@@ -1,0 +1,53 @@
+# NuProc 0.9.0 SHACL test graph negative/n07_R6_prefix_mismatch.ttl
+# Synthetic: no real organization, article or event.
+# Validate it merged with ontology/nuproc-core.ttl, nuproc-codebook.ttl and nuproc-alignments.ttl against
+# ontology/nuproc-shapes.ttl; tests/run_fixtures.py does this for every test graph (tests/README.md).
+# Expected with all shapes: reported by R6_EventTypePrefixMatchesChannel (Warning).
+# Expected with the pattern-layer shapes only: conforms (the rule is a profile rule).
+
+@prefix nuproc:  <https://w3id.org/nuproc/ns#> .
+@prefix channel: <https://w3id.org/nuproc/channel/> .
+@prefix etype:   <https://w3id.org/nuproc/eventtype/> .
+@prefix prole:   <https://w3id.org/nuproc/playerrole/> .
+@prefix crole:   <https://w3id.org/nuproc/counterpartyrole/> .
+@prefix srole:   <https://w3id.org/nuproc/siderole/> .
+@prefix rstat:   <https://w3id.org/nuproc/resolutionstatus/> .
+@prefix otype:   <https://w3id.org/nuproc/organizationtype/> .
+@prefix erole:   <https://w3id.org/nuproc/engagementrole/> .
+@prefix eident:  <https://w3id.org/nuproc/engagementidentification/> .
+@prefix ostat:   <https://w3id.org/nuproc/occurrencestatus/> .
+@prefix obo:     <http://purl.obolibrary.org/obo/> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+@prefix prov:    <http://www.w3.org/ns/prov#> .
+@prefix dqv:     <http://www.w3.org/ns/dqv#> .
+@prefix time:    <http://www.w3.org/2006/time#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ex:      <https://w3id.org/nuproc/fixture/> .
+
+ex:n07case a nuproc:ProcurementCase .
+ex:n07evt a nuproc:EngagementCluster ;
+    nuproc:concernsCase         ex:n07case ;
+    nuproc:hasEngagementChannel channel:B2G ;
+    nuproc:hasEventType         etype:G2G-1 ;
+    nuproc:hasParticipation     ex:n07p , ex:n07cp .
+ex:n07cp a nuproc:CodedParticipation ;
+    nuproc:hasSide    srole:host_side ;
+    nuproc:hasCounterpartyRole crole:project_owner_soe .
+ex:n07p a nuproc:CodedParticipation ;
+    nuproc:hasSide srole:export_side ;
+    nuproc:namesParticipant   ex:n07org ;
+    nuproc:hasCodedPlayerCategory    prole:private_firm .
+ex:n07org a nuproc:Organization .
+
+<https://w3id.org/nuproc/fixture/n07evt> nuproc:hasOccurrenceStatus ostat:occurred ;
+    nuproc:hasFinalOccurrenceClaim <https://w3id.org/nuproc/fixture/n07evt_occ> .
+<https://w3id.org/nuproc/fixture/n07evt_occ> a nuproc:OccurrenceClaim ;
+    nuproc:occurrenceClaimAbout <https://w3id.org/nuproc/fixture/n07evt> ;
+    nuproc:claimedOccurrence ostat:occurred ;
+    prov:wasGeneratedBy ex:fxOccCoding .
+ex:fxOccCoding a prov:Activity ;
+    prov:qualifiedAssociation ex:fxOccCoding_as .
+ex:fxOccCoding_as a prov:Association ; prov:agent ex:fxOccCoder ; prov:hadPlan ex:fxOccProtocol .
+ex:fxOccCoder a prov:Person .
+ex:fxOccProtocol a prov:Plan ; rdfs:label "occurrence coding protocol (synthetic)"@en .

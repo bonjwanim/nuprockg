@@ -1,0 +1,45 @@
+NuProc modules read from: the ontology/ folder of the repository (TBox 0.9.0)
+
+REPRESENTATION (triples per section; published / ad-hoc schema terms; distinct codes)
+  S0 case, engagements, records and the two sides of each engagem composition  61 triples (23 published, 0 ad hoc; 6 codes) | nuproc 121 triples (47 terms; 6 codes)
+  S1 organisations                                                composition   9 triples (3 published, 0 ad hoc; 0 codes) | nuproc   6 triples (2 terms; 0 codes)
+  P1 actor references: the candidate set of engagement A and the  composition  11 triples (3 published, 3 ad hoc: ex:actorReference ex:candidate ex:resolutionStatus; 2 codes) | nuproc  31 triples (21 terms; 2 codes)
+  P2 role claims and their provenance                             composition  99 triples (19 published, 0 ad hoc; 6 codes) | nuproc  93 triples (22 terms; 4 codes)
+  P3 roles: the role types on the participation nodes             composition   4 triples (1 published, 0 ad hoc; 3 codes) | nuproc  19 triples (9 terms; 3 codes)
+  total: composition 184 triples, nuproc 270 triples
+  composition_ext.ttl: ad-hoc terms section 15 triples / 15 lines; code lists 72 triples / 72 lines
+  codes used: composition 12, nuproc 12
+
+VALIDATION
+  composition base conforms=true  violations=0 warnings=0 fired=[] constraint_shape_fired=- others=[]
+  composition c1a  conforms=false violations=1 warnings=0 fired=[cs:C1_CandidateSetReferenceShape] constraint_shape_fired=yes others=[]
+  composition c1b  conforms=false violations=1 warnings=0 fired=[cs:C1_CandidateSetReferenceShape] constraint_shape_fired=yes others=[]
+  composition c2a  conforms=false violations=1 warnings=0 fired=[cs:C2_FinalClaimShape] constraint_shape_fired=yes others=[]
+  composition c2b  conforms=false violations=1 warnings=0 fired=[cs:C2_FinalClaimShape] constraint_shape_fired=yes others=[]
+  composition c3a  conforms=false violations=1 warnings=0 fired=[cs:C3_CodingActivityShape] constraint_shape_fired=yes others=[]
+  composition c3b  conforms=false violations=1 warnings=0 fired=[cs:C3_CodingActivityShape] constraint_shape_fired=yes others=[]
+  composition c4   conforms=false violations=1 warnings=0 fired=[cs:C4_RoleInEngagementShape] constraint_shape_fired=yes others=[]
+  nuproc      base conforms=true  violations=0 warnings=0 fired=[] constraint_shape_fired=- others=[]
+  nuproc      c1a  conforms=false violations=1 warnings=0 fired=[nuproc:AmbiguousReferenceCandidateShape] constraint_shape_fired=yes others=[]
+  nuproc      c1b  conforms=false violations=4 warnings=0 fired=[nuproc:ActorReferenceShape nuproc:ReferenceKindStatusShape nuproc:ResolutionClaimShape] constraint_shape_fired=yes others=[]
+  nuproc      c2a  conforms=false violations=1 warnings=0 fired=[nuproc:CodedParticipationRoleClaimShape] constraint_shape_fired=yes others=[]
+  nuproc      c2b  conforms=false violations=1 warnings=0 fired=[nuproc:CodedParticipationRoleClaimShape] constraint_shape_fired=yes others=[]
+  nuproc      c3a  conforms=false violations=1 warnings=0 fired=[nuproc:CodingActivityShape] constraint_shape_fired=yes others=[]
+  nuproc      c3b  conforms=false violations=1 warnings=0 fired=[nuproc:CodingActivityProfileShape] constraint_shape_fired=yes others=[]
+  nuproc      c4   conforms=false violations=1 warnings=0 fired=[nuproc:EngagementShape] constraint_shape_fired=yes others=[]
+
+SHAPES PER CONSTRAINT (shapes / lines / triples)
+  c1 builder writes 1 / 14 / 39   NuProc ships 5 / 166 / 129
+  c2 builder writes 2 / 55 / 36   NuProc ships 2 / 68 / 43
+  c3 builder writes 2 / 23 / 27   NuProc ships 3 / 52 / 49
+  c4 builder writes 1 / 7 / 15   NuProc ships 2 / 154 / 58
+  all four: builder writes 6 / 99 / 117   NuProc ships 12 / 440 / 279
+  composition_shapes.ttl counted lines: 109; nuproc-shapes.ttl named node shapes: 47, counted lines: 1109
+
+QUERIES (rows / triple patterns / join variables / optional / union / exists / ad-hoc terms / same answer)
+  q1 composition rows=2 patterns=10 joins=5 optional=2 union=0 exists=0 adhoc=[ex:actorReference ex:candidate ex:resolutionStatus] same=yes
+  q1 nuproc      rows=2 patterns=11 joins=6 optional=2 union=0 exists=0 adhoc=[] same=yes
+  q2 composition rows=4 patterns=19 joins=8 optional=1 union=0 exists=2 adhoc=[] same=yes
+  q2 nuproc      rows=4 patterns=19 joins=11 optional=1 union=0 exists=2 adhoc=[] same=yes
+  q3 composition rows=1 patterns=7 joins=4 optional=0 union=0 exists=0 adhoc=[] same=yes
+  q3 nuproc      rows=1 patterns=7 joins=4 optional=0 union=0 exists=0 adhoc=[] same=yes
