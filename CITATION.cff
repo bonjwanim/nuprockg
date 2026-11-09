@@ -12,6 +12,7 @@ abstract: >-
   engagement or grounds a role.
 type: software
 version: "0.9.0"
+date-released: "2026-11-01"
 license: CC-BY-4.0
 repository-code: "https://github.com/bonjwanim/nuprockg"
 keywords:
@@ -34,12 +35,12 @@ authors:
 #   orcid          제공되지 않았다. 온톨로지 헤더(`nuproc:status`)도 같은 이유로
 #                  비어 있다. 식별자를 만들어 채우면 그 순간 거짓 메타데이터가 된다.
 #   doi            없다 — 보관 DOI 를 쓰지 않는다 (ADR-0042). 판은 공개 저장소의 태그 tbox-v0.9.0 이 고정한다.
-#   date-released  아직 릴리스하지 않았다. 저장소가 공개로 전환되는 시점에 적는다.
+#   date-released  2026-11-01 — 공개 저장소의 태그 · 릴리스 tbox-v0.9.0 을 단 날.
 #
-#   orcid · date-released 는 **공개 시점에 채운다** (doi 는 쓰지 않는다). 지금 비어 있다는 사실 자체를 숨기지 않는다.
+#   orcid 는 제공되면 채운다 (doi 는 쓰지 않는다). 비어 있다는 사실 자체를 숨기지 않는다.
 # ─────────────────────────────────────────────────────────────────────────────
 #
 # 라이선스
-#   위 `license` 는 공개 저장소의 자료 (네 모듈 · 문서 · 질의 · 합성 데모 그래프) 의 것 (CC BY 4.0) 이고,
+#   위 `license` 는 공개 저장소의 자료 (네 모듈 · 문서 · 질의 · 합성 데모 그래프 · 합성 시험 자료) 의 것 (CC BY 4.0) 이고,
 #   공개 저장소 뿌리의 `LICENSE` 가 그 전문이다. 분석 코드 (MIT) 는 공개 저장소에 없고 요청 시 제공한다.
 #   자료별 행렬은 `LICENSES.md` 에 있다.

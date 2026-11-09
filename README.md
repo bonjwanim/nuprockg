@@ -5,7 +5,7 @@ procurement**: the meetings, visits, negotiations, signings and public commitmen
 parties engage over a procurement case, whether or not they were reported. The ontology keeps these
 apart from the news reports, coded records and coding claims through which they are known.
 
-- **Namespace** `https://w3id.org/nuproc/ns#` (registration pending; see *Status*)
+- **Namespace** `https://w3id.org/nuproc/ns#` (registered at w3id.org; see *Status*)
 - **Version** 0.9.0 · **Licence** CC BY 4.0 (the legal code is in `LICENSE`)
 - The licence matrix (`LICENSES.md`) is in Korean; the modules carry Korean annotations beside the English
   ones, and each query file states its question in English before its Korean comments.
@@ -92,8 +92,8 @@ module, are sent here by the w3id rules. Their files and checksums are available
 
 ## Using the release
 
-The modules import one another by their w3id IRIs; until the namespace resolves, load the files from
-`ontology/` directly. The examples below use Python with rdflib and pySHACL (checked with Python
+The modules import one another by their w3id IRIs, which resolve to the files of this repository; to
+work offline, load the files from `ontology/` directly. The examples below use Python with rdflib and pySHACL (checked with Python
 3.14.3, rdflib 7.6.0 and pySHACL 0.40.1 on Windows 11); any SPARQL 1.1 engine and SHACL processor can
 be used instead.
 
@@ -203,7 +203,7 @@ implying one.
 
 | Item | State |
 |---|---|
-| `https://w3id.org/nuproc/` registration | **pending**. The namespace was checked and is unclaimed; registration is submitted when the repository goes public |
+| `https://w3id.org/nuproc/` registration | **registered** (perma-id/w3id.org pull request 7044, merged on 1 November 2026); the module, version, vocabulary, design-record and demonstration IRIs resolve to the files and sections of this repository |
 | Release | tag `tbox-v0.9.0` of this repository, with the checksums in `ontology/CHECKSUMS.txt`; no archive DOI is minted |
 | ORCID | **not supplied**, so the field is left empty |
 
