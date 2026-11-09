@@ -1,0 +1,17 @@
+file,section,title,triples,published_terms,adhoc_terms,adhoc_term_list,distinct_codes,codes
+composition_status.ttl,G,"report groups C, D and E: events, records, articles, sides, labels and role claims",86,18,1,ex:actorReference,7,excp:host_government exrole:commercial_supply exrole:financing exrole:technology_supply exside:export_side exside:host_side extype:meeting
+composition_status.ttl,O,"occurrence status of groups C, D and E, with claims",21,7,0,,2,exocc:occurred exocc:planned
+composition_status.ttl,I,"identification status of groups C, D and E, with claims, activities and plans",42,16,0,,3,exid:key_based exid:merged exid:verified
+composition_status.ttl,R,"resolution of the references of groups C, D and E, with claims, activities and plans",76,15,1,ex:resolutionStatus,2,exstat:resolved exstat:unresolvable_candidate_set
+composition_status.ttl,W,"what is asserted about the real world for groups C, D and E",1,1,0,,0,
+composition_status.ttl,B0,"statuses, claims and shared activities of groups A and B",77,18,0,,6,exagent:non_model_software exid:key_based exocc:occurred explan:prompt_specification exstat:resolved exstat:unresolvable_candidate_set
+composition_status.ttl,ALL,whole file,303,,,,,
+nuproc_status.ttl,G,"groups C, D and E: clusters, records, articles, participations, labels, role claims",95,26,0,,8,channel:B2G crole:host_government erole:commercial_supply erole:financing erole:technology_supply etype:B2G-1 srole:export_side srole:host_side
+nuproc_status.ttl,O,"occurrence status of groups C, D and E, with claims",18,6,0,,2,ostat:occurred ostat:planned
+nuproc_status.ttl,I,"identification status of groups C, D and E, with claims, activities and plans",36,14,0,,3,eident:key_based eident:merged eident:verified
+nuproc_status.ttl,R,"resolution of the references of groups C, D and E, with claims, activities and plans",48,16,0,,2,rstat:resolved rstat:unresolvable_candidate_set
+nuproc_status.ttl,W,"what is asserted about the real world for groups C, D and E",19,11,0,,0,
+nuproc_status.ttl,ALL,whole file,216,,,,,
+composition_status_ext.ttl,X3,ad-hoc terms,0,0,0,,0,
+composition_status_ext.ttl,X4,code lists,32,6,0,,3,exagent: exid: exocc:
+composition_status_ext.ttl,ALL,whole file,32,,,,,

@@ -159,6 +159,7 @@ is caught by the shapes of its own constraint and by no other shape. The broken 
 ## 7. Limits
 
 - One synthetic case with two engagements; the counts describe this case, not datasets in general.
+- Q1-Q3 and c1-c4 do not read the occurrence, identification and resolution claims; section 9 does.
 - The composition was built by the same agent that wrote the NuProc encoding. It was built to need as few new terms
   as possible and the alternatives above were weighed, but another builder could compose differently (CIDOC CRM and
   PROV-O, nanopublications), and the counts would differ.
@@ -184,9 +185,55 @@ is caught by the shapes of its own constraint and by no other shape. The broken 
 | `broken/*.ru` | seven broken variants per encoding (SPARQL updates) |
 | `run.py` | rebuilds `results/` (deterministic; Python 3.14.3, rdflib 7.6, pySHACL 0.40.1) |
 | `check_terms.py`, `vocabularies.csv` | checks every published term against its vocabulary file (addresses and sha256 in the CSV; the files are not redistributed) |
+| `status_claims/` | the extension of section 9, with its protocol, files, runner and results |
 | `results/` | `representation.csv`, `terms_used.csv`, `validation.csv`, `validation_details.csv`, `shapes_size.csv`, `q*_*.csv`, `query_metrics.csv`, `term_check*.csv`, `inputs.csv` (sha256 of every input), `summary.txt` |
 
 ```bash
 python run.py                      # from this folder or anywhere; reads the NuProc modules from the repository
 python -P check_terms.py --fetch DIR   # downloads the vocabularies into DIR (generic User-Agent, no contact data)
+```
+
+
+## 9. Extension: the status claims and the assertion rule
+
+Q1-Q3 and c1-c4 do not read the occurrence and identification status of a cluster, the claims behind a resolution, or
+the rule for what is asserted about the real world. `status_claims/` adds three report groups (a planned meeting, two
+meetings of one month that the key joined, and a meeting whose identification and reference a person revised), three
+questions (Q4-Q6), four constraints (c5-c8) and seven broken variants per encoding. `status_claims/PROTOCOL.md`, with
+the expected answers, was fixed before either encoding of the new material was written, and its checksum is compared
+at every run. A separate language-model instance wrote the composition's part from the protocol, the base composition
+and the published vocabularies, without sight of the NuProc encoding of the new groups or of NuProc's shapes; its
+choices and the alternatives it rejected are in `status_claims/COMPOSITION_NOTES.md`.
+
+| | Composition | NuProc 0.9.0 |
+|---|---|---|
+| Whole case, same content (data files) | 487 triples | 486 triples |
+| New ad-hoc terms | none: `schema:eventStatus` and `adms:status` are borrowed for the two statuses | none |
+| New codes | 6 (30 lines) | none |
+| Shapes for c5-c8 | builder writes 4 (163 lines) and rewrites 2 base shapes (58 lines), so that 10 shapes (281 lines) are in force | 10 shipped (507 lines), which also check more |
+| Seven broken variants | all caught by the shapes of their own constraint, and by no other | all caught by the shapes of their own constraint (c7b also by `CodedParticipationReferenceCoherenceShape`) |
+| The parent folder's seven broken variants, on the extended composition | all still caught | not re-run: no NuProc shape changed |
+| Q4-Q6 | the protocol's rows; 31 triple patterns | the protocol's rows; 40 triple patterns |
+
+So the composition can state and check this material too, with no further ad-hoc property, and at the same size for the
+same content. What the numbers do not show:
+
+- **The two status properties are stretched.** ADMS defines `adms:status` as "the status of the Asset in the context of
+  a particular workflow process", and a report group is no asset. The five published values of `schema:eventStatus` do
+  not separate a meeting announced for later from one that took place, so the values are the builder's.
+- **The composition keeps no engagement apart from its reports.** Its planned group C and its merged group D are
+  `sem:Event`s like the others. No statement says that a group reports an engagement: the rule (occurred and not
+  merged) is written in the shape and again in Q4, and any query for the set of engagements has to repeat it. In NuProc
+  the rule is applied when the graph is built and checked by the shipped shapes, and queries read the real-world layer.
+- **In one respect the composition keeps more.** The candidates of the revised judgement of group E stay as reified
+  statements. NuProc keeps that claim's status and the label, but not its candidates, because
+  `hasCandidateOrganization` belongs to an ambiguous reference and the reference is typed by its final claim.
+- **A claim that resolves a reference** takes two reified statements in the composition (status and organisation) and
+  one node in NuProc, so section R is the largest difference in triples: 76 against 48.
+
+The limits of section 7 apply: one synthetic case, and every encoding written by a language model.
+
+```bash
+python status_claims/run.py                       # rebuilds status_claims/results/
+python -P status_claims/check_terms.py --fetch DIR   # checks the published terms the extension uses
 ```

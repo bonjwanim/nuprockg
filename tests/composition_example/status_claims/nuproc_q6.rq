@@ -1,0 +1,37 @@
+PREFIX nuproc: <https://w3id.org/nuproc/ns#>
+PREFIX prov:   <http://www.w3.org/ns/prov#>
+PREFIX skos:   <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX syn:    <https://example.org/syn/>
+
+# Q6 (NuProc). For group E and its export-side reference: for each of the three judgements, the final status, the
+# activity, the agent and the plans of the final claim, and the status given by the claim it revised, if any.
+SELECT ?kind ?status ?activity ?agent (GROUP_CONCAT(DISTINCT ?planLabel; SEPARATOR=" | ") AS ?plans) ?revisedStatus
+WHERE {
+  {
+    BIND("occurrence" AS ?kind)
+    syn:cluster-E nuproc:hasFinalOccurrenceClaim ?c .
+    ?c nuproc:claimedOccurrence ?s .
+    OPTIONAL { ?c prov:wasRevisionOf ?p . ?p nuproc:claimedOccurrence ?ps . ?ps skos:notation ?revisedStatus }
+  } UNION {
+    BIND("identification" AS ?kind)
+    syn:cluster-E nuproc:hasFinalIdentificationClaim ?c .
+    ?c nuproc:claimedIdentification ?s .
+    OPTIONAL { ?c prov:wasRevisionOf ?p . ?p nuproc:claimedIdentification ?ps . ?ps skos:notation ?revisedStatus }
+  } UNION {
+    BIND("resolution" AS ?kind)
+    syn:reference-E-export nuproc:hasFinalResolutionClaim ?c .
+    ?c nuproc:claimedResolutionStatus ?s .
+    OPTIONAL { ?c prov:wasRevisionOf ?p . ?p nuproc:claimedResolutionStatus ?ps . ?ps skos:notation ?revisedStatus }
+  }
+  ?s skos:notation ?status .
+  ?c prov:wasGeneratedBy ?act .
+  ?act rdfs:label ?activity ;
+       prov:qualifiedAssociation ?as .
+  ?as  prov:agent ?ag ;
+       prov:hadPlan ?plan .
+  ?ag  rdfs:label ?agent .
+  ?plan rdfs:label ?planLabel .
+}
+GROUP BY ?kind ?status ?activity ?agent ?revisedStatus
+ORDER BY ?kind

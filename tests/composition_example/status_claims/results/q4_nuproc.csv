@@ -1,0 +1,6 @@
+group,occurrence,identification,reportsEngagement
+A,occurred,key_based,yes
+B,occurred,key_based,yes
+C,planned,key_based,no
+D,occurred,merged,no
+E,occurred,verified,yes

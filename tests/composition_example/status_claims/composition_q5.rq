@@ -1,0 +1,24 @@
+PREFIX adms:   <http://www.w3.org/ns/adms#>
+PREFIX sem:    <http://semanticweb.cs.vu.nl/2009/11/sem/>
+PREFIX rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX skos:   <http://www.w3.org/2004/02/skos/core#>
+PREFIX exrole: <https://example.org/ext/role/>
+
+# Q5 (composition). Which organisations are asserted to have taken part in which groups, which role facets did they
+# take there, and on what does the identification of the group rest? An organisation is asserted when it is the bearer
+# (rdf:value) of a participation node; a role facet is a role type of the builder's role scheme on that node (side and
+# counterparty codes belong to other schemes and are not facets).
+SELECT ?organisation ?role ?group ?identification
+WHERE {
+  ?e   sem:hasActor ?p ;
+       adms:status ?id .
+  ?p   rdf:value ?org ;
+       sem:roleType ?v .
+  ?v   skos:inScheme exrole: ;
+       skos:notation ?role .
+  ?org rdfs:label ?organisation .
+  ?id  skos:notation ?identification .
+  BIND(STRAFTER(STR(?e), "https://example.org/syn/engagement-") AS ?group)
+}
+ORDER BY ?group ?organisation ?role

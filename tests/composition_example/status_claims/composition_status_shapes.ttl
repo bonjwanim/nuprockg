@@ -1,0 +1,275 @@
+# SHACL shapes for the status material of composition_status.ttl. Each named shape starts with the constraint it serves
+# (C5 ... C8). Run with SHACL-SPARQL enabled (pySHACL advanced=True), with composition_ext.ttl and
+# composition_status_ext.ttl mixed into the data graph (the codes carry skos:inScheme).
+#
+#   c5  a report group has exactly one occurrence status and exactly one final claim about it, which gives that status
+#   c6  the same for the identification status
+#   c7  an actor reference has exactly one final resolution claim, which gives its status and, when it is resolved,
+#       its organisation
+#   c8  an organisation is asserted as an actor of a group only if the group occurred and is not merged
+#
+# Two shapes of composition_shapes.ttl are replaced by shapes under new names, because the base shapes do not accept
+# the new material:
+#   cs:C2_ClaimShape_rev replaces cs:C2_ClaimShape, which holds every rdf:Statement to be a sem:roleType claim about a
+#       participation; the status and resolution claims of this material are rdf:Statements too.
+#   cs:C3_CodingActivityShape_rev replaces cs:C3_CodingActivityShape, which reads every software agent as a language
+#       model; the clustering pipeline is software that is not one.
+#
+# The SPARQL bodies use full IRIs.
+
+@prefix adms:    <http://www.w3.org/ns/adms#> .
+@prefix cs:      <https://example.org/composition-shapes#> .
+@prefix ex:      <https://example.org/ext#> .
+@prefix exid:    <https://example.org/ext/identification/> .
+@prefix exocc:   <https://example.org/ext/occurrence/> .
+@prefix gaf:     <http://groundedannotationframework.org/gaf#> .
+@prefix prov:    <http://www.w3.org/ns/prov#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix schema:  <https://schema.org/> .
+@prefix sem:     <http://semanticweb.cs.vu.nl/2009/11/sem/> .
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+
+# c5. A report group (a sub-event of the case, or an event with actors) has exactly one occurrence status and exactly
+# one final claim about it (a claim the group was derived from); the claim is about this group and gives that status.
+# Every claim about the group's occurrence status names the one activity that made it.
+cs:C5_OccurrenceStatusShape a sh:NodeShape ;
+    sh:targetSubjectsOf sem:subEventOf , sem:hasActor ;
+    sh:property [ sh:path schema:eventStatus ; sh:minCount 1 ; sh:maxCount 1 ;
+                  sh:in ( exocc:planned exocc:occurred ) ;
+                  sh:message "c5: a report group has exactly one occurrence status, planned or occurred." ] ;
+    sh:sparql [
+        sh:message "c5: a report group has exactly one final claim about its occurrence status; that claim is about this group and gives its status, and every occurrence claim about the group names the one activity that made it." ;
+        sh:select """
+            SELECT $this ?value WHERE {
+              {
+                $this <https://schema.org/eventStatus> ?value .
+                FILTER NOT EXISTS {
+                  $this <http://www.w3.org/ns/prov#wasDerivedFrom> ?c .
+                  ?c <http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> $this ;
+                     <http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <https://schema.org/eventStatus> ;
+                     <http://www.w3.org/1999/02/22-rdf-syntax-ns#object> ?value .
+                }
+              } UNION {
+                $this <http://www.w3.org/ns/prov#wasDerivedFrom> ?c1 , ?c2 .
+                FILTER(?c1 != ?c2)
+                ?c1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <https://schema.org/eventStatus> ;
+                    <http://www.w3.org/1999/02/22-rdf-syntax-ns#object> ?value .
+                ?c2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <https://schema.org/eventStatus> .
+              } UNION {
+                ?value <http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> $this ;
+                       <http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <https://schema.org/eventStatus> .
+                FILTER NOT EXISTS { ?value <http://www.w3.org/ns/prov#wasGeneratedBy> ?a }
+              } UNION {
+                ?value <http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> $this ;
+                       <http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <https://schema.org/eventStatus> ;
+                       <http://www.w3.org/ns/prov#wasGeneratedBy> ?a1 , ?a2 .
+                FILTER(?a1 != ?a2)
+              }
+            }
+        """ ;
+    ] ;
+    sh:severity sh:Violation .
+
+# c6. The same for the identification status, on adms:status with the identification codes.
+cs:C6_IdentificationStatusShape a sh:NodeShape ;
+    sh:targetSubjectsOf sem:subEventOf , sem:hasActor ;
+    sh:property [ sh:path adms:status ; sh:minCount 1 ; sh:maxCount 1 ;
+                  sh:in ( exid:key_based exid:merged exid:verified ) ;
+                  sh:message "c6: a report group has exactly one identification status, key_based, merged or verified." ] ;
+    sh:sparql [
+        sh:message "c6: a report group has exactly one final claim about its identification status; that claim is about this group and gives its status, and every identification claim about the group names the one activity that made it." ;
+        sh:select """
+            SELECT $this ?value WHERE {
+              {
+                $this <http://www.w3.org/ns/adms#status> ?value .
+                FILTER NOT EXISTS {
+                  $this <http://www.w3.org/ns/prov#wasDerivedFrom> ?c .
+                  ?c <http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> $this ;
+                     <http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <http://www.w3.org/ns/adms#status> ;
+                     <http://www.w3.org/1999/02/22-rdf-syntax-ns#object> ?value .
+                }
+              } UNION {
+                $this <http://www.w3.org/ns/prov#wasDerivedFrom> ?c1 , ?c2 .
+                FILTER(?c1 != ?c2)
+                ?c1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <http://www.w3.org/ns/adms#status> ;
+                    <http://www.w3.org/1999/02/22-rdf-syntax-ns#object> ?value .
+                ?c2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <http://www.w3.org/ns/adms#status> .
+              } UNION {
+                ?value <http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> $this ;
+                       <http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <http://www.w3.org/ns/adms#status> .
+                FILTER NOT EXISTS { ?value <http://www.w3.org/ns/prov#wasGeneratedBy> ?a }
+              } UNION {
+                ?value <http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> $this ;
+                       <http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <http://www.w3.org/ns/adms#status> ;
+                       <http://www.w3.org/ns/prov#wasGeneratedBy> ?a1 , ?a2 .
+                FILTER(?a1 != ?a2)
+              }
+            }
+        """ ;
+    ] ;
+    sh:severity sh:Violation .
+
+# c7. Every actor reference has exactly one status and exactly one final resolution claim (a reified ex:resolutionStatus
+# statement it was derived from), which gives that status. A resolved reference denotes exactly one organisation, given
+# by a final reified gaf:denotes statement of the same activity; a reference that is not resolved has no such statement.
+# Every claim about the reference names the one activity that made it.
+cs:C7_ResolutionShape a sh:NodeShape ;
+    sh:targetObjectsOf ex:actorReference ;
+    sh:property [ sh:path ex:resolutionStatus ; sh:minCount 1 ; sh:maxCount 1 ;
+                  sh:message "c7: an actor reference has exactly one resolution status." ] ;
+    sh:property [ sh:path gaf:denotes ; sh:maxCount 1 ;
+                  sh:message "c7: an actor reference denotes at most one organisation." ] ;
+    sh:sparql [
+        sh:message "c7: an actor reference has exactly one final resolution claim, which gives its status and, when the reference is resolved, its organisation (a final gaf:denotes statement of the same activity); every claim about the reference names the one activity that made it." ;
+        sh:select """
+            SELECT $this ?value WHERE {
+              {
+                $this <https://example.org/ext#resolutionStatus> ?value .
+                FILTER NOT EXISTS {
+                  $this <http://www.w3.org/ns/prov#wasDerivedFrom> ?c .
+                  ?c <http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> $this ;
+                     <http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <https://example.org/ext#resolutionStatus> ;
+                     <http://www.w3.org/1999/02/22-rdf-syntax-ns#object> ?value .
+                }
+              } UNION {
+                $this <http://www.w3.org/ns/prov#wasDerivedFrom> ?c1 , ?c2 .
+                FILTER(?c1 != ?c2)
+                ?c1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> ?p ;
+                    <http://www.w3.org/1999/02/22-rdf-syntax-ns#object> ?value .
+                ?c2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> ?p .
+                FILTER(?p IN (<https://example.org/ext#resolutionStatus>, <http://groundedannotationframework.org/gaf#denotes>))
+              } UNION {
+                $this <https://example.org/ext#resolutionStatus> <https://example.org/ext/status/resolved> .
+                $this <http://groundedannotationframework.org/gaf#denotes> ?value .
+                FILTER NOT EXISTS {
+                  $this <http://www.w3.org/ns/prov#wasDerivedFrom> ?c .
+                  ?c <http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> $this ;
+                     <http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <http://groundedannotationframework.org/gaf#denotes> ;
+                     <http://www.w3.org/1999/02/22-rdf-syntax-ns#object> ?value .
+                }
+              } UNION {
+                $this <https://example.org/ext#resolutionStatus> <https://example.org/ext/status/resolved> .
+                FILTER NOT EXISTS { $this <http://groundedannotationframework.org/gaf#denotes> ?o }
+              } UNION {
+                $this <http://www.w3.org/ns/prov#wasDerivedFrom> ?value .
+                ?value <http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <http://groundedannotationframework.org/gaf#denotes> ;
+                       <http://www.w3.org/1999/02/22-rdf-syntax-ns#object> ?o .
+                FILTER NOT EXISTS {
+                  $this <http://groundedannotationframework.org/gaf#denotes> ?o ;
+                        <https://example.org/ext#resolutionStatus> <https://example.org/ext/status/resolved> .
+                }
+              } UNION {
+                $this <http://www.w3.org/ns/prov#wasDerivedFrom> ?c1 , ?c2 .
+                ?c1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <https://example.org/ext#resolutionStatus> ;
+                    <http://www.w3.org/ns/prov#wasGeneratedBy> ?value .
+                ?c2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <http://groundedannotationframework.org/gaf#denotes> ;
+                    <http://www.w3.org/ns/prov#wasGeneratedBy> ?a2 .
+                FILTER(?value != ?a2)
+              } UNION {
+                ?value <http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> $this ;
+                       <http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> ?p .
+                FILTER(?p IN (<https://example.org/ext#resolutionStatus>, <http://groundedannotationframework.org/gaf#denotes>, <https://example.org/ext#candidate>))
+                FILTER NOT EXISTS { ?value <http://www.w3.org/ns/prov#wasGeneratedBy> ?a }
+              } UNION {
+                ?value <http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> $this ;
+                       <http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> ?p ;
+                       <http://www.w3.org/ns/prov#wasGeneratedBy> ?a1 , ?a2 .
+                FILTER(?p IN (<https://example.org/ext#resolutionStatus>, <http://groundedannotationframework.org/gaf#denotes>, <https://example.org/ext#candidate>))
+                FILTER(?a1 != ?a2)
+              }
+            }
+        """ ;
+    ] ;
+    sh:severity sh:Violation .
+
+# c8. An organisation is asserted to have taken part in a group, and so to have realized the role types coded on its
+# node, only through a bearer on one of the group's participation nodes (rdf:value) or an organisation given directly
+# as sem:hasActor; either is allowed only if the group occurred and is not merged. The shape forbids nothing else, so
+# the coded role types, references and claims of any other group stay in the graph.
+cs:C8_AssertedParticipationShape a sh:NodeShape ;
+    sh:targetSubjectsOf sem:hasActor ;
+    sh:sparql [
+        sh:message "c8: an organisation is asserted to have taken part in a group (a bearer on a participation node, or an organisation given directly as an actor) only if the group occurred and is not merged." ;
+        sh:select """
+            SELECT $this ?value WHERE {
+              {
+                $this <http://semanticweb.cs.vu.nl/2009/11/sem/hasActor> ?p .
+                ?p <http://www.w3.org/1999/02/22-rdf-syntax-ns#value> ?value .
+              } UNION {
+                $this <http://semanticweb.cs.vu.nl/2009/11/sem/hasActor> ?value .
+                ?value a <http://www.w3.org/ns/org#Organization> .
+              }
+              FILTER(
+                NOT EXISTS { $this <https://schema.org/eventStatus> <https://example.org/ext/occurrence/occurred> }
+                || EXISTS { $this <http://www.w3.org/ns/adms#status> <https://example.org/ext/identification/merged> }
+              )
+            }
+        """ ;
+    ] ;
+    sh:severity sh:Violation .
+
+# c2 (claims), replacing cs:C2_ClaimShape. As the base shape for the claims it knows; the set of statements a claim may
+# reify grows to the occurrence, identification and resolution statements of this material. The subject of a claim is
+# of the class its reified predicate is about (a role claim about a participation, as in the base shape), and a revised
+# claim is about the same subject as the claim it revises.
+cs:C2_ClaimShape_rev a sh:NodeShape ;
+    sh:targetClass rdf:Statement ;
+    sh:property [ sh:path rdf:subject ; sh:minCount 1 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path rdf:predicate ; sh:minCount 1 ; sh:maxCount 1 ;
+                  sh:in ( sem:roleType schema:eventStatus adms:status ex:resolutionStatus gaf:denotes ex:candidate ) ] ;
+    sh:property [ sh:path rdf:object ; sh:minCount 1 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path prov:wasGeneratedBy ; sh:minCount 1 ; sh:maxCount 1 ; sh:class prov:Activity ] ;
+    sh:property [ sh:path prov:wasRevisionOf ; sh:maxCount 1 ; sh:class rdf:Statement ] ;
+    sh:sparql [
+        sh:message "c2: a revised claim is about the same subject as the claim it revises." ;
+        sh:select """
+            SELECT $this ?value WHERE {
+              $this <http://www.w3.org/ns/prov#wasRevisionOf> ?value ;
+                    <http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> ?p .
+              FILTER NOT EXISTS { ?value <http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> ?p }
+            }
+        """ ;
+    ] ;
+    sh:sparql [
+        sh:message "c2: a claim is about a node of the class its reified statement is about: a role claim about a participation, an occurrence or identification claim about an event, a resolution claim about a mention." ;
+        sh:select """
+            SELECT $this ?value WHERE {
+              $this <http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> ?p ;
+                    <http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> ?value .
+              FILTER(
+                ( ?p = <http://semanticweb.cs.vu.nl/2009/11/sem/roleType>
+                  && NOT EXISTS { ?value a <http://semanticweb.cs.vu.nl/2009/11/sem/Role> } )
+                || ( ?p IN (<https://schema.org/eventStatus>, <http://www.w3.org/ns/adms#status>)
+                  && NOT EXISTS { ?value a <http://semanticweb.cs.vu.nl/2009/11/sem/Event> } )
+                || ( ?p IN (<https://example.org/ext#resolutionStatus>, <http://groundedannotationframework.org/gaf#denotes>, <https://example.org/ext#candidate>)
+                  && NOT EXISTS { ?value a <http://groundedannotationframework.org/gaf#Mention> } )
+              )
+            }
+        """ ;
+    ] ;
+    sh:message "c2: a claim names one subject, one statement a claim may reify, one object and the one activity that made it." ;
+    sh:severity sh:Violation .
+
+# c3, replacing cs:C3_CodingActivityShape. As the base shape, except that the prompt-specification requirement binds an
+# activity's software agent unless dcterms:type marks that agent as software that is not a language model.
+cs:C3_CodingActivityShape_rev a sh:NodeShape ;
+    sh:targetObjectsOf prov:wasGeneratedBy ;
+    sh:property [ sh:path prov:qualifiedAssociation ; sh:minCount 1 ; sh:node cs:C3_AssociationShape ;
+                  sh:message "c3: an activity names its agent and plans on qualified associations, one agent and at most one plan each." ] ;
+    sh:property [ sh:path ( prov:qualifiedAssociation prov:hadPlan ) ; sh:minCount 1 ;
+                  sh:message "c3: an activity followed at least one plan, recorded on a qualified association." ] ;
+    sh:sparql [
+        sh:message "c3: an activity carried out by a software agent that is a language model has a prompt specification among the plans of its qualified associations." ;
+        sh:select """
+            SELECT $this WHERE {
+              $this <http://www.w3.org/ns/prov#qualifiedAssociation>/<http://www.w3.org/ns/prov#agent> ?a .
+              ?a a <http://www.w3.org/ns/prov#SoftwareAgent> .
+              FILTER NOT EXISTS { ?a <http://purl.org/dc/terms/type> <https://example.org/ext/agentkind/non_model_software> }
+              FILTER NOT EXISTS {
+                $this <http://www.w3.org/ns/prov#qualifiedAssociation>/<http://www.w3.org/ns/prov#hadPlan> ?p .
+                ?p <http://purl.org/dc/terms/type> <https://example.org/ext/plantype/prompt_specification> .
+              }
+            }
+        """ ;
+    ] ;
+    sh:severity sh:Violation .

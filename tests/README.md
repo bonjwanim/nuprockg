@@ -36,6 +36,14 @@ broken variants are run on both. `composition_example/README.md` describes the c
 python tests/composition_example/run.py    # rebuilds composition_example/results/ (sorted, no time stamp)
 ```
 
+`composition_example/status_claims/` extends the case with three report groups, three questions and four constraints
+that read the occurrence, identification and resolution claims and the rule for what is asserted. Its protocol, with
+the expected answers, was fixed before the encodings were written.
+
+```bash
+python tests/composition_example/status_claims/run.py    # rebuilds status_claims/results/ (sorted, no time stamp)
+```
+
 ## Licence
 
 CC BY 4.0, as the rest of the repository (`LICENSE`), including the Python scripts in this folder.

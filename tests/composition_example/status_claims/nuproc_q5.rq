@@ -1,0 +1,26 @@
+PREFIX nuproc: <https://w3id.org/nuproc/ns#>
+PREFIX erole:  <https://w3id.org/nuproc/engagementrole/>
+PREFIX obo:    <http://purl.obolibrary.org/obo/>
+PREFIX skos:   <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>
+
+# Q5 (NuProc). Which organisations are asserted to have taken part in which groups, which role facets did they take
+# there, and on what does the identification of the group rest? Read in the real-world layer: a role individual borne
+# by an organisation and realized in an engagement. No filter on status is needed: planned and merged clusters report
+# no engagement. Side roles are left out, as in Q3, through the codebook's link from a facet value to its role class.
+SELECT ?organisation ?role ?group ?identification
+WHERE {
+  ?r   obo:RO_0000081 ?org ;
+       obo:BFO_0000054 ?e ;
+       a ?k .
+  ?v   nuproc:roleClass ?k ;
+       skos:inScheme erole: ;
+       skos:notation ?role .
+  ?org rdfs:label ?organisation .
+  ?c   a nuproc:EngagementCluster ;
+       nuproc:reportsEngagement ?e ;
+       nuproc:hasEngagementIdentification ?i .
+  ?i   skos:notation ?identification .
+  BIND(STRAFTER(STR(?c), "https://example.org/syn/cluster-") AS ?group)
+}
+ORDER BY ?organisation ?role ?group

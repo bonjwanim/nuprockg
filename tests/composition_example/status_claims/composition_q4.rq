@@ -1,0 +1,23 @@
+PREFIX adms:   <http://www.w3.org/ns/adms#>
+PREFIX sem:    <http://semanticweb.cs.vu.nl/2009/11/sem/>
+PREFIX skos:   <http://www.w3.org/2004/02/skos/core#>
+PREFIX schema: <https://schema.org/>
+PREFIX exocc:  <https://example.org/ext/occurrence/>
+PREFIX exid:   <https://example.org/ext/identification/>
+PREFIX syn:    <https://example.org/syn/>
+
+# Q4 (composition). For every report group: its occurrence status, its identification status, and whether it is taken
+# as reporting an engagement. A report group is a sub-event of the case. The graph holds no separate statement that a
+# group reports an engagement, because the group is the event; the answer follows from the two statuses by the rule
+# that also governs what may be asserted: the group occurred and is not merged.
+SELECT ?group ?occurrence ?identification ?reportsEngagement
+WHERE {
+  ?e   sem:subEventOf syn:case ;
+       schema:eventStatus ?occ ;
+       adms:status ?id .
+  ?occ skos:notation ?occurrence .
+  ?id  skos:notation ?identification .
+  BIND(STRAFTER(STR(?e), "https://example.org/syn/engagement-") AS ?group)
+  BIND(IF(?occ = exocc:occurred && ?id != exid:merged, "yes", "no") AS ?reportsEngagement)
+}
+ORDER BY ?group

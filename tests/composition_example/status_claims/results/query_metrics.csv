@@ -1,0 +1,7 @@
+query,encoding,rows,triple_patterns,property_paths,variables,join_variables,optional,union,exists,adhoc_terms,vocabularies,as_in_protocol,same_answer_as_other_encoding
+q4,composition,5,5,0,5,3,0,0,0,,ADMS SEM SKOS schema.org,yes,yes
+q4,nuproc,5,6,0,6,3,0,0,1,,NuProc RDF SKOS,yes,yes
+q5,composition,3,8,0,8,5,0,0,0,,ADMS RDF RDFS SEM SKOS,yes,yes
+q5,nuproc,3,11,0,10,7,0,0,0,,BFO/RO NuProc RDF RDFS SKOS,yes,yes
+q6,composition,3,18,0,17,10,1,0,0,ex:actorReference,PROV-O RDF RDFS SEM SKOS ad hoc,yes,yes
+q6,nuproc,3,23,0,13,9,3,2,0,,NuProc PROV-O RDFS SKOS,yes,yes

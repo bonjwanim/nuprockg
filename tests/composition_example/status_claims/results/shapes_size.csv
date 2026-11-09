@@ -1,0 +1,20 @@
+encoding,constraint,shape,who,lines,triples
+composition,c5,cs:C5_OccurrenceStatusShape,builder writes,37,17
+composition,c6,cs:C6_IdentificationStatusShape,builder writes,37,19
+composition,c7,cs:C7_ResolutionShape,builder writes,68,15
+composition,c8,cs:C8_AssertedParticipationShape,builder writes,21,6
+composition,c2,cs:C2_ClaimShape_rev,builder rewrites a base shape,37,44
+composition,c3,cs:C3_CodingActivityShape_rev,builder rewrites a base shape,21,19
+nuproc,c5,nuproc:EngagementClusterShape,shipped with NuProc,86,72
+nuproc,c5,nuproc:OccurrenceClaimShape,shipped with NuProc,38,40
+nuproc,c5,nuproc:EngagementClusterProfileShape,shipped with NuProc,30,44
+nuproc,c6,nuproc:EngagementClusterShape,shipped with NuProc,86,72
+nuproc,c6,nuproc:IdentificationClaimShape,shipped with NuProc,57,41
+nuproc,c6,nuproc:EngagementClusterProfileShape,shipped with NuProc,30,44
+nuproc,c7,nuproc:ActorReferenceShape,shipped with NuProc,25,55
+nuproc,c7,nuproc:ResolutionClaimShape,shipped with NuProc,82,51
+nuproc,c7,nuproc:ActorReferenceProfileShape,shipped with NuProc,8,9
+nuproc,c8,nuproc:EngagementClusterShape,shipped with NuProc,86,72
+nuproc,c8,nuproc:ReportsEngagementShape,shipped with NuProc,27,13
+nuproc,c8,nuproc:EngagementRoleShape,shipped with NuProc,116,44
+nuproc,c8,nuproc:EngagementShape,shipped with NuProc,38,14

@@ -1,0 +1,17 @@
+PREFIX nuproc: <https://w3id.org/nuproc/ns#>
+PREFIX skos:   <http://www.w3.org/2004/02/skos/core#>
+
+# Q4 (NuProc). For every report group: its occurrence status, its identification status, and whether it is taken as
+# reporting an engagement. A cluster reports an engagement exactly when the graph says so: the rule is applied when the
+# graph is built and checked by the shapes, and the query does not repeat it.
+SELECT ?group ?occurrence ?identification ?reportsEngagement
+WHERE {
+  ?c a nuproc:EngagementCluster ;
+     nuproc:hasOccurrenceStatus ?o ;
+     nuproc:hasEngagementIdentification ?i .
+  ?o skos:notation ?occurrence .
+  ?i skos:notation ?identification .
+  BIND(IF(EXISTS { ?c nuproc:reportsEngagement ?e }, "yes", "no") AS ?reportsEngagement)
+  BIND(STRAFTER(STR(?c), "https://example.org/syn/cluster-") AS ?group)
+}
+ORDER BY ?group

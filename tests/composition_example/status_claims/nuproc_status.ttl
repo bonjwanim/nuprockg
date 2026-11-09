@@ -1,0 +1,310 @@
+# The new report groups of PROTOCOL.md, expressed in NuProc 0.9.0, as an addition to the base file nuproc.ttl of the
+# parent folder. Every individual is synthetic; every label carries "(SYN)". No new term is used. The statuses and
+# claims of groups A and B are already in the base file.
+#
+# Section markers ("# == <id> <title> ==") are read by run.py, which counts the triples of each section.
+
+@prefix channel: <https://w3id.org/nuproc/channel/> .
+@prefix crole:   <https://w3id.org/nuproc/counterpartyrole/> .
+@prefix eident:  <https://w3id.org/nuproc/engagementidentification/> .
+@prefix erole:   <https://w3id.org/nuproc/engagementrole/> .
+@prefix etype:   <https://w3id.org/nuproc/eventtype/> .
+@prefix nuproc:  <https://w3id.org/nuproc/ns#> .
+@prefix obo:     <http://purl.obolibrary.org/obo/> .
+@prefix ostat:   <https://w3id.org/nuproc/occurrencestatus/> .
+@prefix prov:    <http://www.w3.org/ns/prov#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rstat:   <https://w3id.org/nuproc/resolutionstatus/> .
+@prefix srole:   <https://w3id.org/nuproc/siderole/> .
+@prefix syn:     <https://example.org/syn/> .
+@prefix time:    <http://www.w3.org/2006/time#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+
+# == G groups C, D and E: clusters, records, articles, participations, labels, role claims ==
+
+syn:month-2024-06 a time:Instant ;
+    time:inXSDgYearMonth "2024-06"^^xsd:gYearMonth .
+
+syn:month-2024-07 a time:Instant ;
+    time:inXSDgYearMonth "2024-07"^^xsd:gYearMonth .
+
+syn:month-2024-08 a time:Instant ;
+    time:inXSDgYearMonth "2024-08"^^xsd:gYearMonth .
+
+# Group C: a meeting announced for later.
+syn:cluster-C a nuproc:EngagementCluster ;
+    time:hasTime syn:month-2024-06 ;
+    nuproc:clusteredBy <https://w3id.org/nuproc/rule/month-granularity> ;
+    nuproc:concernsCase syn:case ;
+    nuproc:hasEngagementChannel channel:B2G ;
+    nuproc:hasEventType etype:B2G-1 ;
+    nuproc:hasParticipation syn:participation-C-export , syn:participation-C-host ;
+    nuproc:uniqueSourceArticleCount "1"^^xsd:nonNegativeInteger .
+
+# Group D: two meetings of one month that the clustering key joined.
+syn:cluster-D a nuproc:EngagementCluster ;
+    time:hasTime syn:month-2024-07 ;
+    nuproc:clusteredBy <https://w3id.org/nuproc/rule/month-granularity> ;
+    nuproc:concernsCase syn:case ;
+    nuproc:hasEngagementChannel channel:B2G ;
+    nuproc:hasEventType etype:B2G-1 ;
+    nuproc:hasParticipation syn:participation-D-export , syn:participation-D-host ;
+    nuproc:uniqueSourceArticleCount "2"^^xsd:nonNegativeInteger .
+
+# Group E: a meeting that took place.
+syn:cluster-E a nuproc:EngagementCluster ;
+    time:hasTime syn:month-2024-08 ;
+    nuproc:clusteredBy <https://w3id.org/nuproc/rule/month-granularity> ;
+    nuproc:concernsCase syn:case ;
+    nuproc:hasEngagementChannel channel:B2G ;
+    nuproc:hasEventType etype:B2G-1 ;
+    nuproc:hasParticipation syn:participation-E-export , syn:participation-E-host ;
+    nuproc:uniqueSourceArticleCount "1"^^xsd:nonNegativeInteger .
+
+syn:article-C1 a nuproc:SourceArticle .
+syn:article-D1 a nuproc:SourceArticle .
+syn:article-D2 a nuproc:SourceArticle .
+syn:article-E1 a nuproc:SourceArticle .
+
+syn:record-C1 a nuproc:EventRecord ;
+    prov:wasDerivedFrom syn:article-C1 ;
+    prov:wasGeneratedBy syn:activity-event-extraction ;
+    nuproc:describesEvent syn:cluster-C .
+
+syn:record-D1 a nuproc:EventRecord ;
+    prov:wasDerivedFrom syn:article-D1 ;
+    prov:wasGeneratedBy syn:activity-event-extraction ;
+    nuproc:describesEvent syn:cluster-D .
+
+syn:record-D2 a nuproc:EventRecord ;
+    prov:wasDerivedFrom syn:article-D2 ;
+    prov:wasGeneratedBy syn:activity-event-extraction ;
+    nuproc:describesEvent syn:cluster-D .
+
+syn:record-E1 a nuproc:EventRecord ;
+    prov:wasDerivedFrom syn:article-E1 ;
+    prov:wasGeneratedBy syn:activity-event-extraction ;
+    nuproc:describesEvent syn:cluster-E .
+
+syn:participation-C-export a nuproc:CodedParticipation ;
+    nuproc:hasActorReference syn:reference-C-export ;
+    nuproc:hasEngagementRole erole:financing ;
+    nuproc:hasFinalRoleClaim syn:claim-C-export-v3-financing ;
+    nuproc:hasSide srole:export_side ;
+    nuproc:namesParticipant syn:org-vendor-beta .
+
+syn:participation-C-host a nuproc:CodedParticipation ;
+    nuproc:hasCounterpartyRole crole:host_government ;
+    nuproc:hasSide srole:host_side .
+
+syn:participation-D-export a nuproc:CodedParticipation ;
+    nuproc:hasActorReference syn:reference-D-export ;
+    nuproc:hasEngagementRole erole:commercial_supply ;
+    nuproc:hasFinalRoleClaim syn:claim-D-export-v3-commercial_supply ;
+    nuproc:hasSide srole:export_side ;
+    nuproc:namesParticipant syn:org-vendor-beta .
+
+syn:participation-D-host a nuproc:CodedParticipation ;
+    nuproc:hasCounterpartyRole crole:host_government ;
+    nuproc:hasSide srole:host_side .
+
+syn:participation-E-export a nuproc:CodedParticipation ;
+    nuproc:hasActorReference syn:reference-E-export ;
+    nuproc:hasEngagementRole erole:technology_supply ;
+    nuproc:hasFinalRoleClaim syn:claim-E-export-v3-technology_supply ;
+    nuproc:hasSide srole:export_side ;
+    nuproc:namesParticipant syn:org-vendor-k .
+
+syn:participation-E-host a nuproc:CodedParticipation ;
+    nuproc:hasCounterpartyRole crole:host_government ;
+    nuproc:hasSide srole:host_side .
+
+syn:reference-C-export nuproc:hasSourceMention "Vendor Beta (SYN)"^^xsd:string .
+syn:reference-D-export nuproc:hasSourceMention "Vendor Beta (SYN)"^^xsd:string .
+syn:reference-E-export nuproc:hasSourceMention "Vendor K / Utility K (SYN)"^^xsd:string .
+
+syn:claim-C-export-v3-financing a nuproc:RoleClaim ;
+    prov:wasGeneratedBy syn:activity-role-coding-v3 ;
+    nuproc:claimAbout syn:participation-C-export ;
+    nuproc:claimedRole erole:financing .
+
+syn:claim-D-export-v3-commercial_supply a nuproc:RoleClaim ;
+    prov:wasGeneratedBy syn:activity-role-coding-v3 ;
+    nuproc:claimAbout syn:participation-D-export ;
+    nuproc:claimedRole erole:commercial_supply .
+
+syn:claim-E-export-v3-technology_supply a nuproc:RoleClaim ;
+    prov:wasGeneratedBy syn:activity-role-coding-v3 ;
+    nuproc:claimAbout syn:participation-E-export ;
+    nuproc:claimedRole erole:technology_supply .
+
+# == O occurrence status of groups C, D and E, with claims ==
+
+syn:cluster-C nuproc:hasOccurrenceStatus ostat:planned ;
+    nuproc:hasFinalOccurrenceClaim syn:occurrence-claim-C .
+
+syn:cluster-D nuproc:hasOccurrenceStatus ostat:occurred ;
+    nuproc:hasFinalOccurrenceClaim syn:occurrence-claim-D .
+
+syn:cluster-E nuproc:hasOccurrenceStatus ostat:occurred ;
+    nuproc:hasFinalOccurrenceClaim syn:occurrence-claim-E .
+
+syn:occurrence-claim-C a nuproc:OccurrenceClaim ;
+    nuproc:occurrenceClaimAbout syn:cluster-C ;
+    nuproc:claimedOccurrence ostat:planned ;
+    prov:wasGeneratedBy syn:occurrence-coding .
+
+syn:occurrence-claim-D a nuproc:OccurrenceClaim ;
+    nuproc:occurrenceClaimAbout syn:cluster-D ;
+    nuproc:claimedOccurrence ostat:occurred ;
+    prov:wasGeneratedBy syn:occurrence-coding .
+
+syn:occurrence-claim-E a nuproc:OccurrenceClaim ;
+    nuproc:occurrenceClaimAbout syn:cluster-E ;
+    nuproc:claimedOccurrence ostat:occurred ;
+    prov:wasGeneratedBy syn:occurrence-coding .
+
+# == I identification status of groups C, D and E, with claims, activities and plans ==
+
+syn:cluster-C nuproc:hasEngagementIdentification eident:key_based ;
+    nuproc:hasFinalIdentificationClaim syn:identification-claim-C .
+
+syn:cluster-D nuproc:hasEngagementIdentification eident:merged ;
+    nuproc:hasFinalIdentificationClaim syn:identification-claim-D .
+
+syn:cluster-E nuproc:hasEngagementIdentification eident:verified ;
+    nuproc:hasFinalIdentificationClaim syn:identification-claim-E .
+
+syn:identification-claim-C a nuproc:IdentificationClaim ;
+    nuproc:identificationClaimAbout syn:cluster-C ;
+    nuproc:claimedIdentification eident:key_based ;
+    prov:wasGeneratedBy syn:clustering .
+
+syn:identification-claim-D-key a nuproc:IdentificationClaim ;
+    nuproc:identificationClaimAbout syn:cluster-D ;
+    nuproc:claimedIdentification eident:key_based ;
+    prov:wasGeneratedBy syn:clustering .
+
+syn:identification-claim-D a nuproc:IdentificationClaim ;
+    nuproc:identificationClaimAbout syn:cluster-D ;
+    nuproc:claimedIdentification eident:merged ;
+    prov:wasGeneratedBy syn:identification-recheck ;
+    prov:wasRevisionOf syn:identification-claim-D-key .
+
+syn:identification-claim-E-key a nuproc:IdentificationClaim ;
+    nuproc:identificationClaimAbout syn:cluster-E ;
+    nuproc:claimedIdentification eident:key_based ;
+    prov:wasGeneratedBy syn:clustering .
+
+syn:identification-claim-E a nuproc:IdentificationClaim ;
+    nuproc:identificationClaimAbout syn:cluster-E ;
+    nuproc:claimedIdentification eident:verified ;
+    prov:wasGeneratedBy syn:identification-recheck ;
+    prov:wasRevisionOf syn:identification-claim-E-key .
+
+syn:identification-recheck a prov:Activity ;
+    rdfs:label "Identification re-check (SYN)" ;
+    prov:qualifiedAssociation syn:identification-recheck-association .
+
+syn:identification-recheck-association a prov:Association ;
+    prov:agent syn:agent-adjudicator ;
+    prov:hadPlan syn:plan-identification-recheck .
+
+syn:plan-identification-recheck a prov:Plan ;
+    rdfs:label "Identification re-check protocol (SYN)" .
+
+# == R resolution of the references of groups C, D and E, with claims, activities and plans ==
+
+syn:reference-C-export a nuproc:DefiniteOrganizationReference ;
+    nuproc:hasFinalResolutionClaim syn:resolution-claim-C ;
+    nuproc:hasResolutionStatus rstat:resolved ;
+    nuproc:resolvedTo syn:org-vendor-beta .
+
+syn:reference-D-export a nuproc:DefiniteOrganizationReference ;
+    nuproc:hasFinalResolutionClaim syn:resolution-claim-D ;
+    nuproc:hasResolutionStatus rstat:resolved ;
+    nuproc:resolvedTo syn:org-vendor-beta .
+
+# A reference is typed by its final claim. The re-judgement found that the bundled label of group E names Vendor K, so
+# the reference is a definite reference. The earlier claim remains with the status it gave. The candidates of that
+# earlier judgement are not kept on the reference: hasCandidateOrganization has AmbiguousOrganizationReference as its
+# domain, and only the label remains.
+syn:reference-E-export a nuproc:DefiniteOrganizationReference ;
+    nuproc:hasFinalResolutionClaim syn:resolution-claim-E ;
+    nuproc:hasResolutionStatus rstat:resolved ;
+    nuproc:resolvedTo syn:org-vendor-k .
+
+syn:resolution-claim-C a nuproc:ResolutionClaim ;
+    nuproc:resolutionClaimAbout syn:reference-C-export ;
+    nuproc:claimedResolutionStatus rstat:resolved ;
+    nuproc:claimedResolvedTo syn:org-vendor-beta ;
+    prov:wasGeneratedBy syn:reference-resolution .
+
+syn:resolution-claim-D a nuproc:ResolutionClaim ;
+    nuproc:resolutionClaimAbout syn:reference-D-export ;
+    nuproc:claimedResolutionStatus rstat:resolved ;
+    nuproc:claimedResolvedTo syn:org-vendor-beta ;
+    prov:wasGeneratedBy syn:reference-resolution .
+
+syn:resolution-claim-E-model a nuproc:ResolutionClaim ;
+    nuproc:resolutionClaimAbout syn:reference-E-export ;
+    nuproc:claimedResolutionStatus rstat:unresolvable_candidate_set ;
+    prov:wasGeneratedBy syn:reference-resolution-model .
+
+syn:resolution-claim-E a nuproc:ResolutionClaim ;
+    nuproc:resolutionClaimAbout syn:reference-E-export ;
+    nuproc:claimedResolutionStatus rstat:resolved ;
+    nuproc:claimedResolvedTo syn:org-vendor-k ;
+    prov:wasGeneratedBy syn:reference-rejudgement ;
+    prov:wasRevisionOf syn:resolution-claim-E-model .
+
+syn:reference-resolution-model a prov:Activity ;
+    rdfs:label "Reference resolution by model (SYN)" ;
+    prov:qualifiedAssociation syn:reference-resolution-model-rules ,
+        syn:reference-resolution-model-prompt .
+
+syn:reference-resolution-model-rules a prov:Association ;
+    prov:agent syn:agent-model-m3 ;
+    prov:hadPlan syn:plan-resolution-rules .
+
+syn:reference-resolution-model-prompt a prov:Association ;
+    prov:agent syn:agent-model-m3 ;
+    prov:hadPlan syn:plan-prompt-v3 .
+
+syn:reference-rejudgement a prov:Activity ;
+    rdfs:label "Reference re-judgement (SYN)" ;
+    prov:qualifiedAssociation syn:reference-rejudgement-association .
+
+syn:reference-rejudgement-association a prov:Association ;
+    prov:agent syn:agent-adjudicator ;
+    prov:hadPlan syn:plan-resolution-rules .
+
+# == W what is asserted about the real world for groups C, D and E ==
+
+# Group C did not occur as far as the records say, so it reports no engagement, and its role claim supports no role.
+# Group D occurred but joins two engagements, so it reports none; its role claim does support a role of the
+# organisation in the case (a role need not be realized in a recorded engagement), with no realization.
+# Group E occurred and a person verified that it reports one engagement.
+syn:engagement-E a nuproc:Engagement ;
+    rdfs:label "Engagement E (SYN)" ;
+    nuproc:concernsCase syn:case ;
+    obo:RO_0000057 syn:org-vendor-k .
+
+syn:cluster-E nuproc:reportsEngagement syn:engagement-E .
+syn:record-E1 nuproc:reportsEngagement syn:engagement-E .
+
+syn:role-case-vendor-k-export_side a nuproc:ExportSideRole ;
+    nuproc:concernsCase syn:case ;
+    obo:BFO_0000054 syn:engagement-E ;
+    obo:RO_0000081 syn:org-vendor-k .
+
+syn:role-case-vendor-k-technology_supply a nuproc:TechnologySupplyRole ;
+    nuproc:concernsCase syn:case ;
+    obo:BFO_0000054 syn:engagement-E ;
+    obo:RO_0000081 syn:org-vendor-k ;
+    nuproc:supportedByClaim syn:claim-E-export-v3-technology_supply .
+
+syn:role-case-vendor-beta-commercial_supply a nuproc:CommercialSupplyRole ;
+    nuproc:concernsCase syn:case ;
+    obo:RO_0000081 syn:org-vendor-beta ;
+    nuproc:supportedByClaim syn:claim-D-export-v3-commercial_supply .

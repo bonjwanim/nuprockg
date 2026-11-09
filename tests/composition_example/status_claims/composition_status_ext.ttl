@@ -1,0 +1,65 @@
+# What the status material of composition_status.ttl adds to the terms of composition_ext.ttl: ad-hoc terms for which
+# no published term was found (section X3, empty) and the builder's own code lists (section X4).
+#
+# Section markers ("# == <id> <title> ==") delimit the sections.
+
+@prefix exagent: <https://example.org/ext/agentkind/> .
+@prefix exid:    <https://example.org/ext/identification/> .
+@prefix exocc:   <https://example.org/ext/occurrence/> .
+@prefix schema:  <https://schema.org/> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+
+# == X3 ad-hoc terms ==
+
+# None. Every property the status material needs is published or already in composition_ext.ttl: the occurrence status
+# is schema:eventStatus, the identification status is adms:status, the kind of a software agent is dcterms:type, the
+# final claim of a node is marked with prov:wasDerivedFrom, the organisation of a resolution claim is a reified
+# gaf:denotes, the candidates of an earlier claim are reified ex:candidate statements, and the organisation asserted to
+# have taken part is rdf:value on the participation node.
+
+# == X4 code lists ==
+
+# The builder's codes for the two statuses of a report group and for a software agent that is not a language model.
+# Each code has a scheme, a notation and a label, as in composition_ext.ttl. The occurrence codes are also typed as
+# schema:EventStatusType, the class schema:eventStatus expects its values to come from: its five published members
+# (EventCancelled, EventMovedOnline, EventPostponed, EventRescheduled, EventScheduled) do not separate a meeting
+# announced for later from a meeting that took place, so the two codes extend that enumeration.
+
+exocc: a skos:ConceptScheme ;
+    skos:prefLabel "occurrence statuses" .
+
+exocc:planned a skos:Concept , schema:EventStatusType ;
+    skos:inScheme exocc: ;
+    skos:notation "planned" ;
+    skos:prefLabel "planned" .
+
+exocc:occurred a skos:Concept , schema:EventStatusType ;
+    skos:inScheme exocc: ;
+    skos:notation "occurred" ;
+    skos:prefLabel "occurred" .
+
+exid: a skos:ConceptScheme ;
+    skos:prefLabel "identification statuses" .
+
+exid:key_based a skos:Concept ;
+    skos:inScheme exid: ;
+    skos:notation "key_based" ;
+    skos:prefLabel "key-based" .
+
+exid:merged a skos:Concept ;
+    skos:inScheme exid: ;
+    skos:notation "merged" ;
+    skos:prefLabel "merged" .
+
+exid:verified a skos:Concept ;
+    skos:inScheme exid: ;
+    skos:notation "verified" ;
+    skos:prefLabel "verified" .
+
+exagent: a skos:ConceptScheme ;
+    skos:prefLabel "software agent kinds" .
+
+exagent:non_model_software a skos:Concept ;
+    skos:inScheme exagent: ;
+    skos:notation "non_model_software" ;
+    skos:prefLabel "software that is not a language model" .

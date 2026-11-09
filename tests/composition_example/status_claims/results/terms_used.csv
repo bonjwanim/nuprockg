@@ -1,0 +1,101 @@
+file,term,kind,vocabulary,sections,uses,declared
+composition_status.ttl,adms:status,property,ADMS,B0 I,5,see term_check.csv
+composition_status.ttl,dcterms:type,property,DCTERMS,B0,2,see term_check.csv
+composition_status.ttl,ex:actorReference,property,ad hoc,G,3,yes
+composition_status.ttl,ex:resolutionStatus,property,ad hoc,R,3,yes
+composition_status.ttl,gaf:Mention,class,GAF,G,7,see term_check.csv
+composition_status.ttl,gaf:denotes,property,GAF,G R,7,see term_check.csv
+composition_status.ttl,prov:Activity,class,PROV-O,B0 I R,6,see term_check.csv
+composition_status.ttl,prov:Association,class,PROV-O,B0 I R,7,see term_check.csv
+composition_status.ttl,prov:Entity,class,PROV-O,G,4,see term_check.csv
+composition_status.ttl,prov:Plan,class,PROV-O,B0 I,4,see term_check.csv
+composition_status.ttl,prov:SoftwareAgent,class,PROV-O,B0,1,see term_check.csv
+composition_status.ttl,prov:agent,property,PROV-O,B0 I R,7,see term_check.csv
+composition_status.ttl,prov:hadPlan,property,PROV-O,B0 I R,7,see term_check.csv
+composition_status.ttl,prov:qualifiedAssociation,property,PROV-O,B0 I R,7,see term_check.csv
+composition_status.ttl,prov:value,property,PROV-O,G,3,see term_check.csv
+composition_status.ttl,prov:wasAssociatedWith,property,PROV-O,B0 I R,6,see term_check.csv
+composition_status.ttl,prov:wasDerivedFrom,property,PROV-O,B0 G I O R,26,see term_check.csv
+composition_status.ttl,prov:wasGeneratedBy,property,PROV-O,B0 G I O R,31,see term_check.csv
+composition_status.ttl,prov:wasRevisionOf,property,PROV-O,I R,3,see term_check.csv
+composition_status.ttl,rdf:Statement,class,RDF,B0 G I O R,27,see term_check.csv
+composition_status.ttl,rdf:object,property,RDF,B0 G I O R,27,see term_check.csv
+composition_status.ttl,rdf:predicate,property,RDF,B0 G I O R,27,see term_check.csv
+composition_status.ttl,rdf:subject,property,RDF,B0 G I O R,27,see term_check.csv
+composition_status.ttl,rdf:value,property,RDF,W,1,see term_check.csv
+composition_status.ttl,rdfs:label,property,RDFS,B0 G I R,14,see term_check.csv
+composition_status.ttl,schema:eventStatus,property,schema.org,B0 O,5,see term_check.csv
+composition_status.ttl,sem:Event,class,SEM,G,3,see term_check.csv
+composition_status.ttl,sem:Role,class,SEM,G,6,see term_check.csv
+composition_status.ttl,sem:eventType,property,SEM,G,3,see term_check.csv
+composition_status.ttl,sem:hasActor,property,SEM,G,6,see term_check.csv
+composition_status.ttl,sem:hasTimeStamp,property,SEM,G,3,see term_check.csv
+composition_status.ttl,sem:roleType,property,SEM,G,12,see term_check.csv
+composition_status.ttl,sem:subEventOf,property,SEM,G,3,see term_check.csv
+nuproc_status.ttl,nuproc:CodedParticipation,class,NuProc,G,6,yes
+nuproc_status.ttl,nuproc:CommercialSupplyRole,class,NuProc,W,1,yes
+nuproc_status.ttl,nuproc:DefiniteOrganizationReference,class,NuProc,R,3,yes
+nuproc_status.ttl,nuproc:Engagement,class,NuProc,W,1,yes
+nuproc_status.ttl,nuproc:EngagementCluster,class,NuProc,G,3,yes
+nuproc_status.ttl,nuproc:EventRecord,class,NuProc,G,4,yes
+nuproc_status.ttl,nuproc:ExportSideRole,class,NuProc,W,1,yes
+nuproc_status.ttl,nuproc:IdentificationClaim,class,NuProc,I,5,yes
+nuproc_status.ttl,nuproc:OccurrenceClaim,class,NuProc,O,3,yes
+nuproc_status.ttl,nuproc:ResolutionClaim,class,NuProc,R,4,yes
+nuproc_status.ttl,nuproc:RoleClaim,class,NuProc,G,3,yes
+nuproc_status.ttl,nuproc:SourceArticle,class,NuProc,G,4,yes
+nuproc_status.ttl,nuproc:TechnologySupplyRole,class,NuProc,W,1,yes
+nuproc_status.ttl,nuproc:claimAbout,property,NuProc,G,3,yes
+nuproc_status.ttl,nuproc:claimedIdentification,property,NuProc,I,5,yes
+nuproc_status.ttl,nuproc:claimedOccurrence,property,NuProc,O,3,yes
+nuproc_status.ttl,nuproc:claimedResolutionStatus,property,NuProc,R,4,yes
+nuproc_status.ttl,nuproc:claimedResolvedTo,property,NuProc,R,3,yes
+nuproc_status.ttl,nuproc:claimedRole,property,NuProc,G,3,yes
+nuproc_status.ttl,nuproc:clusteredBy,property,NuProc,G,3,yes
+nuproc_status.ttl,nuproc:concernsCase,property,NuProc,G W,7,yes
+nuproc_status.ttl,nuproc:describesEvent,property,NuProc,G,4,yes
+nuproc_status.ttl,nuproc:hasActorReference,property,NuProc,G,3,yes
+nuproc_status.ttl,nuproc:hasCounterpartyRole,property,NuProc,G,3,yes
+nuproc_status.ttl,nuproc:hasEngagementChannel,property,NuProc,G,3,yes
+nuproc_status.ttl,nuproc:hasEngagementIdentification,property,NuProc,I,3,yes
+nuproc_status.ttl,nuproc:hasEngagementRole,property,NuProc,G,3,yes
+nuproc_status.ttl,nuproc:hasEventType,property,NuProc,G,3,yes
+nuproc_status.ttl,nuproc:hasFinalIdentificationClaim,property,NuProc,I,3,yes
+nuproc_status.ttl,nuproc:hasFinalOccurrenceClaim,property,NuProc,O,3,yes
+nuproc_status.ttl,nuproc:hasFinalResolutionClaim,property,NuProc,R,3,yes
+nuproc_status.ttl,nuproc:hasFinalRoleClaim,property,NuProc,G,3,yes
+nuproc_status.ttl,nuproc:hasOccurrenceStatus,property,NuProc,O,3,yes
+nuproc_status.ttl,nuproc:hasParticipation,property,NuProc,G,6,yes
+nuproc_status.ttl,nuproc:hasResolutionStatus,property,NuProc,R,3,yes
+nuproc_status.ttl,nuproc:hasSide,property,NuProc,G,6,yes
+nuproc_status.ttl,nuproc:hasSourceMention,property,NuProc,G,3,yes
+nuproc_status.ttl,nuproc:identificationClaimAbout,property,NuProc,I,5,yes
+nuproc_status.ttl,nuproc:namesParticipant,property,NuProc,G,3,yes
+nuproc_status.ttl,nuproc:occurrenceClaimAbout,property,NuProc,O,3,yes
+nuproc_status.ttl,nuproc:reportsEngagement,property,NuProc,W,2,yes
+nuproc_status.ttl,nuproc:resolutionClaimAbout,property,NuProc,R,4,yes
+nuproc_status.ttl,nuproc:resolvedTo,property,NuProc,R,3,yes
+nuproc_status.ttl,nuproc:supportedByClaim,property,NuProc,W,2,yes
+nuproc_status.ttl,nuproc:uniqueSourceArticleCount,property,NuProc,G,3,yes
+nuproc_status.ttl,obo:BFO_0000054,property,BFO/RO,W,2,declared by IRI in nuproc-core.ttl
+nuproc_status.ttl,obo:RO_0000057,property,BFO/RO,W,1,declared by IRI in nuproc-core.ttl
+nuproc_status.ttl,obo:RO_0000081,property,BFO/RO,W,3,declared by IRI in nuproc-core.ttl
+nuproc_status.ttl,prov:Activity,class,PROV-O,I R,3,see term_check.csv
+nuproc_status.ttl,prov:Association,class,PROV-O,I R,4,see term_check.csv
+nuproc_status.ttl,prov:Plan,class,PROV-O,I,1,see term_check.csv
+nuproc_status.ttl,prov:agent,property,PROV-O,I R,4,see term_check.csv
+nuproc_status.ttl,prov:hadPlan,property,PROV-O,I R,4,see term_check.csv
+nuproc_status.ttl,prov:qualifiedAssociation,property,PROV-O,I R,4,see term_check.csv
+nuproc_status.ttl,prov:wasDerivedFrom,property,PROV-O,G,4,see term_check.csv
+nuproc_status.ttl,prov:wasGeneratedBy,property,PROV-O,G I O R,19,see term_check.csv
+nuproc_status.ttl,prov:wasRevisionOf,property,PROV-O,I R,3,see term_check.csv
+nuproc_status.ttl,rdfs:label,property,RDFS,I R W,5,see term_check.csv
+nuproc_status.ttl,time:Instant,class,OWL-Time,G,3,see term_check.csv
+nuproc_status.ttl,time:hasTime,property,OWL-Time,G,3,see term_check.csv
+nuproc_status.ttl,time:inXSDgYearMonth,property,OWL-Time,G,3,see term_check.csv
+composition_status_ext.ttl,schema:EventStatusType,class,schema.org,X4,2,see term_check.csv
+composition_status_ext.ttl,skos:Concept,class,SKOS,X4,6,see term_check.csv
+composition_status_ext.ttl,skos:ConceptScheme,class,SKOS,X4,3,see term_check.csv
+composition_status_ext.ttl,skos:inScheme,property,SKOS,X4,6,see term_check.csv
+composition_status_ext.ttl,skos:notation,property,SKOS,X4,6,see term_check.csv
+composition_status_ext.ttl,skos:prefLabel,property,SKOS,X4,9,see term_check.csv

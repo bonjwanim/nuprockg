@@ -1,0 +1,4 @@
+kind,status,activity,agent,plans,revisedStatus
+identification,verified,Identification re-check (SYN),Adjudicator (SYN),Identification re-check protocol (SYN),key_based
+occurrence,occurred,Occurrence coding (SYN),Coding model M3 (SYN),Occurrence coding protocol (SYN),
+resolution,resolved,Reference re-judgement (SYN),Adjudicator (SYN),Reference resolution rules (SYN),unresolvable_candidate_set

@@ -1,0 +1,55 @@
+Extension: status claims and the assertion rule. The protocol matches its recorded checksum.
+
+REPRESENTATION (triples per section; ad-hoc schema terms; distinct codes)
+  G composition  86 triples (1 ad hoc: ex:actorReference; 7 codes) | nuproc  95 triples (8 codes)
+  O composition  21 triples (0 ad hoc; 2 codes) | nuproc  18 triples (2 codes)
+  I composition  42 triples (0 ad hoc; 3 codes) | nuproc  36 triples (3 codes)
+  R composition  76 triples (1 ad hoc: ex:resolutionStatus; 2 codes) | nuproc  48 triples (2 codes)
+  W composition   1 triples (0 ad hoc; 0 codes) | nuproc  19 triples (0 codes)
+  G to W: composition 226 triples, nuproc 216 triples
+  B0 (composition only, not compared): 77 triples
+  whole case, same content (data files of the parent folder and of this one): composition 487 triples, nuproc 486 triples
+  composition_status_ext.ttl: ad-hoc terms section 0 triples / 0 lines; code lists 32 triples / 30 lines; new codes 6
+
+VALIDATION
+  composition base        conforms=true  violations=0 warnings=0 fired=[] constraint_shape_fired=- others=[]
+  composition c5a         conforms=false violations=1 warnings=0 fired=[cs:C5_OccurrenceStatusShape] constraint_shape_fired=yes others=[]
+  composition c5b         conforms=false violations=1 warnings=0 fired=[cs:C5_OccurrenceStatusShape] constraint_shape_fired=yes others=[]
+  composition c6a         conforms=false violations=1 warnings=0 fired=[cs:C6_IdentificationStatusShape] constraint_shape_fired=yes others=[]
+  composition c7a         conforms=false violations=2 warnings=0 fired=[cs:C7_ResolutionShape] constraint_shape_fired=yes others=[]
+  composition c7b         conforms=false violations=2 warnings=0 fired=[cs:C7_ResolutionShape] constraint_shape_fired=yes others=[]
+  composition c8a         conforms=false violations=1 warnings=0 fired=[cs:C8_AssertedParticipationShape] constraint_shape_fired=yes others=[]
+  composition c8b         conforms=false violations=1 warnings=0 fired=[cs:C8_AssertedParticipationShape] constraint_shape_fired=yes others=[]
+  nuproc      base        conforms=true  violations=0 warnings=0 fired=[] constraint_shape_fired=- others=[]
+  nuproc      c5a         conforms=false violations=1 warnings=0 fired=[nuproc:EngagementClusterShape] constraint_shape_fired=yes others=[]
+  nuproc      c5b         conforms=false violations=2 warnings=0 fired=[nuproc:EngagementClusterShape] constraint_shape_fired=yes others=[]
+  nuproc      c6a         conforms=false violations=2 warnings=0 fired=[nuproc:IdentificationClaimShape] constraint_shape_fired=yes others=[]
+  nuproc      c7a         conforms=false violations=1 warnings=0 fired=[nuproc:ActorReferenceProfileShape] constraint_shape_fired=yes others=[]
+  nuproc      c7b         conforms=false violations=4 warnings=0 fired=[nuproc:CodedParticipationReferenceCoherenceShape nuproc:ResolutionClaimShape] constraint_shape_fired=yes others=[nuproc:CodedParticipationReferenceCoherenceShape]
+  nuproc      c8a         conforms=false violations=1 warnings=0 fired=[nuproc:EngagementClusterShape] constraint_shape_fired=yes others=[]
+  nuproc      c8b         conforms=false violations=2 warnings=0 fired=[nuproc:EngagementClusterShape nuproc:EngagementRoleShape] constraint_shape_fired=yes others=[]
+  composition parent:c1a  conforms=false violations=1 warnings=0 fired=[cs:C1_CandidateSetReferenceShape] constraint_shape_fired=yes others=[]
+  composition parent:c1b  conforms=false violations=3 warnings=0 fired=[cs:C1_CandidateSetReferenceShape cs:C7_ResolutionShape] constraint_shape_fired=yes others=[cs:C7_ResolutionShape]
+  composition parent:c2a  conforms=false violations=1 warnings=0 fired=[cs:C2_FinalClaimShape] constraint_shape_fired=yes others=[]
+  composition parent:c2b  conforms=false violations=1 warnings=0 fired=[cs:C2_FinalClaimShape] constraint_shape_fired=yes others=[]
+  composition parent:c3a  conforms=false violations=1 warnings=0 fired=[cs:C3_CodingActivityShape_rev] constraint_shape_fired=yes others=[]
+  composition parent:c3b  conforms=false violations=1 warnings=0 fired=[cs:C3_CodingActivityShape_rev] constraint_shape_fired=yes others=[]
+  composition parent:c4   conforms=false violations=1 warnings=0 fired=[cs:C4_RoleInEngagementShape] constraint_shape_fired=yes others=[]
+
+SHAPES PER CONSTRAINT (shapes / lines / triples)
+  c5 builder writes 1 / 37 / 17   NuProc ships 3 / 154 / 156
+  c6 builder writes 1 / 37 / 19   NuProc ships 3 / 173 / 157
+  c7 builder writes 1 / 68 / 15   NuProc ships 3 / 115 / 115
+  c8 builder writes 1 / 21 / 6   NuProc ships 4 / 267 / 143
+  c5 to c8: builder writes 4 / 163 / 57   NuProc ships 10 distinct shapes / 507 / 383
+  rewritten base shape: cs:C2_ClaimShape_rev, 37 lines
+  rewritten base shape: cs:C3_CodingActivityShape_rev, 21 lines
+  whole set the builder has written with the extension in force: 10 shapes, 281 lines (before the extension 6 shapes)
+
+QUERIES (rows / triple patterns / join variables / optional / union / exists / as in the protocol / same answer)
+  q4 composition rows=5 patterns=5 joins=3 optional=0 union=0 exists=0 as_in_protocol=yes same=yes
+  q4 nuproc      rows=5 patterns=6 joins=3 optional=0 union=0 exists=1 as_in_protocol=yes same=yes
+  q5 composition rows=3 patterns=8 joins=5 optional=0 union=0 exists=0 as_in_protocol=yes same=yes
+  q5 nuproc      rows=3 patterns=11 joins=7 optional=0 union=0 exists=0 as_in_protocol=yes same=yes
+  q6 composition rows=3 patterns=18 joins=10 optional=1 union=0 exists=0 as_in_protocol=yes same=yes
+  q6 nuproc      rows=3 patterns=23 joins=9 optional=3 union=2 exists=0 as_in_protocol=yes same=yes

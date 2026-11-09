@@ -1,0 +1,46 @@
+PREFIX adms:   <http://www.w3.org/ns/adms#>
+PREFIX sem:    <http://semanticweb.cs.vu.nl/2009/11/sem/>
+PREFIX prov:   <http://www.w3.org/ns/prov#>
+PREFIX rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX skos:   <http://www.w3.org/2004/02/skos/core#>
+PREFIX schema: <https://schema.org/>
+PREFIX ex:     <https://example.org/ext#>
+PREFIX exside: <https://example.org/ext/side/>
+PREFIX syn:    <https://example.org/syn/>
+
+# Q6 (composition). For group E and its export-side reference: for each of the three judgements, the final status, the
+# activity, the agent and the plans of the final claim, and the status given by the claim it revised, if any. The final
+# claim is the one the node was derived from, among the reified statements of the judgement's own property.
+SELECT ?kind ?status ?activity ?agent
+       (GROUP_CONCAT(DISTINCT ?planLabel; SEPARATOR=" | ") AS ?plans) ?revisedStatus
+WHERE {
+  VALUES (?kind ?prop) {
+    ("identification" adms:status)
+    ("occurrence" schema:eventStatus)
+    ("resolution" ex:resolutionStatus)
+  }
+  syn:engagement-E sem:hasActor ?side .
+  ?side sem:roleType exside:export_side ;
+        ex:actorReference ?reference .
+  BIND(IF(?prop = ex:resolutionStatus, ?reference, syn:engagement-E) AS ?node)
+  ?node prov:wasDerivedFrom ?claim .
+  ?claim rdf:subject ?node ;
+         rdf:predicate ?prop ;
+         rdf:object ?v ;
+         prov:wasGeneratedBy ?act .
+  ?v   skos:notation ?status .
+  ?act rdfs:label ?activity ;
+       prov:qualifiedAssociation ?as .
+  ?as  prov:agent ?ag ;
+       prov:hadPlan ?plan .
+  ?ag  rdfs:label ?agent .
+  ?plan rdfs:label ?planLabel .
+  OPTIONAL {
+    ?claim prov:wasRevisionOf ?earlier .
+    ?earlier rdf:object ?ev .
+    ?ev skos:notation ?revisedStatus .
+  }
+}
+GROUP BY ?kind ?status ?activity ?agent ?revisedStatus
+ORDER BY ?kind
