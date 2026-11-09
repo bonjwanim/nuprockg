@@ -7,8 +7,8 @@ apart from the news reports, coded records and coding claims through which they 
 
 - **Namespace** `https://w3id.org/nuproc/ns#` (registered at w3id.org; see *Status*)
 - **Version** 0.9.0 · **Licence** CC BY 4.0 (the legal code is in `LICENSE`)
-- The licence matrix (`LICENSES.md`) is in Korean; the modules carry Korean annotations beside the English
-  ones, and each query file states its question in English before its Korean comments.
+- The modules carry Korean annotations beside the English ones, and each query file states its question in
+  English before its Korean comments.
 
 ---
 
@@ -140,6 +140,44 @@ cases; those are given in the report.
 
 ---
 
+## Reusing the patterns on other data
+
+The pattern layer of the shapes is what carries over to other event data: references with a resolution status, claims
+with provenance, and the rule for what is asserted. The profile layer describes this dataset and does not apply. The
+definitions of `Engagement`, `ProcurementCase` and `ExportSideRole` are written for nuclear new-build procurement; the
+reference and claim classes are not. All of them are in the core module, so a reuse imports it.
+
+| What your data hold | Terms |
+|---|---|
+| A group of reports taken as one event | `EngagementCluster`, with `hasOccurrenceStatus` and `hasEngagementIdentification` |
+| A source record | `EventRecord` (`describesEvent`) |
+| One side of an event and its coded values | `CodedParticipation` (`hasParticipation`, `hasSide`) |
+| An actor as the data name it | a subclass of `ActorReference` (`hasActorReference`, `hasSourceMention`, `hasResolutionStatus`, `resolvedTo`; `hasCandidateOrganization` for a candidate set) |
+| A registered actor | `Organization` (`namesParticipant`) |
+| A judgement | `RoleClaim`, `OccurrenceClaim`, `ResolutionClaim` or `IdentificationClaim`, with `prov:wasGeneratedBy` |
+| The activity behind a judgement | a `prov:Activity` with one `prov:qualifiedAssociation` per plan (`prov:agent`, `prov:hadPlan`) |
+| What took place | `Engagement`, reported by a cluster (`reportsEngagement`), with its `EngagementRole` individuals |
+
+1. **Map your fields to these terms**, and write down the outcome you expect for each before loading. Leave out what
+   your data do not give: the pattern layer requires neither who initiated an event nor a software coder's prompt.
+2. **Load the mapped graph** with `ontology/nuproc-core.ttl` and `ontology/nuproc-codebook.ttl` merged into it.
+3. **Validate against the pattern layer alone.** Deactivate every other shape, then validate with SHACL-SPARQL enabled:
+
+```python
+shapes = Graph().parse("ontology/nuproc-shapes.ttl")
+shapes.update("""
+    PREFIX sh: <http://www.w3.org/ns/shacl#>
+    PREFIX nuproc: <https://w3id.org/nuproc/ns#>
+    INSERT { ?s sh:deactivated true }
+    WHERE { ?s a sh:NodeShape . FILTER NOT EXISTS { ?s nuproc:shapeLayer "pattern" } }
+""")
+conforms, report, text = validate(data, shacl_graph=shapes, advanced=True, inference="none")
+```
+
+On the synthetic graph this reports no violation.
+
+---
+
 ## Evaluation
 
 The report gives these results. Coding protocols and codebooks were frozen and checksummed before
@@ -206,6 +244,7 @@ implying one.
 | `https://w3id.org/nuproc/` registration | **registered** (perma-id/w3id.org pull request 7044, merged on 1 November 2026); the module, version, vocabulary, design-record and demonstration IRIs resolve to the files and sections of this repository |
 | Release | tag `tbox-v0.9.0` of this repository, with the checksums in `ontology/CHECKSUMS.txt`; no archive DOI is minted |
 | ORCID | **not supplied**, so the field is left empty |
+| Maintenance | problems and requests go to the issue tracker of this repository; the four modules are versioned together under semantic versioning, and each release has a tag and checksums |
 
 ---
 
