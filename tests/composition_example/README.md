@@ -45,10 +45,11 @@ bearer participates in the engagement that realizes it.
 
 **Why this composition is the strongest we found.** It follows the term-level comparison of the paper (Table S1 and
 Section S2 of the supplementary material), which rates SEM *reuse by composition* for roles and several role types, PROV-O *reuse as-is* for claim provenance,
-revision and plans, and GAF as the closest news-domain separation of mentions from what they denote. It is built to
+revision and plans, and GAF as a news-domain separation of mentions from what they denote. It is built to
 need as few new terms as possible: claims need none (RDF reification), finality needs none (PROV derivation), plan
-types need only codes, several roles need none. The only gaps are those the term map found in all ten resources:
-no term for a reference known to denote one of several candidate organisations, and no resolution-status term. Every
+types need only codes, several roles need none. Two of the three gaps are those the term map found in all ten resources:
+no term for a reference known to denote one of several candidate organisations, and no resolution-status term. The
+third is the link from a participation to its mention, which SEM and GAF do not provide (section 3). Every
 published term the two encodings use (49) is declared in its vocabulary (`check_terms.py` → `results/term_check.csv`).
 
 **Considered and not used** (facts in `results/term_check_considered.csv`):
@@ -86,7 +87,7 @@ published term the two encodings use (49) is declared in its vocabulary (`check_
 | `ex:candidate` | property, `gaf:Mention` → `org:Organization` | *candidate-set reference*: absent in all ten resources of the term map |
 | `ex:resolutionStatus` | property, `gaf:Mention` → `skos:Concept` | *resolution status*: no status term in any of them |
 
-Plus the builder's code lists (16 concepts in 6 schemes, 72 lines): role types (6), sides (2), counterparty role (1),
+Plus the builder's code lists (15 concepts in 6 schemes, 72 lines): role types (6), sides (2), counterparty role (1),
 statuses (3), plan types (2), engagement type (1). NuProc ships the corresponding schemes, with definitions, scope
 notes and examples, in `ontology/nuproc-codebook.ttl`. A builder could drop `ex:resolutionStatus` and read "resolved"
 from the presence of `gaf:denotes`; the graph could then no longer tell *unresolvable* from *not yet resolved*.
@@ -207,7 +208,7 @@ choices and the alternatives it rejected are in `status_claims/COMPOSITION_NOTES
 
 | | Composition | NuProc 0.9.0 |
 |---|---|---|
-| Whole case, same content (data files) | 487 triples | 486 triples |
+| Whole case (data files) | 487 triples | 486 triples |
 | New ad-hoc terms | none: `schema:eventStatus` and `adms:status` are borrowed for the two statuses | none |
 | New codes | 6 (30 lines) | none |
 | Shapes for c5-c8 | builder writes 4 (163 lines) and rewrites 2 base shapes (58 lines), so that 10 shapes (281 lines) are in force | 10 shipped (507 lines), which also check more |
@@ -215,8 +216,8 @@ choices and the alternatives it rejected are in `status_claims/COMPOSITION_NOTES
 | The parent folder's seven broken variants, on the extended composition | all still caught | not re-run: no NuProc shape changed |
 | Q4-Q6 | the protocol's rows; 31 triple patterns | the protocol's rows; 40 triple patterns |
 
-So the composition can state and check this material too, with no further ad-hoc property, and at the same size for the
-same content. What the numbers do not show:
+So the composition can state and check this material too, with no further ad-hoc property, and at about the same size.
+What the numbers do not show:
 
 - **The two status properties are stretched.** ADMS defines `adms:status` as "the status of the Asset in the context of
   a particular workflow process", and a report group is no asset. The five published values of `schema:eventStatus` do

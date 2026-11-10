@@ -243,7 +243,7 @@ def main() -> int:
     out.append(f"  B0 (composition only, not compared): {rep[('composition_status.ttl', 'B0')][3]} triples")
     all_c = len(base.merged(base.parse(ptexts["composition.ttl"]), base.parse(texts["composition_status.ttl"])))
     all_n = len(base.merged(base.parse(ptexts["nuproc.ttl"]), base.parse(texts["nuproc_status.ttl"])))
-    out.append(f"  whole case, same content (data files of the parent folder and of this one): composition {all_c} triples, nuproc {all_n} triples")
+    out.append(f"  whole case (data files of the parent folder and of this one): composition {all_c} triples, nuproc {all_n} triples")
     x3, x4 = rep[("composition_status_ext.ttl", "X3")], rep[("composition_status_ext.ttl", "X4")]
     concepts = sorted({base.short(s) for s in base.parse(texts["composition_status_ext.ttl"]).subjects(None, URIRef("http://www.w3.org/2004/02/skos/core#Concept"))})
     out.append(f"  composition_status_ext.ttl: ad-hoc terms section {x3[3]} triples / {ext_lines['X3']} lines; "

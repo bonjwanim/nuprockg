@@ -3,7 +3,7 @@
 #
 # Section markers ("# == <id> <title> ==") are read by run.py.
 #
-# Why these three properties are ad hoc: the term-level comparison (Table 1 of the paper and Section S2 of its
+# Why these three properties are ad hoc: the term-level comparison (Table S1 and Section S2 of the paper's
 # supplementary material, rows "candidate-set reference" and "reference with resolution status") found no term for a
 # reference known to denote one of several candidate organisations in any of the ten resources, and no resolution
 # status term in any of them. The link from a participation to the mention used for its actor has no published term

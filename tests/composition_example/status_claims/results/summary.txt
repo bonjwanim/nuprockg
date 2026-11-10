@@ -8,7 +8,7 @@ REPRESENTATION (triples per section; ad-hoc schema terms; distinct codes)
   W composition   1 triples (0 ad hoc; 0 codes) | nuproc  19 triples (0 codes)
   G to W: composition 226 triples, nuproc 216 triples
   B0 (composition only, not compared): 77 triples
-  whole case, same content (data files of the parent folder and of this one): composition 487 triples, nuproc 486 triples
+  whole case (data files of the parent folder and of this one): composition 487 triples, nuproc 486 triples
   composition_status_ext.ttl: ad-hoc terms section 0 triples / 0 lines; code lists 32 triples / 30 lines; new codes 6
 
 VALIDATION
